@@ -33,7 +33,7 @@ jobs:
             docker-compose --file docker-compose.yml up -d
 
             for ((i=0; i<15; i++)); do
-              if [ `docker-compose exec -T $IMAGE_NAME bash -c "if [ -f .env ]; then echo 0; else echo 1; fi` -ne 0 ]; then
+              if [ `docker-compose exec -T $IMAGE_NAME bash -c "if [ -f .env ]; then echo 0; else echo 1; fi"` -ne 0 ]; then
                 echo "No .env file exist"
                 sleep 1
               else
