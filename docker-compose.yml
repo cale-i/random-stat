@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  webserver:
+    build: ./backend/
+    # image: webserver:latest
+    container_name: webserver
+    ports:
+      - "80:80"
+    environment:
+      - "POSTGRES_USER=testuser"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_NAME=testdb"
+      - "POSTGRES_HOST=db"
+    depends_on:
+      - db
+
+  db:
+    # build: ./postgres/
+    image: postgres:11.9-alpine
+    container_name: postgres
+    environment:
+      - "POSTGRES_USER=testuser"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=testdb"
+
+    volumes:
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"

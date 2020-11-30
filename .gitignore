@@ -1,0 +1,16 @@
+**/venv
+**.env
+**/.vscode
+#  Local .terraform directories
+**/.terraform/*
+*/.terraform*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
+
+# VS Code
+.vscode/

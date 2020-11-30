@@ -1,0 +1,58 @@
+name: "Terraform"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: [terraform]
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.4
+
+      # Checks that all Terraform configuration files adhere to a canonical format
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check -recursive
+        working-directory: ${{ matrix.dir }}
+        continue-on-error: true
+
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ${{ matrix.dir }}
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: ${{ matrix.dir }}
+
+      # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ matrix.dir }}
+        continue-on-error: true
