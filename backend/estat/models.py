@@ -191,8 +191,8 @@ class StatsData(models.Model):
         Time,
         verbose_name='年度コード'
     )
-    stat_code_id = models.ForeignKey(
-        StatCode,
+    stats_code_id = models.ForeignKey(
+        StatsCode,
         verbose_name='政府統計コード'
     )
     unit = models.CharField(
