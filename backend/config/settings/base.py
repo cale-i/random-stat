@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     # My Applications
-    'example.apps.ExampleConfig',
+    'estat.apps.EstatConfig',
     'apiv1.apps.Apiv1Config',
 ]
 
