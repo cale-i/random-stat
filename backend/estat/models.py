@@ -73,25 +73,33 @@ class StatsCode(models.Model):
     id = models.CharField(
         verbose_name='表題',
         primary_key=True,
-        max_length=3
+        max_length=10
     )
-    stat_name_id = models.ForeignKey(
+    stat_name = models.ForeignKey(
         StatName,
         verbose_name='政府統計コード',
         on_delete=models.PROTECT
     )
-    gov_org_id = models.ForeignKey(
+    gov_org = models.ForeignKey(
         GovOrg,
         verbose_name='担当機関コード',
         on_delete=models.PROTECT
     )
-    title_id = models.ForeignKey(
+    title = models.ForeignKey(
         Title,
         verbose_name='表題コード',
         on_delete=models.PROTECT
     )
-    statics_name = models.CharField(
+    statistics_name = models.CharField(
         verbose_name='提供分類1',
+        null=False, max_length=255
+    )
+    table_name = models.CharField(
+        verbose_name='テーブル名',
+        null=False, max_length=255
+    )
+    explanation = models.CharField(
+        verbose_name='説明',
         null=False, max_length=255
     )
 
@@ -136,13 +144,13 @@ class Area(models.Model):
 
     id = models.CharField(
         verbose_name='地域コード', primary_key=True,
-        max_length=5
+        max_length=255
     )
 
     name = models.CharField(
         verbose_name='地域名',
         null=False,
-        max_length=4
+        max_length=255
     )
 
 
@@ -175,29 +183,34 @@ class StatsData(models.Model):
         db_table = 'stats_data'
 
     id = models.CharField(
-        verbose_name='データ',
+        verbose_name='ID',
         primary_key=True,
-        max_length=10
+        max_length=255
     )
-    category_id = models.ManyToManyField(
+    category = models.ManyToManyField(
         Category,
         verbose_name='カテゴリコード'
     )
-    area_id = models.ForeignKey(
+    area = models.ForeignKey(
         Area,
-        verbose_name='地域コード'
+        verbose_name='地域コード',
+        on_delete=models.PROTECT
+
     )
-    time_id = models.ForeignKey(
+    time = models.ForeignKey(
         Time,
-        verbose_name='年度コード'
+        verbose_name='年度コード',
+        on_delete=models.PROTECT
+
     )
-    stats_code_id = models.ForeignKey(
+    stats_code = models.ForeignKey(
         StatsCode,
-        verbose_name='政府統計コード'
+        verbose_name='政府統計コード',
+        on_delete=models.PROTECT
+
     )
     unit = models.CharField(
         verbose_name='単位コード',
-        null=False,
         max_length=10
     )
     value = models.PositiveIntegerField(
