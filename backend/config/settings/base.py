@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # My Applications
     'estat.apps.EstatConfig',
     'apiv1.apps.Apiv1Config',
+    'example.apps.ExampleConfig',
 ]
 
 MIDDLEWARE = [
