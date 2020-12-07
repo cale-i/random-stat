@@ -1,7 +1,44 @@
-from rest_framework import generics
+from rest_framework import generics, views
 
 from example.models import Book
 from .serializers import BookSerializer
+
+from estat.models import (
+    StatName,
+    GovOrg,
+    Title,
+    StatsCode,
+    Category,
+    Area,
+    Time,
+    StatsData,
+)
+
+from .serializers import (
+    StatNameSerializer,
+    GovOrgSerializer,
+    TitleSerializer,
+    StatsCodeSerializer,
+    CategorySerializer,
+    AreaSerializer,
+    TimeSerializer,
+    StatsDataSerializer,
+)
+
+
+class ChronologicalListAPIView(generics.ListAPIView):
+
+    # query = StatsData.objects.all()
+    queryset = StatsData.objects.all() \
+        .select_related('area') \
+        .select_related('time') \
+        .select_related('stats_code') \
+        .prefetch_related('category') \
+        .select_related('stats_code__stat_name') \
+        .select_related('stats_code__gov_org') \
+        .select_related('stats_code__title')
+
+    serializer_class = StatsDataSerializer
 
 
 class BookListAPIView(generics.ListAPIView):
