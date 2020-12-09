@@ -10,6 +10,7 @@ urlpatterns = [
     path('update/books/<pk>/', views.BookUpdateAPIView.as_view()),
     path('delete/books/<pk>/', views.BookDestroyAPIView.as_view()),
     path('test/', views.ChronologicalListAPIView.as_view()),
+    path('test2/', views.ChronologicalAPIView.as_view()),
 
 
 ]
