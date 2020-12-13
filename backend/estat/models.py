@@ -34,7 +34,7 @@ class GovOrg(models.Model):
     id = models.CharField(
         verbose_name='担当機関コード',
         primary_key=True,
-        max_length=8
+        max_length=5
     )
     name = models.CharField(
         verbose_name='担当機関名',
@@ -55,7 +55,7 @@ class Title(models.Model):
     id = models.CharField(
         verbose_name='統計コード',
         primary_key=True,
-        max_length=8
+        max_length=3
     )
     name = models.CharField(
         verbose_name='統計コード名',
@@ -65,15 +65,15 @@ class Title(models.Model):
 
 
 class StatsCode(models.Model):
-    """"""
+    """統計表 表ID"""
 
     class Meta:
         db_table = 'stats_code'
 
     id = models.CharField(
-        verbose_name='表題',
+        verbose_name='統計表ID {stat_name}_{gov_ort}_{title.zfill(3)}',
         primary_key=True,
-        max_length=10
+        max_length=18
     )
     stat_name = models.ForeignKey(
         StatName,
@@ -92,21 +92,26 @@ class StatsCode(models.Model):
     )
     statistics_name = models.CharField(
         verbose_name='提供分類1',
-        null=False, max_length=255
+        null=False,
+        max_length=255
     )
     table_name = models.CharField(
         verbose_name='テーブル名',
-        null=False, max_length=255
+        null=False,
+        max_length=255
     )
     explanation = models.CharField(
         verbose_name='説明',
-        null=False, max_length=255
+        null=False,
+        max_length=255
     )
 
 
 class Category(models.Model):
     """
     カテゴリ
+    eg. '0020504_00200_001_cat1'
+        '0020504_00200_001_tab'
     @cat1: {
         @code: '000',
         name: '男女計'
@@ -119,10 +124,49 @@ class Category(models.Model):
     id = models.CharField(
         verbose_name='カテゴリコード',
         primary_key=True,
-        max_length=255
+        max_length=25
+    )
+    stats_code = models.ForeignKey(
+        StatsCode,
+        verbose_name='統計表 表ID',
+        on_delete=models.PROTECT,
     )
     name = models.CharField(
         verbose_name='カテゴリ名',
+        null=False,
+        max_length=255
+    )
+    # unit = models.CharField(
+    #     verbose_name='表示単位',
+    #     null=True,
+    #     max_length=255
+    # )
+
+
+class SubCategory(models.Model):
+    """
+    サブカテゴリ
+    @cat1: {
+        @code: '000',
+        name: '男女計'
+    }
+    """
+
+    class Meta:
+        db_table = 'sub_category'
+
+    id = models.CharField(
+        verbose_name='サブカテゴリコード',
+        primary_key=True,
+        max_length=255
+    )
+    category = models.ForeignKey(
+        Category,
+        verbose_name='カテゴリ',
+        on_delete=models.PROTECT,
+    )
+    name = models.CharField(
+        verbose_name='サブカテゴリ名',
         null=False,
         max_length=255
     )
@@ -136,7 +180,8 @@ class Category(models.Model):
 class Area(models.Model):
     """
     統計データエリア
-    eg.'全国', '北海道'
+    id: 00000 - 47000
+    eg.'全国', ... '沖縄県'
     """
 
     class Meta:
@@ -144,7 +189,7 @@ class Area(models.Model):
 
     id = models.CharField(
         verbose_name='地域コード', primary_key=True,
-        max_length=255
+        max_length=5
     )
 
     name = models.CharField(
@@ -157,6 +202,8 @@ class Area(models.Model):
 class Time(models.Model):
     """
     統計データ年度
+    id: @code(max_length=10)
+    date: 8桁の西暦表示(yyyymmdd)
     """
 
     class Meta:
@@ -165,12 +212,12 @@ class Time(models.Model):
     id = models.CharField(
         verbose_name='年度コード',
         primary_key=True,
-        max_length=255
+        max_length=10
     )
-    name = models.CharField(
-        verbose_name='表示名',
+    date = models.CharField(
+        verbose_name='date',
         null=False,
-        max_length=255
+        max_length=8
     )
 
 
@@ -191,11 +238,14 @@ class StatsData(models.Model):
         Category,
         verbose_name='カテゴリコード'
     )
+    sub_category = models.ManyToManyField(
+        SubCategory,
+        verbose_name='サブカテゴリコード'
+    )
     area = models.ForeignKey(
         Area,
         verbose_name='地域コード',
         on_delete=models.PROTECT
-
     )
     time = models.ForeignKey(
         Time,
@@ -205,15 +255,17 @@ class StatsData(models.Model):
     )
     stats_code = models.ForeignKey(
         StatsCode,
-        verbose_name='政府統計コード',
+        verbose_name='統計表 表ID',
         on_delete=models.PROTECT
 
     )
     unit = models.CharField(
         verbose_name='単位コード',
+        null=True,
         max_length=10
     )
-    value = models.PositiveIntegerField(
+    value = models.CharField(
         verbose_name='統計データ数値',
-        null=False
+        null=True,
+        max_length=255
     )

@@ -4,6 +4,7 @@ from estat.models import (
     Title,
     StatsCode,
     Category,
+    SubCategory,
     Area,
     Time,
     StatsData,
@@ -58,6 +59,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SubCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubCategory
+        fields = '__all__'
+
+
 class AreaSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -75,6 +83,7 @@ class TimeSerializer(serializers.ModelSerializer):
 class StatsDataSerializer(serializers.ModelSerializer):
 
     category = CategorySerializer(many=True)
+    sub_category = SubCategorySerializer(many=True)
     area = AreaSerializer()
     time = TimeSerializer()
     stats_code = StatsCodeSerializer()

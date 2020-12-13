@@ -17,6 +17,7 @@ from estat.models import (
     Title,
     StatsCode,
     Category,
+    SubCategory,
     Area,
     Time,
     StatsData,
@@ -28,6 +29,7 @@ from apiv1.serializers import (
     TitleSerializer,
     StatsCodeSerializer,
     CategorySerializer,
+    SubCategorySerializer,
     AreaSerializer,
     TimeSerializer,
     StatsDataSerializer,
@@ -40,8 +42,10 @@ class ChronologicalFilter(filters.FilterSet):
     time = filters.CharFilter(field_name='time__id', method='get_time')
     # time = filters.CharFilter(field_name='time__id', method='get_time')
 
-    category = filters.CharFilter(
-        field_name='category__id', method='get_category')
+    sub_category = filters.CharFilter(
+        field_name='sub_category__id',
+        method='get_sub_category'
+    )
 
     def get_area(self, queryset, name, value):
         return queryset.filter(**{name: value})
@@ -49,7 +53,7 @@ class ChronologicalFilter(filters.FilterSet):
     def get_time(self, queryset, name, value):
         return queryset.filter(**{name: value})
 
-    def get_category(self, queryset, name, value):
+    def get_sub_category(self, queryset, name, value):
         return self.separate_params(queryset, name, value)
 
     # def get_random_data(self, queryset, name, value)
@@ -64,11 +68,44 @@ class ChronologicalFilter(filters.FilterSet):
             table = str.maketrans('', '', '[] \'')
             value = value.translate(table).split(',')
 
-            name = f'{name}__in'
-            return queryset.filter(**{name: value})
+            # print(name)
+            # print(value)
+            # print({name: value})
+            qs = queryset
+            for val in value:
+                qs = qs.filter(**{name: val})
+                # print(qs.query)
+                print(len(qs))
+                # print(qs)
+            return qs
 
 
 class ChronologicalAPIView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        queryset = StatsData.objects.all() \
+            .select_related('area') \
+            .select_related('time') \
+            .select_related('stats_code') \
+            .prefetch_related('category') \
+            .prefetch_related('sub_category') \
+            .select_related('stats_code__stat_name') \
+            .select_related('stats_code__gov_org') \
+            .select_related('stats_code__title')
+
+        # params = self.get_random_data()
+        params = {
+            'sub_category': [
+                '00200521_00200_001_tab_020',
+                '00200521_00200_001_cat01_100'
+            ],
+            'area': '00000'
+        }
+
+        filterset = ChronologicalFilter(
+            params, queryset=queryset)
+
+        serializer = StatsDataSerializer(instance=filterset.qs, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         queryset = StatsData.objects.all() \
@@ -95,26 +132,29 @@ class ChronologicalAPIView(views.APIView):
     def get_random_data(self):
 
         params = {
-            'category': [],
+            'sub_category': [],
             'area': '',
         }
 
         #  get random prefix(stat_name_id + gov_org_id + title_id)
         stats_code_queryset = random.choice(StatsCode.objects.all())
-        prefix = f"{stats_code_queryset.stat_name.id}_{stats_code_queryset.gov_org.id}_{stats_code_queryset.title.id}"
+        stats_code_id = stats_code_queryset.id
 
-        # get random category
-        category_queryset = random.choice(
-            Category.objects.filter(id__icontains=prefix))
+        # get category allay
+        category_queryset = Category.objects.filter(
+            stats_code_id__id__icontains=stats_code_id)
 
-        params['category'] = category_queryset.id
+        for cat_id in category_queryset:
+            sub_category_queryset = random.choice(SubCategory.objects.filter(
+                category_id__id__icontains=cat_id.id))
+            params['sub_category'].append(sub_category_queryset.id)
 
         # get random area
         area_queryset = random.choice(
-            Area.objects.filter(id__icontains=prefix))
+            Area.objects.all())
 
         params['area'] = area_queryset.id
-
+        print(params)
         return params
 
 
