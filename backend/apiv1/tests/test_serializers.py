@@ -250,27 +250,24 @@ class TestStatsCodeSerializer(TestCase):
     StatsCodeSerializerのテストクラス
     """
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.input_data = {
-            'id': '00200521_00200_001',
-            'statistics_name': '時系列データ 男女，年齢，配偶関係',
-            'table_name': '男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）',
-            'explanation': ' 1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
-            'stat_name': {
-                'id': '00200521',
-                'name': '総務省',
-            },
-            'gov_org': {
-                'id': '00200',
-                'name': '国勢調査',
-            },
-            'title': {
-                'id': '001',
-                'name': '男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）',
-            },
-        }
+    input_data = {
+        'id': '00200521_00200_001',
+        'statistics_name': '時系列データ 男女，年齢，配偶関係',
+        'table_name': '男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）',
+        'explanation': ' 1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
+        'stat_name': {
+            'id': '00200521',
+            'name': '総務省',
+        },
+        'gov_org': {
+            'id': '00200',
+            'name': '国勢調査',
+        },
+        'title': {
+            'id': '001',
+            'name': '男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）',
+        },
+    }
 
     def test_input_valid(self):
         """入力データのバリデーション(OK)"""
@@ -311,5 +308,61 @@ class TestStatsCodeSerializer(TestCase):
         self.assertCountEqual(serializer.errors.keys(), ['statistics_name'])
         self.assertCountEqual(
             [e.code for e in serializer.errors['statistics_name']],
+            ['blank'],
+        )
+
+
+class TestCategorySerializer(TestCase):
+    """
+    CategorySerializerのテストクラス
+    """
+
+    input_data = {
+        'id': '0020504_00200_001_tab',
+        'name': '総数，男及び女_時系列',
+        'stats_code': TestStatsCodeSerializer.input_data
+    }
+
+    def test_input_valid(self):
+        """入力データのバリデーション(OK)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        serializer = CategorySerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        serializer.is_valid()
+        print(serializer.errors)
+        self.assertEqual(serializer.is_valid(), True)
+
+    def test_input_invalid_if_id_is_blank(self):
+        """入力データのバリデーション(NG: idが空文字)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        input_data['id'] = ''
+        serializer = CategorySerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), False)
+        self.assertCountEqual(serializer.errors.keys(), ['id'])
+        self.assertCountEqual(
+            [e.code for e in serializer.errors['id']],
+            ['blank'],
+        )
+
+    def test_input_invalid_if_name_is_blank(self):
+        """入力データのバリデーション(NG: nameが空文字)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        input_data['name'] = ''
+        serializer = CategorySerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), False)
+        self.assertCountEqual(serializer.errors.keys(), ['name'])
+        self.assertCountEqual(
+            [e.code for e in serializer.errors['name']],
             ['blank'],
         )
