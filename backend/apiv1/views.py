@@ -92,17 +92,31 @@ class ChronologicalAPIView(views.APIView):
             .select_related('stats_code__gov_org') \
             .select_related('stats_code__title')
 
-        # params = self.get_random_data()
-        params = {
-            'sub_category': [
-                '00200521_00200_001_tab_020',
-                '00200521_00200_001_cat01_100'
-            ],
-            'area': '00000'
-        }
+        # 存在しないパターンの組み合わせの場合、もう一度取得する
+        queryset_length = 0
+        time_out = 0
+        while not queryset_length:
 
-        filterset = ChronologicalFilter(
-            params, queryset=queryset)
+            params = self.get_random_data()
+            # params = {
+            #     'sub_category': [
+            #         '00200521_00200_001_tab_020',
+            #         '00200521_00200_001_cat01_100'
+            #     ],
+            #     'area': '00000'
+            # }
+
+            filterset = ChronologicalFilter(
+                params,
+                queryset=queryset
+            )
+            queryset_length = len(filterset.qs)
+            print(queryset_length)
+
+            time_out += 1
+
+            if time_out > 0:
+                break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
@@ -118,12 +132,7 @@ class ChronologicalAPIView(views.APIView):
             .select_related('stats_code__title')
 
         # 検索用
-        # filterset = ChronologicalFilter(request.data, queryset=queryset)
-
-        # ランダム用
-        params = self.get_random_data()
-        filterset = ChronologicalFilter(
-            params, queryset=queryset)
+        filterset = ChronologicalFilter(request.data, queryset=queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 
