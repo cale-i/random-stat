@@ -53,6 +53,7 @@ class StatsCodeSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    stats_code = StatsCodeSerializer()
 
     class Meta:
         model = Category
@@ -60,6 +61,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
 
     class Meta:
         model = SubCategory
