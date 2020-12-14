@@ -304,13 +304,11 @@ class TestCategorySerializer(TestCase):
     """
     CategorySerializerのテストクラス
     """
-    @ property
-    def input_data(self):
-        return {
-            'id': '0020504_00200_001_tab',
-            'name': '総数，男及び女_時系列',
-            'stats_code': TestStatsCodeSerializer.input_data.copy()
-        }
+    input_data = {
+        'id': '0020504_00200_001_tab',
+        'name': '総数，男及び女_時系列',
+        'stats_code': TestStatsCodeSerializer.input_data.copy()
+    }
 
     def test_input_valid(self):
         """入力データのバリデーション(OK)"""
@@ -366,21 +364,19 @@ class TestSubCategorySerializer(TestCase):
         'id': '00200521_00200_001_tab_020',
         'name': '人口',
         'unit': '人',
-        'category': TestCategorySerializer.input_data,
+        'category': TestCategorySerializer.input_data.copy(),
     }
 
+    def test_input_valid(self):
+        """入力データのバリデーション(OK)"""
 
-def test_input_valid(self):
-    """入力データのバリデーション(OK)"""
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        serializer = SubCategorySerializer(data=input_data)
 
-    # シリアライザを作成
-    input_data = self.input_data.copy()
-    serializer = SubCategorySerializer(data=input_data)
-
-    # バリデーションの結果を検証
-    serializer.is_valid()
-    print(serializer.errors)
-    self.assertEqual(serializer.is_valid(), True)
+        # バリデーションの結果を検証
+        serializer.is_valid()
+        self.assertEqual(serializer.is_valid(), True)
 
     def test_input_invalid_if_id_is_blank(self):
         """入力データのバリデーション(NG: idが空文字)"""
@@ -471,7 +467,7 @@ class TestAreaSerializer(TestCase):
         """出力データの内容検証"""
         input_data = self.input_data.copy()
         # オブジェクトを作成
-        area = StatName.objects.create(
+        area = Area.objects.create(
             id=input_data['id'],
             name=input_data['name'],
         )
@@ -481,5 +477,75 @@ class TestAreaSerializer(TestCase):
         expected_data = {
             'id': area.id,
             'name': area.name,
+        }
+        self.assertDictEqual(serializer.data, expected_data)
+
+
+class TestTimeSerializer(TestCase):
+    """
+    TimeSerializerのテストクラス
+    """
+    input_data = {
+        'id': '2015000000',
+        'date': '20150000',
+    }
+
+    def test_input_valid(self):
+        """入力データのバリデーション(OK)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+
+        serializer = TimeSerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), True)
+
+    def test_input_invalid_if_id_is_blank(self):
+        """入力データのバリデーション(NG: idが空文字)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        input_data['id'] = ''
+        serializer = TimeSerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), False)
+        self.assertCountEqual(serializer.errors.keys(), ['id'])
+        self.assertCountEqual(
+            [e.code for e in serializer.errors['id']],
+            ['blank'],
+        )
+
+    def test_input_invalid_if_name_is_blank(self):
+        """入力データのバリデーション(NG: nameが空文字)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        input_data['date'] = ''
+        serializer = TimeSerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), False)
+        self.assertCountEqual(serializer.errors.keys(), ['date'])
+        self.assertCountEqual(
+            [e.code for e in serializer.errors['date']],
+            ['blank'],
+        )
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+        input_data = self.input_data.copy()
+        # オブジェクトを作成
+        time = Time.objects.create(
+            id=input_data['id'],
+            date=input_data['date'],
+        )
+        serializer = TimeSerializer(instance=time)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'id': time.id,
+            'date': time.date,
         }
         self.assertDictEqual(serializer.data, expected_data)
