@@ -366,3 +366,60 @@ class TestCategorySerializer(TestCase):
             [e.code for e in serializer.errors['name']],
             ['blank'],
         )
+
+
+class TestSubCategorySerializer(TestCase):
+    """
+    SubCategorySerializerのテストクラス
+    """
+
+    input_data = {
+        'id': '00200521_00200_001_tab_020',
+        'name': '人口',
+        'unit': '人',
+        'category': TestCategorySerializer.input_data,
+    }
+
+    def test_input_valid(self):
+        """入力データのバリデーション(OK)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        serializer = SubCategorySerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        serializer.is_valid()
+        print(serializer.errors)
+        self.assertEqual(serializer.is_valid(), True)
+
+    def test_input_invalid_if_id_is_blank(self):
+        """入力データのバリデーション(NG: idが空文字)"""
+
+        # シリアライザを作成
+        input_data = self.input_data.copy()
+        input_data['id'] = ''
+        serializer = SubCategorySerializer(data=input_data)
+
+        # バリデーションの結果を検証
+        self.assertEqual(serializer.is_valid(), False)
+        self.assertCountEqual(serializer.errors.keys(), ['id'])
+        self.assertCountEqual(
+            [e.code for e in serializer.errors['id']],
+            ['blank'],
+        )
+
+        def test_input_invalid_if_name_is_blank(self):
+            """入力データのバリデーション(NG: nameが空文字)"""
+
+            # シリアライザを作成
+            input_data = self.input_data.copy()
+            input_data['name'] = ''
+            serializer = SubCategorySerializer(data=input_data)
+
+            # バリデーションの結果を検証
+            self.assertEqual(serializer.is_valid(), False)
+            self.assertCountEqual(serializer.errors.keys(), ['name'])
+            self.assertCountEqual(
+                [e.code for e in serializer.errors['name']],
+                ['blank'],
+            )
