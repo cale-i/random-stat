@@ -86,11 +86,13 @@ class ChronologicalAPIView(views.APIView):
             .select_related('area') \
             .select_related('time') \
             .select_related('stats_code') \
-            .prefetch_related('category') \
-            .prefetch_related('sub_category') \
             .select_related('stats_code__stat_name') \
             .select_related('stats_code__gov_org') \
-            .select_related('stats_code__title')
+            .select_related('stats_code__title') \
+            .prefetch_related('category') \
+            .prefetch_related('category__stats_code') \
+            .prefetch_related('sub_category') \
+            .prefetch_related('sub_category__category')
 
         # 存在しないパターンの組み合わせの場合、もう一度取得する
         queryset_length = 0
@@ -115,7 +117,7 @@ class ChronologicalAPIView(views.APIView):
 
             time_out += 1
 
-            if time_out > 0:
+            if time_out > 5:
                 break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
