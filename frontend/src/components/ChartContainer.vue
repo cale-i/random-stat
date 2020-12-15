@@ -61,11 +61,12 @@
                             type: 'time',
                             
                             time: {
-                                unit: 'day',
+                                unit: 'year',
                                 displayFormats: {
-                                    day: 'M[月]D[日]'
+                                    // year: 'YYYY[年]MM[月]DD[日]'
+                                    year: 'YYYY[年]'
                                 },
-                                parser: 'MMM D'
+                                parser: 'YYYY'
                             },
                             gridLines: {
                                 drawOnChartArea: false, 
@@ -84,10 +85,10 @@
                             position: 'left',
                             ticks: {
                                 suggestedMin: 0,
-                                suggestedMax: 60,
-                                stepSize: 10,
+                                // suggestedMax: 60,
+                                // stepSize: 10,
                                 callback: (value) => {
-                                    return value + '万円'
+                                    return value + '人'
                                 }
                             },
                         }
@@ -116,11 +117,12 @@
                             type: 'time',
                             
                             time: {
-                                unit: 'day',
+                                unit: 'year',
                                 displayFormats: {
-                                    day: 'M[月]D[日]'
+                                    // year: 'YYYY[年]MM[月]DD[日]'
+                                    year: 'YYYY[年]'
                                 },
-                                parser: 'MMM D'
+                                parser: 'YYYY'
                             },
                             gridLines: {
                                 drawOnChartArea: false, 
@@ -139,10 +141,10 @@
                             position: 'left',
                             ticks: {
                                 suggestedMin: 0,
-                                suggestedMax: 60,
-                                stepSize: 10,
+                                // suggestedMax: 60,
+                                // stepSize: 10,
                                 callback: (value) => {
-                                    return value + '万円'
+                                    return value + '人'
                                 }
                             },
                         }
@@ -228,6 +230,64 @@
                 }
         }),
         methods: {
+            setStatData(data) {
+                let labelList = []
+                let dataList = []
+                data.then(response => {
+                    response.forEach(el => {
+                        let formattedTime = (el.time.date).slice(0,4)
+                        labelList.push(formattedTime)
+                        dataList.push(el.value)
+                        })
+                    
+                this.chartdataFirst = {
+                    labels: labelList,
+                    datasets: [
+                        {
+                            // data: [1,2,3,4,5,6,7,8,9,10],
+                            data: dataList,
+                            backgroundColor: '#f87979',
+                            
+                            borderWidth: 0,
+                            borderColor: 'rgba(255,255,255,0)',
+                            yAxisID: 'first-y-axis'
+                        }, 
+                    ]
+                }
+                })
+            },
+            setSecondStatData(data) {
+                let labelList = []
+                let dataList = []
+                data.then(response => {
+                    response.forEach(el => {
+                        let formattedTime = (el.time.date).slice(0,4)
+                        labelList.push(formattedTime)
+                        dataList.push(el.value)
+                        })
+                    
+                this.chartdataSecond = {
+                    labels: labelList,
+                    datasets: [
+                        {
+                            // data: [1,2,3,4,5,6,7,8,9,10],
+                            data: dataList,
+                            backgroundColor: '#f87979',
+                            
+                            borderWidth: 0,
+                            borderColor: 'rgba(255,255,255,0)',
+                            yAxisID: 'first-y-axis'
+                        }, 
+                    ]
+                }
+                })
+            },
+            getRandomStat() {
+                // promiseのままreturnしている点に注意
+                return this.$store.dispatch(
+                    'chart/getChart',
+                )
+            },
             getDataFirst () {
                 const NUM = 10
                 this.chartdataFirst = {
@@ -312,14 +372,13 @@
         async mounted () {
             this.loaded = false
             try {
-                // const { datalist } = await this.$store.dispatch(
-                //     'chart/getChart',
-                //     {
-                //         id: '',
-                //     }
-                // )
-                this.getDataMix()
-                this.getDataFirst()
+                const firstData = this.getRandomStat()
+                this.setStatData(firstData)
+
+                const secondData = this.getRandomStat()
+                this.setSecondStatData(secondData)
+                // this.getDataFirst()
+                // this.getDataMix()
                 this.getDataSecond()
                     
                 // this.chartData = datalist
