@@ -1,8 +1,8 @@
 <template>
     <div id="home-page">
         <GlobalHeader/>
-        <InputField/>
-        <OutputField/>
+        <!-- <InputField/> -->
+        <!-- <OutputField/> -->
         <ChartContainer/>
         <b-container>
             <!-- <chart :chartdata="chartData" :options="chartOptions"/> -->
@@ -12,8 +12,8 @@
 
 <script>
     import GlobalHeader from '@/components/GlobalHeader.vue'
-    import InputField from '@/components/InputField.vue'
-    import OutputField from '@/components/OutputField.vue'
+    // import InputField from '@/components/InputField.vue'
+    // import OutputField from '@/components/OutputField.vue'
     import ChartContainer from '@/components/ChartContainer.vue'
 
 
@@ -22,8 +22,8 @@
     export default {
         components: {
             GlobalHeader,
-            InputField,
-            OutputField,
+            // InputField,
+            // OutputField,
             ChartContainer
         },
         data: function() {
