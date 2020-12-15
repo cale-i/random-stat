@@ -8,20 +8,31 @@
                 :chart-data="chartdataMix"
                 :options="optionsMix"
             ></chart> -->
+            <b-card>
+                <b-button @click="setFirstChart()">更新</b-button>
+                <h3>{{ this.firstLegend.title }}</h3>
+                <div>地域 : {{ this.firstLegend.area}}</div>
+                <div>単位 : {{ this.firstLegend.unit}}</div>
+                <div>{{ this.firstLegend.sub_category}}</div>
 
-            <b-button @click="getDataFirst()">更新</b-button>
+                <chart
+                    v-if="loaded"
+                    :chart-data="chartDataFirst"
+                    :options="firstOption"
+                ></chart>
+            </b-card>
+            <b-card>
+            <b-button @click="setSecondChart()">更新</b-button>
+            <h3>{{ this.secondLegend.title }}</h3>
+            <div>地域 : {{ this.secondLegend.area}}</div>
+            <div>単位 : {{ this.secondLegend.unit}}</div>
+            <div>{{ this.secondLegend.sub_category}}</div>
             <chart
                 v-if="loaded"
-                :chart-data="chartdataFirst"
-                :options="optionsFirst"
+                :chart-data="chartDataSecond"
+                :options="SecondOption"
             ></chart>
-
-            <b-button @click="getDataSecond()">更新</b-button>
-            <chart
-                v-if="loaded"
-                :chart-data="chartdataSecond"
-                :options="optionsSecond"
-            ></chart>
+            </b-card>
 
         </b-container>
     </div>
@@ -31,7 +42,6 @@
     // import dayjs from 'dayjs'
     import chart from "@/services/chart.js"
     // import BarChart from "./chart/BarChart.vue"
-    // import LineChart from "@/services/chart/lineChart.js"
     export default {
         name: 'ChartContainer',
         components: {
@@ -39,18 +49,74 @@
             // BarChart
         },
         data: () => ({
-            chartdataFirst: {
+            chartDataFirst: {
                     labels: [],
                     datasets: [],
             },
-            chartdataSecond: {
+            chartDataSecond: {
                     labels: [],
                     datasets: [],
             },
-            optionsFirst: {
+            firstOption: {
                 title: {
                     display: true,
-                    text: '気温1(1月1日~1月10日)'
+                    text: ''
+                },
+                hover: {
+                    intersect: false,
+                },
+                elements: {
+                    line: {
+                        tension: 0, // ベジェ曲線を無効にする
+                    },
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            // グリッドラインを消す
+                            type: 'time',
+                            
+                            time: {
+                                unit: 'year',
+                                displayFormats: {
+                                    // year: 'YYYY[年]MM[月]DD[日]'
+                                    year: 'YYYY[年]'
+                                },
+                                parser: 'YYYY'
+                            },
+                            gridLines: {
+                                drawOnChartArea: false, 
+                            },
+                            // ticks: {
+                            //     callback: (value) => {
+                            //         return dayjs(value).format('D')
+                            //     }
+                            // }
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            // bar chart
+                            id: 'first-y-axis',
+                            position: 'left',
+                            ticks: {
+                                suggestedMin: 0,
+                                // suggestedMax: 60,
+                                // stepSize: 10,
+                                callback: (value) => {
+                                    return value
+                                }
+                            },
+                        }
+                    ]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+            SecondOption: {
+                title: {
+                    display: true,
+                    text: ''
                 },
                 hover: {
                     intersect: false,
@@ -103,64 +169,22 @@
                 responsive: true,
                 maintainAspectRatio: false,
             },
-            optionsSecond: {
-                title: {
-                    display: true,
-                    text: '気温2(2月1日~2月10日)'
-                },
-                hover: {
-                    intersect: false,
-                },
-                elements: {
-                    line: {
-                        tension: 0, // ベジェ曲線を無効にする
-                    },
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            // グリッドラインを消す
-                            type: 'time',
-                            
-                            time: {
-                                unit: 'year',
-                                displayFormats: {
-                                    // year: 'YYYY[年]MM[月]DD[日]'
-                                    year: 'YYYY[年]'
-                                },
-                                parser: 'YYYY'
-                            },
-                            gridLines: {
-                                drawOnChartArea: false, 
-                            },
-                            // ticks: {
-                            //     callback: (value) => {
-                            //         return dayjs(value).format('D')
-                            //     }
-                            // }
-                        },
-                    ],
-                    yAxes: [
-                        {
-                            // bar chart
-                            id: 'first-y-axis',
-                            position: 'left',
-                            ticks: {
-                                suggestedMin: 0,
-                                // suggestedMax: 60,
-                                // stepSize: 10,
-                                callback: (value) => {
-                                    return value + '人'
-                                }
-                            },
-                        }
-                    ]
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-            },
-            
+            firstLegend: {
+                title: '',
+                area: '',
+                unit: '',
+                stats_name: '',
+                sub_category: [],
 
+            },
+            secondLegend: {
+                title: '',
+                area: '',
+                unit: '',
+                stats_name: '',
+                sub_category: [],
+
+            },
 
             loaded: false,
 
@@ -236,7 +260,17 @@
                 }
         }),
         methods: {
-            setStatData(data) {
+            setFirstChart() {
+                const firstData = this.getRandomStat()
+                this.setFirstStatData(firstData)
+                this.setFirstOption(firstData)
+            },
+            setSecondChart() {
+                const secondData = this.getRandomStat()
+                this.setSecondStatData(secondData)
+                this.setSecondOption(secondData)
+            },
+            setFirstStatData(data) {
                 let labelList = []
                 let dataList = []
                 data.then(response => {
@@ -246,7 +280,7 @@
                         dataList.push(el.value)
                         })
                     
-                this.chartdataFirst = {
+                this.chartDataFirst = {
                     labels: labelList,
                     datasets: [
                         {
@@ -272,7 +306,7 @@
                         dataList.push(el.value)
                         })
                     
-                this.chartdataSecond = {
+                this.chartDataSecond = {
                     labels: labelList,
                     datasets: [
                         {
@@ -288,45 +322,46 @@
                 }
                 })
             },
+            setFirstOption(data) {
+                data.then(response => {
+                    const dataset = response[0]
+                    let sub_category = []
+                    dataset.sub_category.map(el => {
+                        sub_category.push(el.name)
+                    })
+                    console.log(dataset)
+                    this.firstLegend = {
+                        area : dataset.area.name,
+                        title: dataset.stats_code.table_name,
+                        unit: dataset.unit,
+                        sub_category: sub_category,
+
+                    }
+                })
+            },
+            setSecondOption(data) {
+                data.then(response => {
+                    const dataset = response[0]
+                    let sub_category = []
+                    dataset.sub_category.map(el => {
+                        sub_category.push(el.name)
+                    })
+                    console.log(dataset)
+                    this.secondLegend = {
+                        area : dataset.area.name,
+                        title: dataset.stats_code.table_name,
+                        unit: dataset.unit,
+                        sub_category: sub_category,
+
+                    }
+                })
+            },
             getRandomStat() {
+                // APIリクエストし、ランダム
                 // promiseのままreturnしている点に注意
                 return this.$store.dispatch(
                     'chart/getChart',
                 )
-            },
-            getDataFirst () {
-                const NUM = 10
-                this.chartdataFirst = {
-                    labels: ['jan 1', 'jan 2', 'jan 3', 'jan 4', 'jan 5', 'jan 6', 'jan 7', 'jan 8', 'jan 9', 'jan 10'],
-                    datasets: [
-                        {
-                            // data: [1,2,3,4,5,6,7,8,9,10],
-                            data: this.getRandomList(NUM),
-                            backgroundColor: '#f87979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            yAxisID: 'first-y-axis'
-                        }, 
-                    ]
-                }
-            },
-            getDataSecond () {
-                const NUM = 10
-                this.chartdataSecond = {
-                    labels: ['feb 1', 'feb 2', 'feb 3', 'feb 4', 'feb 5', 'feb 6', 'feb 7', 'feb 8', 'feb 9', 'feb 10'],
-                    datasets: [
-                        {
-                            // data: [1,2,3,4,5,6,7,8,9,10],
-                            data: this.getRandomList(NUM),
-                            backgroundColor: '#227979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            yAxisID: 'first-y-axis'
-                        }, 
-                    ]
-                }
             },
             getDataMix () {
                 const NUM = 10
@@ -378,14 +413,12 @@
         async mounted () {
             this.loaded = false
             try {
-                const firstData = this.getRandomStat()
-                this.setStatData(firstData)
+                this.setFirstChart()
+                this.setSecondChart()
 
-                const secondData = this.getRandomStat()
-                this.setSecondStatData(secondData)
                 // this.getDataFirst()
                 // this.getDataMix()
-                this.getDataSecond()
+                // this.getDataSecond()
                     
                 // this.chartData = datalist
                 this.loaded = true
