@@ -2,12 +2,12 @@
     <div id="chart">
         <b-container>
             
-            <b-button @click="getDataMix()">更新</b-button>
+            <!-- <b-button @click="getDataMix()">更新</b-button>
             <chart
                 v-if="loaded"
                 :chart-data="chartdataMix"
                 :options="optionsMix"
-            ></chart>
+            ></chart> -->
 
             <b-button @click="getDataFirst()">更新</b-button>
             <chart
@@ -39,8 +39,14 @@
             // BarChart
         },
         data: () => ({
-            chartdataFirst: null,
-            chartdataSecond: null,
+            chartdataFirst: {
+                    labels: [],
+                    datasets: [],
+            },
+            chartdataSecond: {
+                    labels: [],
+                    datasets: [],
+            },
             optionsFirst: {
                 title: {
                     display: true,
