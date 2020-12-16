@@ -1,38 +1,61 @@
 <template>
     <div id="chart">
         <b-container>
-            
-            <!-- <b-button @click="setMixChart()">更新</b-button> -->
+            <b-card>
+            <b-row>
+                <b-col>
+                    <div>{{ this.firstLegend.title }}</div>
+                    <div>地域 : {{ this.firstLegend.area}}</div>
+                    <div>単位 : {{ this.firstLegend.unit}}</div>
+                    <div>{{ this.firstLegend.sub_category}}</div>
+                </b-col>
+                <b-col>
+                    <div>{{ this.secondLegend.title }}</div>
+                    <div>地域 : {{ this.secondLegend.area}}</div>
+                    <div>単位 : {{ this.secondLegend.unit}}</div>
+                    <div>{{ this.secondLegend.sub_category}}</div>
+                </b-col>
+            </b-row>
             <chart
                 v-if="loaded"
                 :chart-data="chartDataMix"
                 :options="mixOption"
             ></chart>
-            <b-card>
-                <b-button @click="setFirstChart()">更新</b-button>
-                <h3>{{ this.firstLegend.title }}</h3>
-                <div>地域 : {{ this.firstLegend.area}}</div>
-                <div>単位 : {{ this.firstLegend.unit}}</div>
-                <div>{{ this.firstLegend.sub_category}}</div>
+            </b-card>
 
-                <chart
-                    v-if="loaded"
-                    :chart-data="chartDataFirst"
-                    :options="firstOption"
-                ></chart>
-            </b-card>
-            <b-card>
-                <b-button @click="setSecondChart()">更新</b-button>
-                <h3>{{ this.secondLegend.title }}</h3>
-                <div>地域 : {{ this.secondLegend.area}}</div>
-                <div>単位 : {{ this.secondLegend.unit}}</div>
-                <div>{{ this.secondLegend.sub_category}}</div>
-                <chart
-                    v-if="loaded"
-                    :chart-data="chartDataSecond"
-                    :options="SecondOption"
-                ></chart>
-            </b-card>
+            <b-row>
+                <b-col md="6">
+                    <b-card>
+                        <h3>{{ this.firstLegend.title }}</h3>
+                        <div>地域 : {{ this.firstLegend.area}}</div>
+                        <div>単位 : {{ this.firstLegend.unit}}</div>
+                        <div>{{ this.firstLegend.sub_category}}</div>
+
+                        <chart
+                            v-if="loaded"
+                            :chart-data="chartDataFirst"
+                            :options="firstOption"
+                        ></chart>
+
+                        <b-button @click="setFirstChart()">更新</b-button>
+                    </b-card>
+                </b-col>
+                <b-col md="6">
+                    <b-card>
+                        <h3>{{ this.secondLegend.title }}</h3>
+                        <div>地域 : {{ this.secondLegend.area}}</div>
+                        <div>単位 : {{ this.secondLegend.unit}}</div>
+                        <div>{{ this.secondLegend.sub_category}}</div>
+                        <chart
+                            v-if="loaded"
+                            :chart-data="chartDataSecond"
+                            :options="SecondOption"
+                        ></chart>
+
+                        <b-button @click="setSecondChart()">更新</b-button>
+                    </b-card>
+                </b-col>
+            </b-row>
 
         </b-container>
     </div>
@@ -185,7 +208,10 @@
                 sub_category: [],
 
             },
-
+            mixLegend: {
+                first: {},
+                second: {},
+            },
             loaded: false,
 
             chartDataMix: {
@@ -288,7 +314,7 @@
                     
                     datasets: [
                         {
-                            label: 'Bar Chart',
+                            label: '三重県 人口 総数',
                             type: 'bar',
                             // borderColor: '#f87979',
                             data: firstDataList.dataList,
@@ -411,37 +437,6 @@
                 return this.$store.dispatch(
                     'chart/getChart',
                 )
-            },
-            getDataMix () {
-                const NUM = 10
-                this.chartDataMix = {
-                    labels: ['Sep 1', 'Sep 2', 'Sep 3', 'Sep 4', 'Sep 5', 'Sep 6', 'Sep 7', 'Sep 8', 'Sep 9', 'Sep 10'],
-                    datasets: [
-                        {
-                            label: 'Bar Chart',
-                            type: 'bar',
-                            // borderColor: '#f87979',
-                            data: [1,2,3,4,5,6,7,8,9,10],
-                            backgroundColor: '#f87979',
-                            // backgroundColor: '#f87979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            // data: this.getRandomList(NUM)
-                            yAxisID: 'first-y-axis'
-                        }, 
-                        {
-                            label: 'Line Chart',
-                            type: 'line',
-                            // lineTension: 0,
-                            borderColor: '#2f8888',
-                            // backgroundColor: '#2f8888',
-                            backgroundColor: '#0000',
-                            data: this.getRandomList(NUM),
-                            yAxisID: 'second-y-axis'
-                        }
-                    ]
-                }
             },
         },
         mounted () {
