@@ -2,12 +2,12 @@
     <div id="chart">
         <b-container>
             
-            <!-- <b-button @click="getDataMix()">更新</b-button>
+            <!-- <b-button @click="setMixChart()">更新</b-button> -->
             <chart
                 v-if="loaded"
-                :chart-data="chartdataMix"
-                :options="optionsMix"
-            ></chart> -->
+                :chart-data="chartDataMix"
+                :options="mixOption"
+            ></chart>
             <b-card>
                 <b-button @click="setFirstChart()">更新</b-button>
                 <h3>{{ this.firstLegend.title }}</h3>
@@ -22,16 +22,16 @@
                 ></chart>
             </b-card>
             <b-card>
-            <b-button @click="setSecondChart()">更新</b-button>
-            <h3>{{ this.secondLegend.title }}</h3>
-            <div>地域 : {{ this.secondLegend.area}}</div>
-            <div>単位 : {{ this.secondLegend.unit}}</div>
-            <div>{{ this.secondLegend.sub_category}}</div>
-            <chart
-                v-if="loaded"
-                :chart-data="chartDataSecond"
-                :options="SecondOption"
-            ></chart>
+                <b-button @click="setSecondChart()">更新</b-button>
+                <h3>{{ this.secondLegend.title }}</h3>
+                <div>地域 : {{ this.secondLegend.area}}</div>
+                <div>単位 : {{ this.secondLegend.unit}}</div>
+                <div>{{ this.secondLegend.sub_category}}</div>
+                <chart
+                    v-if="loaded"
+                    :chart-data="chartDataSecond"
+                    :options="SecondOption"
+                ></chart>
             </b-card>
 
         </b-container>
@@ -188,11 +188,14 @@
 
             loaded: false,
 
-            chartdataMix: null,
-            optionsMix: {
+            chartDataMix: {
+                    labels: [],
+                    datasets: [{},{}],
+            },
+            mixOption: {
                 title: {
                     display: true,
-                    text: '気温(8月1日~8月10日)'
+                    text: ''
                 },
                 hover: {
                     intersect: false,
@@ -209,11 +212,12 @@
                             type: 'time',
                             
                             time: {
-                                unit: 'day',
+                                unit: 'year',
                                 displayFormats: {
-                                    day: 'M[月]D[日]'
+                                    // year: 'YYYY[年]MM[月]DD[日]'
+                                    year: 'YYYY[年]'
                                 },
-                                parser: 'MMM D'
+                                parser: 'YYYY'
                             },
                             gridLines: {
                                 drawOnChartArea: false, 
@@ -232,10 +236,10 @@
                             position: 'left',
                             ticks: {
                                 suggestedMin: 0,
-                                suggestedMax: 60,
-                                stepSize: 10,
+                                // suggestedMax: 60,
+                                // stepSize: 10,
                                 callback: (value) => {
-                                    return value + '万円'
+                                    return value + '人'
                                 }
                             },
 
@@ -245,10 +249,10 @@
                             position: 'right',
                             ticks: {
                                 suggestedMin: 0,
-                                suggestedMax: 60,
-                                stepSize: 10,
+                                // suggestedMax: 60,
+                                // stepSize: 10,
                                 callback: (value) => {
-                                    return value + '万人'
+                                    return value + '人'
                                 }
                             },
 
@@ -262,65 +266,112 @@
         methods: {
             setFirstChart() {
                 const firstData = this.getRandomStat()
-                this.setFirstStatData(firstData)
+                const firstDataSet = this.setFirstStatData(firstData)
                 this.setFirstOption(firstData)
+                return firstDataSet
             },
             setSecondChart() {
                 const secondData = this.getRandomStat()
-                this.setSecondStatData(secondData)
+                const secondDataSet = this.setSecondStatData(secondData)
                 this.setSecondOption(secondData)
+                return secondDataSet
+            },
+            async setMixChart(firstDataSet, secondDataSet) {
+                const firstDataList = await firstDataSet.then(res => {
+                    return res
+                })
+                const secondDataList = await secondDataSet.then(res => {
+                    return res
+                })
+                this.chartDataMix = {
+                    labels: firstDataList.labelList,
+                    
+                    datasets: [
+                        {
+                            label: 'Bar Chart',
+                            type: 'bar',
+                            // borderColor: '#f87979',
+                            data: firstDataList.dataList,
+                            backgroundColor: '#f87979',
+                            // backgroundColor: '#f87979',
+                            
+                            borderWidth: 0,
+                            borderColor: 'rgba(255,255,255,0)',
+                            // data: this.getRandomList(NUM)
+                            yAxisID: 'first-y-axis'
+                        }, 
+                        {
+                            label: 'Line Chart',
+                            type: 'line',
+                            // lineTension: 0,
+                            borderColor: '#2f8888',
+                            // backgroundColor: '#2f8888',
+                            backgroundColor: '#0000',
+                            data: secondDataList.dataList,
+                            yAxisID: 'second-y-axis'
+                        },
+                        
+                        
+                    ]
+                }
             },
             setFirstStatData(data) {
                 let labelList = []
                 let dataList = []
-                data.then(response => {
+                const dataset = data.then(response => {
                     response.forEach(el => {
                         let formattedTime = (el.time.date).slice(0,4)
                         labelList.push(formattedTime)
                         dataList.push(el.value)
-                        })
-                    
-                this.chartDataFirst = {
-                    labels: labelList,
-                    datasets: [
-                        {
-                            // data: [1,2,3,4,5,6,7,8,9,10],
-                            data: dataList,
-                            backgroundColor: '#f87979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            yAxisID: 'first-y-axis'
-                        }, 
-                    ]
-                }
+                    })
+                    const dataset =  {
+                        labels: labelList,
+                        datasets: [
+                            {
+                                label: 'Bar Chart',
+                                type: 'bar',
+                                data: dataList,
+                                backgroundColor: '#f87979',
+                                
+                                borderWidth: 0,
+                                borderColor: 'rgba(255,255,255,0)',
+                                yAxisID: 'first-y-axis'
+                            }, 
+                        ]
+                    }
+                    this.chartDataFirst = dataset
+                    return {labelList, dataList}
                 })
+                return dataset
             },
             setSecondStatData(data) {
                 let labelList = []
                 let dataList = []
-                data.then(response => {
+                const dataset = data.then(response => {
                     response.forEach(el => {
                         let formattedTime = (el.time.date).slice(0,4)
                         labelList.push(formattedTime)
                         dataList.push(el.value)
-                        })
-                    
-                this.chartDataSecond = {
-                    labels: labelList,
-                    datasets: [
-                        {
-                            // data: [1,2,3,4,5,6,7,8,9,10],
-                            data: dataList,
-                            backgroundColor: '#f87979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            yAxisID: 'first-y-axis'
-                        }, 
-                    ]
-                }
+                    })
+                    const dataset = {
+                        labels: labelList,
+                        datasets: [
+                            {
+                                label: 'Line Chart',
+                                type: 'bar',
+                                data: dataList,
+                                backgroundColor: '#2f8888',
+                                
+                                borderWidth: 0,
+                                borderColor: 'rgba(255,255,255,0)',
+                                yAxisID: 'first-y-axis'
+                            }, 
+                        ]
+                    }
+                    this.chartDataSecond = dataset
+                    return {labelList, dataList}
                 })
+                return dataset
             },
             setFirstOption(data) {
                 data.then(response => {
@@ -329,7 +380,6 @@
                     dataset.sub_category.map(el => {
                         sub_category.push(el.name)
                     })
-                    console.log(dataset)
                     this.firstLegend = {
                         area : dataset.area.name,
                         title: dataset.stats_code.table_name,
@@ -346,7 +396,6 @@
                     dataset.sub_category.map(el => {
                         sub_category.push(el.name)
                     })
-                    console.log(dataset)
                     this.secondLegend = {
                         area : dataset.area.name,
                         title: dataset.stats_code.table_name,
@@ -357,7 +406,7 @@
                 })
             },
             getRandomStat() {
-                // APIリクエストし、ランダム
+                // ランダムデータを取得
                 // promiseのままreturnしている点に注意
                 return this.$store.dispatch(
                     'chart/getChart',
@@ -365,7 +414,7 @@
             },
             getDataMix () {
                 const NUM = 10
-                this.chartdataMix = {
+                this.chartDataMix = {
                     labels: ['Sep 1', 'Sep 2', 'Sep 3', 'Sep 4', 'Sep 5', 'Sep 6', 'Sep 7', 'Sep 8', 'Sep 9', 'Sep 10'],
                     datasets: [
                         {
@@ -393,34 +442,14 @@
                         }
                     ]
                 }
-                // this.options = {
-                //     responsive: true,
-                //     maintainAspectRatio: false
-                // }
-
             },
-            getRandomList (num) {
-                let res = []
-                for (let i=0; i<num; i++) {
-                    res.push(this.getRandomInt())
-                }
-                return res
-            },
-            getRandomInt () {
-                return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-            }
         },
-        async mounted () {
+        mounted () {
             this.loaded = false
             try {
-                this.setFirstChart()
-                this.setSecondChart()
-
-                // this.getDataFirst()
-                // this.getDataMix()
-                // this.getDataSecond()
-                    
-                // this.chartData = datalist
+                const firstDataSet = this.setFirstChart()
+                const secondDataSet = this.setSecondChart()
+                this.setMixChart(firstDataSet, secondDataSet)
                 this.loaded = true
             } catch (e) {
                 console.error(e)
