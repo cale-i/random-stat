@@ -17,7 +17,7 @@
                 </b-col>
             </b-row>
             <chart
-                v-if="loaded"
+                v-if="loaded.mixChart"
                 :chart-data="chartDataMix"
                 :options="mixOption"
             ></chart>
@@ -32,12 +32,12 @@
                         <div>{{ this.firstLegend.sub_category}}</div>
 
                         <chart
-                            v-if="loaded"
+                            v-if="loaded.firstChart"
                             :chart-data="chartDataFirst"
                             :options="firstOption"
                         ></chart>
 
-                        <b-button @click="setFirstChart()">更新</b-button>
+                        <b-button @click="reloadChart('first')">更新</b-button>
                     </b-card>
                 </b-col>
                 <b-col md="6">
@@ -47,12 +47,12 @@
                         <div>単位 : {{ this.secondLegend.unit}}</div>
                         <div>{{ this.secondLegend.sub_category}}</div>
                         <chart
-                            v-if="loaded"
+                            v-if="loaded.secondChart"
                             :chart-data="chartDataSecond"
                             :options="SecondOption"
                         ></chart>
 
-                        <b-button @click="setSecondChart()">更新</b-button>
+                        <b-button @click="reloadChart('second')">更新</b-button>
                     </b-card>
                 </b-col>
             </b-row>
@@ -176,7 +176,7 @@
                     yAxes: [
                         {
                             // bar chart
-                            id: 'first-y-axis',
+                            id: 'second-y-axis',
                             position: 'left',
                             ticks: {
                                 suggestedMin: 0,
@@ -212,7 +212,11 @@
                 first: {},
                 second: {},
             },
-            loaded: false,
+            loaded: {
+                mixChart: false,
+                firstChart: false,
+                secondChart: false,
+            },
 
             chartDataMix: {
                     labels: [],
@@ -294,52 +298,56 @@
                 const firstData = this.getRandomStat()
                 const firstDataSet = this.setFirstStatData(firstData)
                 this.setFirstOption(firstData)
+                this.loaded.firstChart = true
+
                 return firstDataSet
             },
             setSecondChart() {
                 const secondData = this.getRandomStat()
                 const secondDataSet = this.setSecondStatData(secondData)
                 this.setSecondOption(secondData)
+                this.loaded.secondChart = true
+
                 return secondDataSet
             },
-            async setMixChart(firstDataSet, secondDataSet) {
-                const firstDataList = await firstDataSet.then(res => {
-                    return res
-                })
-                const secondDataList = await secondDataSet.then(res => {
-                    return res
-                })
+            async setMixChart(firstData, secondData) {
+                const firstDataSet = await firstData.then(res => res)
+                const secondDataSet = await secondData.then(res => res)
+
                 this.chartDataMix = {
-                    labels: firstDataList.labelList,
-                    
+                    labels: firstDataSet.labels,
                     datasets: [
-                        {
-                            label: '三重県 人口 総数',
-                            type: 'bar',
-                            // borderColor: '#f87979',
-                            data: firstDataList.dataList,
-                            backgroundColor: '#f87979',
-                            // backgroundColor: '#f87979',
-                            
-                            borderWidth: 0,
-                            borderColor: 'rgba(255,255,255,0)',
-                            // data: this.getRandomList(NUM)
-                            yAxisID: 'first-y-axis'
-                        }, 
-                        {
-                            label: 'Line Chart',
-                            type: 'line',
-                            // lineTension: 0,
-                            borderColor: '#2f8888',
-                            // backgroundColor: '#2f8888',
-                            backgroundColor: '#0000',
-                            data: secondDataList.dataList,
-                            yAxisID: 'second-y-axis'
-                        },
-                        
-                        
+                        firstDataSet.datasets[0],
+                        secondDataSet.datasets[0],
                     ]
                 }
+                this.loaded.mixChart = true
+                
+                    // datasets: [
+                    //     {
+                    //         label: '三重県 人口 総数',
+                    //         type: 'bar',
+                    //         // borderColor: '#f87979',
+                    //         data: firstDataSet.dataList,
+                    //         backgroundColor: '#f87979',
+                    //         // backgroundColor: '#f87979',
+                            
+                    //         borderWidth: 0,
+                    //         borderColor: 'rgba(255,255,255,0)',
+                    //         // data: this.getRandomList(NUM)
+                    //         yAxisID: 'first-y-axis'
+                    //     }, 
+                    //     {
+                    //         label: 'Line Chart',
+                    //         type: 'line',
+                    //         // lineTension: 0,
+                    //         borderColor: '#2f8888',
+                    //         // backgroundColor: '#2f8888',
+                    //         backgroundColor: '#0000',
+                    //         data: secondDataSet.dataList,
+                    //         yAxisID: 'second-y-axis'
+                    //     },
+                    // ]
             },
             setFirstStatData(data) {
                 let labelList = []
@@ -366,7 +374,7 @@
                         ]
                     }
                     this.chartDataFirst = dataset
-                    return {labelList, dataList}
+                    return dataset
                 })
                 return dataset
             },
@@ -390,12 +398,12 @@
                                 
                                 borderWidth: 0,
                                 borderColor: 'rgba(255,255,255,0)',
-                                yAxisID: 'first-y-axis'
+                                yAxisID: 'second-y-axis'
                             }, 
                         ]
                     }
                     this.chartDataSecond = dataset
-                    return {labelList, dataList}
+                    return dataset
                 })
                 return dataset
             },
@@ -431,6 +439,29 @@
                     }
                 })
             },
+            async reloadChart(target) {
+                this.loaded.mixChart = false
+
+                try {
+
+                    // 引数でターゲットとなるchartを指定
+                    if (target == 'first') {
+                        // first chart
+                        const firstDataSet = await this.setFirstChart()
+                        this.chartDataMix.datasets[0] = firstDataSet.datasets[0]
+                    } else if (target == 'second') {
+                        // second chart
+                        const secondDataSet = await this.setSecondChart()
+                        this.chartDataMix.datasets[1] = secondDataSet.datasets[0]
+
+                    }
+
+                    this.loaded.mixChart = true
+                    // this.setMixChart(firstDataSet, secondDataSet)
+                } catch (e) {
+                    console.error(e)
+                }
+            },
             getRandomStat() {
                 // ランダムデータを取得
                 // promiseのままreturnしている点に注意
@@ -440,12 +471,11 @@
             },
         },
         mounted () {
-            this.loaded = false
+            // this.loaded = false
             try {
                 const firstDataSet = this.setFirstChart()
                 const secondDataSet = this.setSecondChart()
                 this.setMixChart(firstDataSet, secondDataSet)
-                this.loaded = true
             } catch (e) {
                 console.error(e)
             }
