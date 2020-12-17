@@ -2,37 +2,47 @@
     <div id="chart">
         <b-container>
             <b-card>
-            <b-row>
-                <b-col>
-                    <div>{{ this.firstLegend.title }}</div>
-                    <div>地域 : {{ this.firstLegend.area}}</div>
-                    <div>単位 : {{ this.firstLegend.unit}}</div>
-                    <div>{{ this.firstLegend.sub_category}}</div>
-                </b-col>
-                <b-col>
-                    <div>{{ this.secondLegend.title }}</div>
-                    <div>地域 : {{ this.secondLegend.area}}</div>
-                    <div>単位 : {{ this.secondLegend.unit}}</div>
-                    <div>{{ this.secondLegend.sub_category}}</div>
-                </b-col>
-            </b-row>
-            <chart
-                v-if="loaded.mixChart"
-                :chart-data="chartDataMix"
-                :options="mixOption"
-            ></chart>
+                <b-row>
+                    <b-col md="6">
+                        <div>{{ this.firstLegend.title }}</div>
+                        <div>地域 : {{ this.firstLegend.area }}</div>
+                        <div>単位 : {{ this.firstLegend.unit }}</div>
+                        <div>{{ this.firstLegend.sub_category }}</div>
+                    </b-col>
+
+                    <b-col md="6">
+                            <div>{{ this.secondLegend.title }}</div>
+                            <div>地域 : {{ this.secondLegend.area }}</div>
+                            <div>単位 : {{ this.secondLegend.unit }}</div>
+                            <div>{{ this.secondLegend.sub_category }}</div>
+                    </b-col>
+                </b-row>
+
+                <template v-if="loaded.mixChart">
+                    <chart
+                        v-if="loaded.mixChart"
+                        :chart-data="chartDataMix"
+                        :options="mixOption"
+                    ></chart>
+                </template>
+                <template v-if="!loaded.mixChart">
+                    <b-spinner
+                        variant='success'
+                        label="Text Centered"
+                    ></b-spinner>
+                </template>
             </b-card>
 
             <b-row>
                 <b-col md="6">
                     <b-card>
                         <h3>{{ this.firstLegend.title }}</h3>
-                        <div>地域 : {{ this.firstLegend.area}}</div>
-                        <div>単位 : {{ this.firstLegend.unit}}</div>
-                        <div>{{ this.firstLegend.sub_category}}</div>
+                        <div>地域 : {{ this.firstLegend.area }}</div>
+                        <div>単位 : {{ this.firstLegend.unit }}</div>
+                        <div>{{ this.firstLegend.sub_category }}</div>
 
                         <chart
-                            v-if="loaded.firstChart"
+                            v-if="loaded.first"
                             :chart-data="chartDataFirst"
                             :options="firstOption"
                         ></chart>
@@ -47,7 +57,7 @@
                         <div>単位 : {{ this.secondLegend.unit}}</div>
                         <div>{{ this.secondLegend.sub_category}}</div>
                         <chart
-                            v-if="loaded.secondChart"
+                            v-if="loaded.second"
                             :chart-data="chartDataSecond"
                             :options="SecondOption"
                         ></chart>
@@ -294,21 +304,12 @@
                 }
         }),
         methods: {
-            setFirstChart() {
-                const firstData = this.getRandomStat()
-                const firstDataSet = this.setFirstStatData(firstData)
-                this.setFirstOption(firstData)
-                this.loaded.firstChart = true
-
-                return firstDataSet
-            },
-            setSecondChart() {
-                const secondData = this.getRandomStat()
-                const secondDataSet = this.setSecondStatData(secondData)
-                this.setSecondOption(secondData)
-                this.loaded.secondChart = true
-
-                return secondDataSet
+            setChart(target) {
+                const statData = this.getRandomStat()
+                const dataSet = this.setStatData(statData, target)
+                this.setOption(statData, target)
+                this.loaded[target] = true
+                return dataSet
             },
             async setMixChart(firstData, secondData) {
                 const firstDataSet = await firstData.then(res => res)
@@ -321,6 +322,7 @@
                         secondDataSet.datasets[0],
                     ]
                 }
+                this.convertLineChart()
                 this.loaded.mixChart = true
                 
                     // datasets: [
@@ -349,115 +351,101 @@
                     //     },
                     // ]
             },
-            setFirstStatData(data) {
-                let labelList = []
-                let dataList = []
+            setStatData(data, target) {
                 const dataset = data.then(response => {
-                    response.forEach(el => {
+                    let labelList = []
+                    let dataList = []
+                    response.map(el => {
                         let formattedTime = (el.time.date).slice(0,4)
                         labelList.push(formattedTime)
                         dataList.push(el.value)
                     })
-                    const dataset =  {
-                        labels: labelList,
-                        datasets: [
-                            {
-                                label: 'Bar Chart',
-                                type: 'bar',
-                                data: dataList,
-                                backgroundColor: '#f87979',
-                                
-                                borderWidth: 0,
-                                borderColor: 'rgba(255,255,255,0)',
-                                yAxisID: 'first-y-axis'
-                            }, 
-                        ]
-                    }
-                    this.chartDataFirst = dataset
-                    return dataset
-                })
-                return dataset
-            },
-            setSecondStatData(data) {
-                let labelList = []
-                let dataList = []
-                const dataset = data.then(response => {
-                    response.forEach(el => {
-                        let formattedTime = (el.time.date).slice(0,4)
-                        labelList.push(formattedTime)
-                        dataList.push(el.value)
+
+                    // sub_categoryからlabelを取得
+                    let subCategory = []
+                    response[0].sub_category.map(el => {
+                        subCategory.push(el.name)
                     })
-                    const dataset = {
-                        labels: labelList,
-                        datasets: [
-                            {
-                                label: 'Line Chart',
-                                type: 'bar',
-                                data: dataList,
-                                backgroundColor: '#2f8888',
-                                
-                                borderWidth: 0,
-                                borderColor: 'rgba(255,255,255,0)',
-                                yAxisID: 'second-y-axis'
-                            }, 
-                        ]
+                    
+                    let dataset
+                    if (target === 'first') {
+                        dataset =  {
+                            labels: labelList,
+                            datasets: [
+                                {
+                                    label: 'test',
+                                    type: 'bar',
+                                    data: dataList,
+                                    backgroundColor: '#f87979',
+                                    
+                                    borderWidth: 0,
+                                    borderColor: 'rgba(255,255,255,0)',
+                                    yAxisID: 'first-y-axis'
+                                }, 
+                            ]
+                        }
+                        this.chartDataFirst = dataset
+
+                    } else if (target === 'second') {
+                        dataset = {
+                            labels: labelList,
+                            datasets: [
+                                {
+                                    label: 'test',
+                                    type: 'bar',
+                                    data: dataList,
+                                    backgroundColor: '#2f8888',
+                                    
+                                    borderWidth: 0,
+                                    borderColor: 'rgba(255,255,255,0)',
+                                    yAxisID: 'second-y-axis'
+                                }, 
+                            ]
+                        }
+                        this.chartDataSecond = dataset
+
                     }
-                    this.chartDataSecond = dataset
                     return dataset
                 })
                 return dataset
             },
-            setFirstOption(data) {
+            setOption(data, target) {
                 data.then(response => {
                     const dataset = response[0]
                     let sub_category = []
                     dataset.sub_category.map(el => {
                         sub_category.push(el.name)
                     })
-                    this.firstLegend = {
-                        area : dataset.area.name,
-                        title: dataset.stats_code.table_name,
-                        unit: dataset.unit,
-                        sub_category: sub_category,
-
-                    }
-                })
-            },
-            setSecondOption(data) {
-                data.then(response => {
-                    const dataset = response[0]
-                    let sub_category = []
-                    dataset.sub_category.map(el => {
-                        sub_category.push(el.name)
-                    })
-                    this.secondLegend = {
-                        area : dataset.area.name,
-                        title: dataset.stats_code.table_name,
-                        unit: dataset.unit,
-                        sub_category: sub_category,
-
+                    const legend = {
+                            area : dataset.area.name,
+                            title: dataset.stats_code.table_name,
+                            unit: dataset.unit,
+                            sub_category: sub_category,
+                        }
+                    if (target ==='first') {
+                        this.firstLegend = legend
+                    } else if (target ==='second') {
+                        this.secondLegend = legend
                     }
                 })
             },
             async reloadChart(target) {
                 this.loaded.mixChart = false
-
                 try {
 
                     // 引数でターゲットとなるchartを指定
-                    if (target == 'first') {
-                        // first chart
-                        const firstDataSet = await this.setFirstChart()
-                        this.chartDataMix.datasets[0] = firstDataSet.datasets[0]
-                    } else if (target == 'second') {
-                        // second chart
-                        const secondDataSet = await this.setSecondChart()
-                        this.chartDataMix.datasets[1] = secondDataSet.datasets[0]
+                    const dataSet = await this.setChart(target)
 
+                    if (target == 'first') {
+                        this.chartDataMix.datasets[0] = dataSet.datasets[0]
+                    } else if (target == 'second') {
+                        this.chartDataMix.datasets[1] = dataSet.datasets[0]
+
+                        // bar chartを line chartに変更
+                        this.convertLineChart()
                     }
 
                     this.loaded.mixChart = true
-                    // this.setMixChart(firstDataSet, secondDataSet)
                 } catch (e) {
                     console.error(e)
                 }
@@ -469,12 +457,19 @@
                     'chart/getChart',
                 )
             },
+            convertLineChart() {
+                this.chartDataMix.datasets[1].type = 'line'
+                this.chartDataMix.datasets[1].backgroundColor = '#0000'
+                this.chartDataMix.datasets[1].borderColor = '#2f8888'
+            },
+
         },
         mounted () {
             // this.loaded = false
             try {
-                const firstDataSet = this.setFirstChart()
-                const secondDataSet = this.setSecondChart()
+
+                const firstDataSet = this.setChart('first')
+                const secondDataSet = this.setChart('second')
                 this.setMixChart(firstDataSet, secondDataSet)
             } catch (e) {
                 console.error(e)
