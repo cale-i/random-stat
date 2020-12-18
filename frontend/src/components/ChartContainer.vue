@@ -4,13 +4,13 @@
             <b-card>
                 <b-row>
                     <b-col md="6">
-                        <div>{{ this.firstLegend.title }}</div>
-                        <div>{{ this.firstLegend.sub_category }}</div>
+                        <div>{{ this.legends.first.title }}</div>
+                        <div>{{ this.legends.first.sub_category }}</div>
                     </b-col>
 
                     <b-col md="6">
-                            <div>{{ this.secondLegend.title }}</div>
-                            <div>{{ this.secondLegend.sub_category }}</div>
+                            <div>{{ this.legends.second.title }}</div>
+                            <div>{{ this.legends.second.sub_category }}</div>
                     </b-col>
                 </b-row>
 
@@ -32,13 +32,12 @@
             <b-row>
                 <b-col md="6">
                     <b-card>
-                        <h3>{{ this.firstLegend.title }}</h3>
-                        <div>{{ this.firstLegend.sub_category }}</div>
+                        <div>{{ this.legends.first.sub_category }}</div>
 
                         <chart
                             v-if="loaded.first"
                             :chart-data="chartData.first"
-                            :options="firstOption"
+                            :options="options.first"
                         ></chart>
 
                         <b-button @click="reloadChart('first')">更新</b-button>
@@ -46,12 +45,11 @@
                 </b-col>
                 <b-col md="6">
                     <b-card>
-                        <h3>{{ this.secondLegend.title }}</h3>
-                        <div>{{ this.secondLegend.sub_category}}</div>
+                        <div>{{ this.legends.second.sub_category}}</div>
                         <chart
                             v-if="loaded.second"
                             :chart-data="chartData.second"
-                            :options="SecondOption"
+                            :options="options.second"
                         ></chart>
 
                         <b-button @click="reloadChart('second')">更新</b-button>
@@ -84,16 +82,9 @@
                     datasets: [],
                 },
             },
-            chartDataFirst: {
-                    labels: [],
-                    datasets: [],
-            },
-            chartDataSecond: {
-                    labels: [],
-                    datasets: [],
-            },
-            firstOption: {
-                title: {
+            options: {
+                first: {
+                    title: {
                     display: true,
                     text: ''
                 },
@@ -139,7 +130,7 @@
                                 // suggestedMax: 60,
                                 // stepSize: 10,
                                 callback: (value) => {
-                                    return value
+                                    return `${value}`
                                 }
                             },
                         }
@@ -147,78 +138,84 @@
                 },
                 responsive: true,
                 maintainAspectRatio: false,
-            },
-            SecondOption: {
-                title: {
-                    display: true,
-                    text: ''
+
                 },
-                hover: {
-                    intersect: false,
-                },
-                elements: {
-                    line: {
-                        tension: 0, // ベジェ曲線を無効にする
+                second: {
+                    title: {
+                        display: true,
+                        text: ''
                     },
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            // グリッドラインを消す
-                            type: 'time',
-                            
-                            time: {
-                                unit: 'year',
-                                displayFormats: {
-                                    // year: 'YYYY[年]MM[月]DD[日]'
-                                    year: 'YYYY[年]'
-                                },
-                                parser: 'YYYY'
-                            },
-                            gridLines: {
-                                drawOnChartArea: false, 
-                            },
-                            // ticks: {
-                            //     callback: (value) => {
-                            //         return dayjs(value).format('D')
-                            //     }
-                            // }
+                    hover: {
+                        intersect: false,
+                    },
+                    elements: {
+                        line: {
+                            tension: 0, // ベジェ曲線を無効にする
                         },
-                    ],
-                    yAxes: [
-                        {
-                            // bar chart
-                            id: 'second-y-axis',
-                            position: 'left',
-                            ticks: {
-                                suggestedMin: 0,
-                                // suggestedMax: 60,
-                                // stepSize: 10,
-                                callback: (value) => {
-                                    return value + '人'
-                                }
+                    },
+                    scales: {
+                        xAxes: [
+                            {
+                                // グリッドラインを消す
+                                type: 'time',
+                                
+                                time: {
+                                    unit: 'year',
+                                    displayFormats: {
+                                        // year: 'YYYY[年]MM[月]DD[日]'
+                                        year: 'YYYY[年]'
+                                    },
+                                    parser: 'YYYY'
+                                },
+                                gridLines: {
+                                    drawOnChartArea: false, 
+                                },
+                                // ticks: {
+                                //     callback: (value) => {
+                                //         return dayjs(value).format('D')
+                                //     }
+                                // }
                             },
-                        }
-                    ]
+                        ],
+                        yAxes: [
+                            {
+                                // bar chart
+                                id: 'second-y-axis',
+                                position: 'left',
+                                ticks: {
+                                    suggestedMin: 0,
+                                    // suggestedMax: 60,
+                                    // stepSize: 10,
+                                    callback: (value) => {
+                                        return `${value}`
+                                    }
+                                },
+                            }
+                        ]
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
                 },
-                responsive: true,
-                maintainAspectRatio: false,
             },
-            firstLegend: {
-                title: '',
-                area: '',
-                unit: '',
-                stats_name: '',
-                sub_category: [],
-
+            legends: {
+                first: {
+                    title: '',
+                    area: '',
+                    unit: '',
+                    stats_name: '',
+                    sub_category: [],
+                },
+                second: {
+                    title: '',
+                    area: '',
+                    unit: '',
+                    stats_name: '',
+                    sub_category: [],
+                }
             },
-            secondLegend: {
-                title: '',
-                area: '',
-                unit: '',
-                stats_name: '',
-                sub_category: [],
-
+            unit: {
+                first: '',
+                second: '',
             },
             mixLegend: {
                 first: {},
@@ -229,7 +226,6 @@
                 firstChart: false,
                 secondChart: false,
             },
-
             chartDataMix: {
                     labels: [],
                     datasets: [{},{}],
@@ -410,11 +406,10 @@
                     const legend = {
                             title: dataset.stats_code.table_name,
                         }
-                    if (target ==='first') {
-                        this.firstLegend = legend
-                    } else if (target ==='second') {
-                        this.secondLegend = legend
-                    }
+                    this.legends[target] = legend
+
+                    // set title
+                    this.options[target].title.text = response[0].stats_code.table_name
                 })
             },
             async reloadChart(target) {
