@@ -72,7 +72,7 @@ const itemModule = {
 const chartModule = {
     namespaced: true,
     state: {
-        chartURL:'',
+        chartURL:'chronological/',
     },
     getters: {
         chartURL: state => state.chartURL,
