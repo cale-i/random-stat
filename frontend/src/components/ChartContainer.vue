@@ -37,7 +37,7 @@
                         <chart
                             v-if="loaded.first"
                             :chart-data="chartData.first"
-                            :options="options.first"
+                            :options="displayOption.first"
                         ></chart>
 
                         <b-button @click="reloadChart('first')">更新</b-button>
@@ -49,7 +49,7 @@
                         <chart
                             v-if="loaded.second"
                             :chart-data="chartData.second"
-                            :options="options.second"
+                            :options="displayOption.second"
                         ></chart>
 
                         <b-button @click="reloadChart('second')">更新</b-button>
@@ -85,117 +85,16 @@
             options: {
                 first: {
                     title: {
-                    display: true,
-                    text: ''
-                },
-                hover: {
-                    intersect: false,
-                },
-                elements: {
-                    line: {
-                        tension: 0, // ベジェ曲線を無効にする
+                        text: ''
                     },
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            // グリッドラインを消す
-                            type: 'time',
-                            
-                            time: {
-                                unit: 'year',
-                                displayFormats: {
-                                    // year: 'YYYY[年]MM[月]DD[日]'
-                                    year: 'YYYY[年]'
-                                },
-                                parser: 'YYYY'
-                            },
-                            gridLines: {
-                                drawOnChartArea: false, 
-                            },
-                            // ticks: {
-                            //     callback: (value) => {
-                            //         return dayjs(value).format('D')
-                            //     }
-                            // }
-                        },
-                    ],
-                    yAxes: [
-                        {
-                            // bar chart
-                            id: 'first-y-axis',
-                            position: 'left',
-                            ticks: {
-                                suggestedMin: 0,
-                                // suggestedMax: 60,
-                                // stepSize: 10,
-                                callback: (value) => {
-                                    return `${value}`
-                                }
-                            },
-                        }
-                    ]
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-
+                    unit: '',
                 },
                 second: {
                     title: {
-                        display: true,
                         text: ''
                     },
-                    hover: {
-                        intersect: false,
-                    },
-                    elements: {
-                        line: {
-                            tension: 0, // ベジェ曲線を無効にする
-                        },
-                    },
-                    scales: {
-                        xAxes: [
-                            {
-                                // グリッドラインを消す
-                                type: 'time',
-                                
-                                time: {
-                                    unit: 'year',
-                                    displayFormats: {
-                                        // year: 'YYYY[年]MM[月]DD[日]'
-                                        year: 'YYYY[年]'
-                                    },
-                                    parser: 'YYYY'
-                                },
-                                gridLines: {
-                                    drawOnChartArea: false, 
-                                },
-                                // ticks: {
-                                //     callback: (value) => {
-                                //         return dayjs(value).format('D')
-                                //     }
-                                // }
-                            },
-                        ],
-                        yAxes: [
-                            {
-                                // bar chart
-                                id: 'second-y-axis',
-                                position: 'left',
-                                ticks: {
-                                    suggestedMin: 0,
-                                    // suggestedMax: 60,
-                                    // stepSize: 10,
-                                    callback: (value) => {
-                                        return `${value}`
-                                    }
-                                },
-                            }
-                        ]
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                },
+                    unit: '',
+                }
             },
             legends: {
                 first: {
@@ -212,10 +111,6 @@
                     stats_name: '',
                     sub_category: [],
                 }
-            },
-            unit: {
-                first: '',
-                second: '',
             },
             mixLegend: {
                 first: {},
@@ -301,6 +196,128 @@
                 maintainAspectRatio: false,
                 }
         }),
+        computed: {
+            displayOption() {
+                const self = this
+                // const unit = this.ounit
+                // const options = this.options
+                const options = {
+                    first: {
+                        title: {
+                            display: true,
+                            text: self.options.first.title.text
+                        },
+                        hover: {
+                            intersect: false,
+                        },
+                        elements: {
+                            line: {
+                                tension: 0, // ベジェ曲線を無効にする
+                            },
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    // グリッドラインを消す
+                                    type: 'time',
+                                    
+                                    time: {
+                                        unit: 'year',
+                                        displayFormats: {
+                                            // year: 'YYYY[年]MM[月]DD[日]'
+                                            year: 'YYYY[年]'
+                                        },
+                                        parser: 'YYYY'
+                                    },
+                                    gridLines: {
+                                        drawOnChartArea: false, 
+                                    },
+                                    // ticks: {
+                                    //     callback: (value) => {
+                                    //         return dayjs(value).format('D')
+                                    //     }
+                                    // }
+                                },
+                            ],
+                            yAxes: [
+                                {
+                                    // bar chart
+                                    id: 'first-y-axis',
+                                    position: 'left',
+                                    ticks: {
+                                        suggestedMin: 0,
+                                        // suggestedMax: 60,
+                                        // stepSize: 10,
+                                        callback: (value) => {
+                                            return `${value}${self.options.first.unit}`
+                                        }
+                                    },
+                                }
+                            ]
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    },
+                    second: {
+                        title: {
+                            display: true,
+                            text: self.options.second.title.text
+                        },
+                        hover: {
+                            intersect: false,
+                        },
+                        elements: {
+                            line: {
+                                tension: 0, // ベジェ曲線を無効にする
+                            },
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    // グリッドラインを消す
+                                    type: 'time',
+                                    
+                                    time: {
+                                        unit: 'year',
+                                        displayFormats: {
+                                            // year: 'YYYY[年]MM[月]DD[日]'
+                                            year: 'YYYY[年]'
+                                        },
+                                        parser: 'YYYY'
+                                    },
+                                    gridLines: {
+                                        drawOnChartArea: false, 
+                                    },
+                                    // ticks: {
+                                    //     callback: (value) => {
+                                    //         return dayjs(value).format('D')
+                                    //     }
+                                    // }
+                                },
+                            ],
+                            yAxes: [
+                                {
+                                    // bar chart
+                                    id: 'second-y-axis',
+                                    position: 'left',
+                                    ticks: {
+                                        suggestedMin: 0,
+                                        // suggestedMax: 60,
+                                        // stepSize: 10,
+                                        callback: (value) => {
+                                            return `${value}${self.options.second.unit}`
+                                        }
+                                    },
+                                }
+                            ]
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    },
+                }
+                return options
+            }
+        },
         methods: {
             setChart(target) {
                 const statData = this.getRandomStat()
@@ -313,6 +330,7 @@
                 const firstDataSet = await firstData.then(res => res)
                 const secondDataSet = await secondData.then(res => res)
 
+                            
                 this.chartDataMix = {
                     labels: firstDataSet.labels,
                     datasets: [
@@ -321,6 +339,7 @@
                     ]
                 }
                 this.convertLineChart()
+
                 this.loaded.mixChart = true
                 
                     // datasets: [
@@ -359,7 +378,7 @@
                     // areaを取得
                     const area = response[0].area.name
                     const label = `【${area}】${subCategory.join(' : ')}`
-
+                    const transparentWhite = 'rgba(255,255,255,0)'
                     let dataset
                     if (target === 'first') {
                         dataset =  {
@@ -372,7 +391,7 @@
                                     backgroundColor: '#f87979',
                                     
                                     borderWidth: 2,
-                                    borderColor: 'rgba(255,255,255,0)',
+                                    borderColor: transparentWhite,
                                     yAxisID: 'first-y-axis'
                                 }, 
                             ]
@@ -389,7 +408,7 @@
                                     backgroundColor: '#2f8888',
                                     
                                     borderWidth: 2,
-                                    borderColor: 'rgba(255,255,255,0)',
+                                    borderColor: transparentWhite,
                                     yAxisID: 'second-y-axis'
                                 }, 
                             ]
@@ -410,6 +429,7 @@
 
                     // set title
                     this.options[target].title.text = response[0].stats_code.table_name
+                    this.options[target].unit = response[0].unit
                 })
             },
             async reloadChart(target) {
@@ -450,7 +470,6 @@
         mounted () {
             // this.loaded = false
             try {
-
                 const firstDataSet = this.setChart('first')
                 const secondDataSet = this.setChart('second')
                 this.setMixChart(firstDataSet, secondDataSet)
