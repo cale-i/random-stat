@@ -17,7 +17,7 @@
         <template v-if="loaded.mixChart">
           <chart
             v-if="loaded.mixChart"
-            :chart-data="chartDataMix"
+            :chart-data="displayDataMix"
             :options="displayMixOption"
           ></chart>
         </template>
@@ -33,7 +33,7 @@
 
             <chart
               v-if="loaded.first"
-              :chart-data="chartData.first"
+              :chart-data="displayDataFirst"
               :options="displayOption.first"
             ></chart>
 
@@ -45,7 +45,7 @@
             <div>{{ this.legends.second.sub_category }}</div>
             <chart
               v-if="loaded.second"
-              :chart-data="chartData.second"
+              :chart-data="displayDataSecond"
               :options="displayOption.second"
             ></chart>
 
@@ -127,6 +127,94 @@ export default {
     },
   }),
   computed: {
+    displayDataFirst() {
+      const self = this;
+
+      // sub_categoryからlabelを取得
+      let subCategory = self.statData.first[0].sub_category.map((e) => e.name);
+      // areaを取得
+      const area = self.statData.first[0].area.name;
+
+      const transparentWhite = "rgba(255,255,255,0)";
+      const dataCollection = {
+        labels: self.statData.first.map((e) => e.time.date.slice(0, 4)),
+        datasets: [
+          {
+            label: `【${area}】${subCategory.join(" : ")}`,
+            type: "bar",
+            data: self.statData.first.map((e) => e.value),
+            backgroundColor: "#00a040",
+
+            borderWidth: 2,
+            borderColor: transparentWhite,
+            yAxisID: "first-y-axis",
+          },
+        ],
+      };
+      console.log(dataCollection);
+      return dataCollection;
+    },
+    displayDataSecond() {
+      const self = this;
+
+      // sub_categoryからlabelを取得
+      let subCategory = self.statData.second[0].sub_category.map((e) => e.name);
+      // areaを取得
+      const area = self.statData.second[0].area.name;
+
+      const transparentWhite = "rgba(255,255,255,0)";
+      const dataCollection = {
+        labels: self.statData.second.map((e) => e.time.date.slice(0, 4)),
+        datasets: [
+          {
+            label: `【${area}】${subCategory.join(" : ")}`,
+            type: "bar",
+            data: self.statData.second.map((e) => e.value),
+            backgroundColor: "#bd3f4c",
+
+            borderWidth: 2,
+            borderColor: transparentWhite,
+            yAxisID: "second-y-axis",
+          },
+        ],
+      };
+      console.log(dataCollection);
+      return dataCollection;
+    },
+    displayDataMix() {
+      const self = this;
+
+      const labels = self.displayDataFirst.labels;
+
+      const transparentWhite = "rgba(255,255,255,0)";
+      const dataCollection = {
+        labels,
+        datasets: [
+          {
+            label: self.displayDataFirst.datasets[0].label,
+            type: "bar",
+            data: self.statData.first.map((e) => e.value),
+            backgroundColor: "#00a040",
+
+            borderWidth: 2,
+            borderColor: transparentWhite,
+            yAxisID: "second-y-axis",
+          },
+          {
+            label: self.displayDataSecond.datasets[0].label,
+            type: "line",
+            data: self.statData.second.map((e) => e.value),
+            backgroundColor: transparentWhite,
+
+            borderWidth: 2,
+            borderColor: "#bd3f4c",
+            yAxisID: "second-y-axis",
+          },
+        ],
+      };
+      console.log(dataCollection);
+      return dataCollection;
+    },
     displayOption() {
       const self = this;
       // const unit = this.ounit
@@ -135,7 +223,7 @@ export default {
         first: {
           title: {
             display: true,
-            text: self.options.first.title.text,
+            text: self.statData.first[0].stats_code.table_name,
           },
           hover: {
             intersect: false,
@@ -148,7 +236,6 @@ export default {
           scales: {
             xAxes: [
               {
-                // グリッドラインを消す
                 type: "time",
 
                 time: {
@@ -159,6 +246,7 @@ export default {
                   },
                   parser: "YYYY",
                 },
+                // グリッドラインを消す
                 gridLines: {
                   drawOnChartArea: false,
                 },
@@ -179,7 +267,7 @@ export default {
                   // suggestedMax: 60,
                   // stepSize: 10,
                   callback: (value) => {
-                    return `${value}${self.options.first.unit}`;
+                    return `${value}${self.statData.first[0].unit}`;
                   },
                 },
               },
@@ -191,7 +279,7 @@ export default {
         second: {
           title: {
             display: true,
-            text: self.options.second.title.text,
+            text: self.statData.second[0].stats_code.table_name,
           },
           hover: {
             intersect: false,
@@ -204,7 +292,6 @@ export default {
           scales: {
             xAxes: [
               {
-                // グリッドラインを消す
                 type: "time",
 
                 time: {
@@ -215,6 +302,7 @@ export default {
                   },
                   parser: "YYYY",
                 },
+                // グリッドラインを消す
                 gridLines: {
                   drawOnChartArea: false,
                 },
@@ -235,7 +323,7 @@ export default {
                   // suggestedMax: 60,
                   // stepSize: 10,
                   callback: (value) => {
-                    return `${value}${self.options.second.unit}`;
+                    return `${value}${self.statData.second[0].unit}`;
                   },
                 },
               },
@@ -253,14 +341,13 @@ export default {
         ...self.statData.first.map((e) => e.value),
         ...self.statData.second.map((e) => e.value)
       );
-      console.log(self.statData);
-      console.log(suggestedMax);
       // const unit = this.unit
       // const options = this.options
       const options = {
         title: {
           display: true,
           text: "",
+          //   text: self.statData.first.stats_code.table_name,
         },
         hover: {
           intersect: false,
@@ -365,7 +452,7 @@ export default {
               label,
               type: "bar",
               data,
-              backgroundColor: "#f87979",
+              backgroundColor: "#00a040",
 
               borderWidth: 2,
               borderColor: transparentWhite,
@@ -381,7 +468,7 @@ export default {
               label,
               type: "bar",
               data,
-              backgroundColor: "#2f8888",
+              backgroundColor: "#bd3f4c",
 
               borderWidth: 2,
               borderColor: transparentWhite,
@@ -438,8 +525,6 @@ export default {
     async getStatData(target) {
       // ランダムデータを取得
       this.statData[target] = await this.$store.dispatch("chart/getChart");
-      // console.log(this.statData[target]);
-      console.log(target);
     },
   },
   async mounted() {
