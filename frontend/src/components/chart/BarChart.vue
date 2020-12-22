@@ -3,7 +3,7 @@
         <b-container>
             <chart
                 v-if="loaded"
-                :chartData="chartdata"
+                :chart-data="chartData"
                 :options="options"
             ></chart>
         </b-container>
@@ -18,9 +18,25 @@
         components: {
             chart
         },
+        props: {
+            chartData: {
+                type: Object,
+                default: null
+            },
+            options: {
+                type: Object,
+                default: null
+            },
+            unit: {
+                type: String,
+                default: '',
+            },
+        },
         data: () => ({
-
         }),
+        computed: {
+
+        },
         methods: {
 
         },
