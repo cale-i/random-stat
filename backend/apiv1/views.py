@@ -136,6 +136,7 @@ class ChronologicalAPIView(views.APIView):
         data['area'] = serializer.data[0]['area']
         data['unit'] = serializer.data[0]['unit']
         data['sub_category'] = serializer.data[0]['sub_category']
+        data['category'] = serializer.data[0]['category']
 
         return Response(data, status.HTTP_200_OK)
 
