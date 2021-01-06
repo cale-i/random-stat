@@ -72,7 +72,7 @@ export default {
         (e) => e.name
       );
       // areaを取得
-      const area = self.statData.first.results[0].area.name;
+      const area = self.statData.first.area.name;
 
       const transparentWhite = "rgba(255,255,255,0)";
       const dataCollection = {
@@ -100,7 +100,7 @@ export default {
         (e) => e.name
       );
       // areaを取得
-      const area = self.statData.second.results[0].area.name;
+      const area = self.statData.second.area.name;
 
       const transparentWhite = "rgba(255,255,255,0)";
       const dataCollection = {
@@ -368,7 +368,6 @@ export default {
     try {
       await this.getStatData("first");
       await this.getStatData("second");
-
       this.loaded.first = true;
       this.loaded.second = true;
       this.loaded.mixChart = true;
