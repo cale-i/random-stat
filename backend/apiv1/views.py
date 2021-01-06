@@ -88,6 +88,7 @@ class ChronologicalAPIView(views.APIView):
             'table_name': {},
             'sub_category': {},
             'area': {},
+            'area_list': [],
         }
 
         queryset = StatsData.objects.all() \
@@ -101,7 +102,6 @@ class ChronologicalAPIView(views.APIView):
             .prefetch_related('category__stats_code') \
             .prefetch_related('sub_category') \
             .prefetch_related('sub_category__category')
-
         # 存在しないパターンの組み合わせの場合、もう一度取得する
         queryset_length = 0
         time_out = 0
@@ -130,13 +130,20 @@ class ChronologicalAPIView(views.APIView):
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
         data['results'] = serializer.data
-        # print(serializer.data[0]['stats_code']['table_name'])
-        # print(serializer.data[0]['area'])
+
+        # headers
         data['table_name'] = serializer.data[0]['stats_code']['table_name']
         data['area'] = serializer.data[0]['area']
         data['unit'] = serializer.data[0]['unit']
         data['sub_category'] = serializer.data[0]['sub_category']
         data['category'] = serializer.data[0]['category']
+
+        # areaデータのリスト
+        area_serializer = AreaSerializer(
+            instance=Area.objects.all(),
+            many=True
+        )
+        data['area_list'] = area_serializer.data
 
         return Response(data, status.HTTP_200_OK)
 

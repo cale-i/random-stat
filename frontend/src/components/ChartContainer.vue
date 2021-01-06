@@ -364,7 +364,7 @@ export default {
     try {
       await this.getStatData("first");
       await this.getStatData("second");
-      console.log(this.statData);
+      // console.log(this.statData);
       this.loaded.first = true;
       this.loaded.second = true;
       this.loaded.mixChart = true;
