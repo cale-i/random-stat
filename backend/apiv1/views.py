@@ -134,6 +134,7 @@ class ChronologicalAPIView(views.APIView):
         # print(serializer.data[0]['area'])
         data['table_name'] = serializer.data[0]['stats_code']['table_name']
         data['area'] = serializer.data[0]['area']
+        data['unit'] = serializer.data[0]['unit']
         return Response(data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):

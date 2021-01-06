@@ -205,7 +205,7 @@ export default {
                 // suggestedMax: 60,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.first.results[0].unit}`;
+                  return `${value}${self.statData.first.unit}`;
                 },
               },
             },
@@ -266,7 +266,7 @@ export default {
                 // suggestedMax: 60,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.second.results[0].unit}`;
+                  return `${value}${self.statData.second.unit}`;
                 },
               },
             },
@@ -332,7 +332,7 @@ export default {
                 suggestedMax,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.first.results[0].unit}`;
+                  return `${value}${self.statData.first.unit}`;
                 },
               },
             },
@@ -345,7 +345,7 @@ export default {
                 suggestedMax,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.second.results[0].unit}`;
+                  return `${value}${self.statData.second.unit}`;
                 },
               },
             },
