@@ -68,9 +68,7 @@ export default {
       const self = this;
 
       // sub_categoryからlabelを取得
-      let subCategory = self.statData.first.results[0].sub_category.map(
-        (e) => e.name
-      );
+      let subCategory = self.statData.first.sub_category.map((e) => e.name);
       // areaを取得
       const area = self.statData.first.area.name;
 
@@ -96,9 +94,7 @@ export default {
       const self = this;
 
       // sub_categoryからlabelを取得
-      let subCategory = self.statData.second.results[0].sub_category.map(
-        (e) => e.name
-      );
+      let subCategory = self.statData.second.sub_category.map((e) => e.name);
       // areaを取得
       const area = self.statData.second.area.name;
 
