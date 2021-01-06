@@ -2,16 +2,6 @@
   <div id="chart">
     <b-container>
       <b-card>
-        <b-row>
-          <b-col md="6">
-            <div>{{ statData.first[0].stats_code.table_name }}</div>
-          </b-col>
-
-          <b-col md="6">
-            <div>{{ statData.second[0].stats_code.table_name }}</div>
-          </b-col>
-        </b-row>
-
         <template v-if="loaded.mixChart">
           <chart
             v-if="loaded.mixChart"
@@ -78,18 +68,20 @@ export default {
       const self = this;
 
       // sub_categoryからlabelを取得
-      let subCategory = self.statData.first[0].sub_category.map((e) => e.name);
+      let subCategory = self.statData.first.results[0].sub_category.map(
+        (e) => e.name
+      );
       // areaを取得
-      const area = self.statData.first[0].area.name;
+      const area = self.statData.first.results[0].area.name;
 
       const transparentWhite = "rgba(255,255,255,0)";
       const dataCollection = {
-        labels: self.statData.first.map((e) => e.time.date.slice(0, 4)),
+        labels: self.statData.first.results.map((e) => e.time.date.slice(0, 4)),
         datasets: [
           {
             label: `【${area}】${subCategory.join(" : ")}`,
             type: "bar",
-            data: self.statData.first.map((e) => e.value),
+            data: self.statData.first.results.map((e) => e.value),
             backgroundColor: "#00a040",
 
             borderWidth: 2,
@@ -104,18 +96,22 @@ export default {
       const self = this;
 
       // sub_categoryからlabelを取得
-      let subCategory = self.statData.second[0].sub_category.map((e) => e.name);
+      let subCategory = self.statData.second.results[0].sub_category.map(
+        (e) => e.name
+      );
       // areaを取得
-      const area = self.statData.second[0].area.name;
+      const area = self.statData.second.results[0].area.name;
 
       const transparentWhite = "rgba(255,255,255,0)";
       const dataCollection = {
-        labels: self.statData.second.map((e) => e.time.date.slice(0, 4)),
+        labels: self.statData.second.results.map((e) =>
+          e.time.date.slice(0, 4)
+        ),
         datasets: [
           {
             label: `【${area}】${subCategory.join(" : ")}`,
             type: "bar",
-            data: self.statData.second.map((e) => e.value),
+            data: self.statData.second.results.map((e) => e.value),
             backgroundColor: "#bd3f4c",
 
             borderWidth: 2,
@@ -138,7 +134,7 @@ export default {
           {
             label: self.displayDataFirst.datasets[0].label,
             type: "bar",
-            data: self.statData.first.map((e) => e.value),
+            data: self.statData.first.results.map((e) => e.value),
             backgroundColor: "#00a040",
 
             borderWidth: 2,
@@ -148,7 +144,7 @@ export default {
           {
             label: self.displayDataSecond.datasets[0].label,
             type: "line",
-            data: self.statData.second.map((e) => e.value),
+            data: self.statData.second.results.map((e) => e.value),
             backgroundColor: transparentWhite,
 
             borderWidth: 2,
@@ -165,7 +161,7 @@ export default {
       const options = {
         title: {
           display: true,
-          text: self.statData.first[0].stats_code.table_name,
+          text: self.statData.first.table_name,
         },
         hover: {
           intersect: false,
@@ -209,7 +205,7 @@ export default {
                 // suggestedMax: 60,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.first[0].unit}`;
+                  return `${value}${self.statData.first.results[0].unit}`;
                 },
               },
             },
@@ -226,7 +222,7 @@ export default {
       const options = {
         title: {
           display: true,
-          text: self.statData.second[0].stats_code.table_name,
+          text: self.statData.second.table_name,
         },
         hover: {
           intersect: false,
@@ -270,7 +266,7 @@ export default {
                 // suggestedMax: 60,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.second[0].unit}`;
+                  return `${value}${self.statData.second.results[0].unit}`;
                 },
               },
             },
@@ -284,15 +280,15 @@ export default {
     displayOptionMix() {
       const self = this;
       const suggestedMax = Math.max(
-        ...self.statData.first.map((e) => e.value),
-        ...self.statData.second.map((e) => e.value)
+        ...self.statData.first.results.map((e) => e.value),
+        ...self.statData.second.results.map((e) => e.value)
       );
 
       const options = {
         title: {
           display: true,
-          text: "",
-          //   text: self.statData.first.stats_code.table_name,
+          // text: "",
+          text: `${self.statData.first.table_name}   /   ${self.statData.second.table_name}`,
         },
         hover: {
           intersect: false,
@@ -336,7 +332,7 @@ export default {
                 suggestedMax,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.first[0].unit}`;
+                  return `${value}${self.statData.first.results[0].unit}`;
                 },
               },
             },
@@ -349,7 +345,7 @@ export default {
                 suggestedMax,
                 // stepSize: 10,
                 callback: (value) => {
-                  return `${value}${self.statData.second[0].unit}`;
+                  return `${value}${self.statData.second.results[0].unit}`;
                 },
               },
             },
@@ -372,6 +368,7 @@ export default {
     try {
       await this.getStatData("first");
       await this.getStatData("second");
+
       this.loaded.first = true;
       this.loaded.second = true;
       this.loaded.mixChart = true;

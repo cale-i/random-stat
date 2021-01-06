@@ -82,6 +82,14 @@ class ChronologicalFilter(filters.FilterSet):
 
 class ChronologicalAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
+        data = {
+            'results': [],
+            'unit': {},
+            'table_name': {},
+            'sub_category': {},
+            'area': {},
+        }
+
         queryset = StatsData.objects.all() \
             .select_related('area') \
             .select_related('time') \
@@ -121,7 +129,10 @@ class ChronologicalAPIView(views.APIView):
                 break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+        data['results'] = serializer.data
+        print(serializer.data[0]['stats_code']['table_name'])
+        data['table_name'] = serializer.data[0]['stats_code']['table_name']
+        return Response(data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         queryset = StatsData.objects.all() \
@@ -139,6 +150,12 @@ class ChronologicalAPIView(views.APIView):
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
+
+    def get_area_list(self):
+        pass
+
+    def get_category_list(self):
+        pass
 
     def get_random_data(self):
 
