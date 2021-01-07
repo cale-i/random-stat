@@ -79,14 +79,6 @@ class ChronologicalFilter(filters.FilterSet):
 
 class ChronologicalAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
-        data = {
-            'results': [],
-            'unit': {},
-            'table_name': {},
-            'sub_category': {},
-            'area': {},
-            'area_list': [],
-        }
 
         queryset = StatsData.objects.all() \
             .select_related('area') \
@@ -126,21 +118,16 @@ class ChronologicalAPIView(views.APIView):
                 break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        data['results'] = serializer.data
-
-        # headers
-        data['table_name'] = serializer.data[0]['stats_code']['table_name']
-        data['area'] = serializer.data[0]['area']
-        data['unit'] = serializer.data[0]['unit']
-        data['sub_category'] = serializer.data[0]['sub_category']
-        data['category'] = serializer.data[0]['category']
-
-        # areaデータのリスト
-        area_serializer = AreaSerializer(
-            instance=Area.objects.all(),
-            many=True
-        )
-        data['area_list'] = area_serializer.data
+        data = {
+            'results': serializer.data,
+            'unit': serializer.data[0]['unit'],
+            'table_name': serializer.data[0]['stats_code']['table_name'],
+            'area': serializer.data[0]['area'],
+            'sub_category': serializer.data[0]['sub_category'],
+            'area_list': self.get_area_list(),
+            'category_list': self.make_category_list(
+                category=serializer.data[0]['category']),
+        }
 
         return Response(data, status.HTTP_200_OK)
 
@@ -162,10 +149,38 @@ class ChronologicalAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
     def get_area_list(self):
-        pass
+        # areaデータのリスト
+        serializer = AreaSerializer(
+            instance=Area.objects.all(),
+            many=True
+        )
+        return serializer.data
 
-    def get_category_list(self):
-        pass
+    def make_category_list(self, category):
+        # category-sub_category のリスト
+        # 抽出したcategoryを受け取り、サブカテゴリと結合して出力
+        # 引数categoryはOrdered Dictでの入力を想定
+
+        ret = []
+        for cat in category:
+            queryset = SubCategory.objects.filter(
+                category_id__id__icontains=cat['id']
+            )
+
+            sub_category_list = [
+                {
+                    'id': q.id,
+                    'name': q.name,
+                }
+                for q in queryset
+            ]
+            ret.append({
+                'id': cat['id'],
+                'name': cat['name'],
+                'sub_category_list': sub_category_list,
+            })
+        print(ret)
+        return ret
 
     def get_random_data(self):
 
