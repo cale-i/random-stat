@@ -25,9 +25,6 @@ from apiv1.serializers import (
     StatsDataSerializer,
 )
 
-from example.models import Book
-from apiv1.serializers import BookSerializer
-
 
 class TestStatNameSerializer(TestCase):
     """
