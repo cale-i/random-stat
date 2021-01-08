@@ -27,6 +27,7 @@
               :area-list="statData.first.area_list"
               :area-id="statData.first.area.id"
               :category-list="statData.first.category_list"
+              :sub-category="statData.first.sub_category"
             />
 
             <b-button @click="getStatData('first')">更新</b-button>

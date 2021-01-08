@@ -1,13 +1,28 @@
 <template>
   <div>
     <b-row>
-      <b-col md="3">
+      <b-col md="4">
         地域
       </b-col>
-      <b-col md="9">
+      <b-col md="8">
         <b-form-select
           v-model="selectedArea"
           :options="areaList"
+          class="mb-3"
+          value-field="id"
+          text-field="name"
+        ></b-form-select>
+      </b-col>
+    </b-row>
+
+    <b-row v-for="item in categoryList" :key="item.id">
+      <b-col md="4">
+        {{ item.name }}
+      </b-col>
+      <b-col md="8">
+        <b-form-select
+          v-model="selectedSubCategory[item.id]"
+          :options="item.sub_category_list"
           class="mb-3"
           value-field="id"
           text-field="name"
@@ -28,15 +43,32 @@ export default {
       type: Array,
       default: null,
     },
+    categoryList: {
+      type: Array,
+      default: null,
+    },
+    subCategory: {
+      type: Array,
+      default: null,
+    },
   },
   data: () => ({
+    show: false,
     selectedArea: null,
+    selectedSubCategory: {},
   }),
   computed: {},
-  methods: {},
+  methods: {
+    setCategory() {
+      this.subCategory.map((e) => {
+        this.selectedSubCategory[e.category.id] = e.id;
+      });
+    },
+  },
   mounted() {
     // 初期 area IDを格納
     this.selectedArea = this.areaId;
+    this.setCategory();
   },
 };
 </script>
