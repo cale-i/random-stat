@@ -22,6 +22,12 @@
               :chart-data="displayDataFirst"
               :options="displayOptionFirst"
             ></chart>
+            <CategoryContainer
+              v-if="loaded.first"
+              :area-list="statData.first.area_list"
+              :area-id="statData.first.area.id"
+              :category-list="statData.first.category_list"
+            />
 
             <b-button @click="getStatData('first')">更新</b-button>
           </b-card>
@@ -45,11 +51,13 @@
 <script>
 // import dayjs from 'dayjs'
 import chart from "@/services/chart.js";
+import CategoryContainer from "./CategoryContainer.vue";
 // import BarChart from "./chart/BarChart.vue"
 export default {
   name: "ChartContainer",
   components: {
     chart,
+    CategoryContainer,
     // BarChart
   },
   data: () => ({
@@ -364,7 +372,7 @@ export default {
     try {
       await this.getStatData("first");
       await this.getStatData("second");
-      // console.log(this.statData);
+      console.log(this.statData);
       this.loaded.first = true;
       this.loaded.second = true;
       this.loaded.mixChart = true;
