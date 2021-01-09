@@ -40,7 +40,13 @@
               :chart-data="displayDataSecond"
               :options="displayOptionSecond"
             ></chart>
-
+            <CategoryContainer
+              v-if="loaded.second"
+              :area-list="statData.second.area_list"
+              :area-id="statData.second.area.id"
+              :category-list="statData.second.category_list"
+              :sub-category="statData.second.sub_category"
+            />
             <b-button @click="getStatData('second')">更新</b-button>
           </b-card>
         </b-col>
