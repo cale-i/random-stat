@@ -2,9 +2,9 @@
   <div>
     <b-row>
       <b-col md="4">
-        地域
-      </b-col>
-      <b-col md="8">
+        <span class="area-name">
+          地域
+        </span>
         <b-form-select
           v-model="selected.area"
           :options="areaList"
@@ -13,13 +13,11 @@
           text-field="name"
         ></b-form-select>
       </b-col>
-    </b-row>
 
-    <b-row v-for="item in categoryList" :key="item.id">
-      <b-col md="4">
-        {{ item.name }}
-      </b-col>
-      <b-col md="8">
+      <b-col md="4" v-for="item in categoryList" :key="item.id">
+        <span class="category-name">
+          {{ item.name }}
+        </span>
         <b-form-select
           @change="changeSubCategory(item.id, $event)"
           :value="selected.subCategory[item.id]"
@@ -88,5 +86,12 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>
+<style scoped>
+.area-name {
+  font-weight: bold;
+}
+.category-name {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+</style>
