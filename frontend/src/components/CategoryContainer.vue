@@ -6,7 +6,7 @@
       </b-col>
       <b-col md="8">
         <b-form-select
-          v-model="selectedArea"
+          v-model="selected.area"
           :options="areaList"
           class="mb-3"
           value-field="id"
@@ -22,7 +22,7 @@
       <b-col md="8">
         <b-form-select
           @change="changeSubCategory(item.id, $event)"
-          :value="selectedSubCategory[item.id]"
+          :value="selected.subCategory[item.id]"
           :options="item.sub_category_list"
           class="mb-3"
           value-field="id"
@@ -54,25 +54,35 @@ export default {
     },
   },
   data: () => ({
-    show: false,
-    selectedArea: null,
-    selectedSubCategory: {},
+    selected: {
+      area: null,
+      subCategory: {},
+    },
   }),
   computed: {},
   methods: {
-    makeSelectedSubCategory() {
+    makeSelected() {
+      // area
+      // 初期 area IDを格納
+      this.selected.area = this.areaId;
+
+      // subcategory
+      // this.selected.subCategory = {
+      //    category: "sub_category",
+      //    category2: "sub_category2",
+      // }
       this.subCategory.map((e) => {
-        this.selectedSubCategory[e.category.id] = e.id;
+        this.selected.subCategory[e.category.id] = e.id;
       });
+      console.log(this.selected);
     },
     changeSubCategory(target, event) {
-      this.selectedSubCategory[target] = event;
+      this.selected.subCategory[target] = event;
+      console.log(this.selected);
     },
   },
   mounted() {
-    // 初期 area IDを格納
-    this.selectedArea = this.areaId;
-    this.makeSelectedSubCategory();
+    this.makeSelected();
   },
 };
 </script>
