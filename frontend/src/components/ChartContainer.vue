@@ -17,6 +17,7 @@
       <b-row>
         <b-col md="6">
           <b-card>
+            <b-button @click="getStatData('first')">別データを取得</b-button>
             <chart
               v-if="loaded.first"
               :chart-data="displayDataFirst"
@@ -29,12 +30,11 @@
               :category-list="statData.first.category_list"
               :sub-category="statData.first.sub_category"
             />
-
-            <b-button @click="getStatData('first')">更新</b-button>
           </b-card>
         </b-col>
         <b-col md="6">
           <b-card>
+            <b-button @click="getStatData('second')">別データを取得</b-button>
             <chart
               v-if="loaded.second"
               :chart-data="displayDataSecond"
@@ -47,7 +47,6 @@
               :category-list="statData.second.category_list"
               :sub-category="statData.second.sub_category"
             />
-            <b-button @click="getStatData('second')">更新</b-button>
           </b-card>
         </b-col>
       </b-row>
