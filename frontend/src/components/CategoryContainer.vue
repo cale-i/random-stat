@@ -78,10 +78,12 @@ export default {
     },
     changeSubCategory(target, event) {
       this.selected.subCategory[target] = event;
-      console.log(this.selected);
     },
   },
   mounted() {
+    this.makeSelected();
+  },
+  updated() {
     this.makeSelected();
   },
 };
