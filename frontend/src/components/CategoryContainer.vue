@@ -21,7 +21,8 @@
       </b-col>
       <b-col md="8">
         <b-form-select
-          v-model="selectedSubCategory[item.id]"
+          @change="changeSubCategory(item.id, $event)"
+          :value="selectedSubCategory[item.id]"
           :options="item.sub_category_list"
           class="mb-3"
           value-field="id"
@@ -59,16 +60,19 @@ export default {
   }),
   computed: {},
   methods: {
-    setCategory() {
+    makeSelectedSubCategory() {
       this.subCategory.map((e) => {
         this.selectedSubCategory[e.category.id] = e.id;
       });
+    },
+    changeSubCategory(target, event) {
+      this.selectedSubCategory[target] = event;
     },
   },
   mounted() {
     // 初期 area IDを格納
     this.selectedArea = this.areaId;
-    this.setCategory();
+    this.makeSelectedSubCategory();
   },
 };
 </script>
