@@ -29,6 +29,7 @@
               :area-id="statData.first.area.id"
               :category-list="statData.first.category_list"
               :sub-category="statData.first.sub_category"
+              @catchSelected="searchStatData('first', $event)"
             />
           </b-card>
         </b-col>
@@ -46,6 +47,7 @@
               :area-id="statData.second.area.id"
               :category-list="statData.second.category_list"
               :sub-category="statData.second.sub_category"
+              @catchSelected="searchStatData('second', $event)"
             />
           </b-card>
         </b-col>
@@ -372,13 +374,27 @@ export default {
       // ランダムデータを取得
       this.statData[target] = await this.$store.dispatch("chart/getChart");
     },
+    async searchStatData(target, selected) {
+      // CategoryContainerコンポーネントにて指定した条件のデータを取得
+      const params = {
+        area: selected.area,
+        sub_category: Object.values(selected.subCategory),
+      };
+      // console.log(params);
+      // console.log(this.statData);
+      // console.log(await this.$store.dispatch("chart/searchChart", params));
+      this.statData[target] = await this.$store.dispatch(
+        "chart/searchChart",
+        params
+      );
+    },
   },
   async mounted() {
     // this.loaded = false
     try {
       await this.getStatData("first");
       await this.getStatData("second");
-      console.log(this.statData);
+      // console.log(this.statData);
       this.loaded.first = true;
       this.loaded.second = true;
       this.loaded.mixChart = true;

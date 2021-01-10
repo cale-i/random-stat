@@ -64,7 +64,6 @@ class ChronologicalFilter(filters.FilterSet):
         if type(value) is str:
             table = str.maketrans('', '', '[] \'')
             value = value.translate(table).split(',')
-
             # print(name)
             # print(value)
             # print({name: value})
@@ -74,6 +73,7 @@ class ChronologicalFilter(filters.FilterSet):
                 # print(qs.query)
                 print(len(qs))
                 # print(qs)
+            # print(qs)
             return qs
 
 
@@ -136,17 +136,31 @@ class ChronologicalAPIView(views.APIView):
             .select_related('area') \
             .select_related('time') \
             .select_related('stats_code') \
-            .prefetch_related('category') \
             .select_related('stats_code__stat_name') \
             .select_related('stats_code__gov_org') \
-            .select_related('stats_code__title')
+            .select_related('stats_code__title') \
+            .prefetch_related('category') \
+            .prefetch_related('category__stats_code') \
+            .prefetch_related('sub_category') \
+            .prefetch_related('sub_category__category')
 
         # 検索用
+        print(request.data)
         filterset = ChronologicalFilter(request.data, queryset=queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        data = {
+            'results': serializer.data,
+            'unit': serializer.data[0]['unit'],
+            'table_name': serializer.data[0]['stats_code']['table_name'],
+            'area': serializer.data[0]['area'],
+            'sub_category': serializer.data[0]['sub_category'],
+            'area_list': self.get_area_list(),
+            'category_list': self.make_category_list(
+                category=serializer.data[0]['category']),
+        }
+        return Response(data, status.HTTP_200_OK)
 
     def get_area_list(self):
         # areaデータのリスト
@@ -179,7 +193,7 @@ class ChronologicalAPIView(views.APIView):
                 'name': cat['name'],
                 'sub_category_list': sub_category_list,
             })
-        print(ret)
+        # print(ret)
         return ret
 
     def get_random_data(self):
@@ -209,20 +223,3 @@ class ChronologicalAPIView(views.APIView):
         params['area'] = area_queryset.id
         print(params)
         return params
-
-
-class ChronologicalListAPIView(generics.ListAPIView):
-
-    # def get(self, request, *args, **kwargs):
-    # queryset = StatsData.objects.filter(time__id__iexact='00200521_00200_1_time_1920000000') \
-    queryset = StatsData.objects.all() \
-        .select_related('area') \
-        .select_related('time') \
-        .select_related('stats_code') \
-        .prefetch_related('category') \
-        .select_related('stats_code__stat_name') \
-        .select_related('stats_code__gov_org') \
-        .select_related('stats_code__title')
-
-    filter_class = ChronologicalFilter
-    serializer_class = StatsDataSerializer

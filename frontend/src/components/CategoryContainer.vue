@@ -28,6 +28,11 @@
         ></b-form-select>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <b-button @click="searchStatData">上記条件でデータを取得</b-button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -72,18 +77,34 @@ export default {
       this.subCategory.map((e) => {
         this.selected.subCategory[e.category.id] = e.id;
       });
-      console.log(this.selected);
     },
     changeSubCategory(target, event) {
       this.selected.subCategory[target] = event;
+    },
+    searchStatData() {
+      this.$emit("catchSelected", this.selected);
+      // console.log(this.selected);
+    },
+  },
+  watch: {
+    areaId: {
+      handler: function(newValue) {
+        this.selected.area = newValue;
+      },
+    },
+    subCategory: function(newValue) {
+      // console.log(newValue);
+      newValue.map((e) => {
+        this.selected.subCategory[e.category.id] = e.id;
+      });
     },
   },
   mounted() {
     this.makeSelected();
   },
-  updated() {
-    this.makeSelected();
-  },
+  // updated() {
+  //   this.makeSelected();
+  // },
 };
 </script>
 <style scoped>

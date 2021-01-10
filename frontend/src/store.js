@@ -73,9 +73,11 @@ const chartModule = {
     namespaced: true,
     state: {
         chartURL:'chronological/',
+        searchURL: 'search/',
     },
     getters: {
         chartURL: state => state.chartURL,
+        searchURL: state => state.searchURL,
     },
     mutations: {
 
@@ -90,6 +92,16 @@ const chartModule = {
                 return response.data
             })
         },
+        searchChart(context, data) {
+            return api({
+                method: 'post',
+                url: context.getters.searchURL,
+                data,
+            })
+            .then(response => {
+                return response.data
+            })
+        },
     }
 }
 
@@ -97,7 +109,7 @@ const chartModule = {
 const store = new Vuex.Store({
     modules: {
         item: itemModule,
-        chart:chartModule
+        chart: chartModule,
     }
 })
 
