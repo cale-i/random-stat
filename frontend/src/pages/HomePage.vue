@@ -1,8 +1,8 @@
 <template>
-  <div id="home-page">
-    <GlobalHeader />
-    <ChartContainer />
-  </div>
+	<div id="home-page">
+		<GlobalHeader />
+		<ChartContainer />
+	</div>
 </template>
 
 <script>
@@ -12,20 +12,20 @@ import ChartContainer from "@/components/ChartContainer.vue";
 // import { mapGetters } from 'vuex'
 
 export default {
-  components: {
-    GlobalHeader,
-    ChartContainer,
-  },
-  data: function() {
-    return {
-      today: "",
-    };
-  },
-  methods: {},
+	components: {
+		GlobalHeader,
+		ChartContainer,
+	},
+	data: function() {
+		return {
+			today: "",
+		};
+	},
+	methods: {},
 
-  mounted() {},
-  created() {},
-  computed: {},
+	mounted() {},
+	created() {},
+	computed: {},
 };
 </script>
 
