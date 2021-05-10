@@ -186,16 +186,17 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							type: "time",
+							// type: "bar",
+							categoryPercentage: 0.4,
 
-							time: {
-								unit: "year",
-								displayFormats: {
-									// year: 'YYYY[年]MM[月]DD[日]'
-									year: "YYYY[年]",
-								},
-								parser: "YYYY",
-							},
+							// time: {
+							// 	unit: "year",
+							// 	displayFormats: {
+							// 		// year: 'YYYY[年]MM[月]DD[日]'
+							// 		year: "YYYY[年]",
+							// 	},
+							// 	parser: "YYYY",
+							// },
 							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
@@ -247,16 +248,16 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							type: "time",
-
-							time: {
-								unit: "year",
-								displayFormats: {
-									// year: 'YYYY[年]MM[月]DD[日]'
-									year: "YYYY[年]",
-								},
-								parser: "YYYY",
-							},
+							// type: "time",
+							categoryPercentage: 0.4,
+							// time: {
+							// 	unit: "year",
+							// 	displayFormats: {
+							// 		// year: 'YYYY[年]MM[月]DD[日]'
+							// 		year: "YYYY[年]",
+							// 	},
+							// 	parser: "YYYY",
+							// },
 							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
@@ -314,16 +315,16 @@ export default {
 					xAxes: [
 						{
 							// グリッドラインを消す
-							type: "time",
-
-							time: {
-								unit: "year",
-								displayFormats: {
-									// year: 'YYYY[年]MM[月]DD[日]'
-									year: "YYYY[年]",
-								},
-								parser: "YYYY",
-							},
+							// type: "time",
+							categoryPercentage: 0.4,
+							// time: {
+							// 	unit: "year",
+							// 	displayFormats: {
+							// 		// year: 'YYYY[年]MM[月]DD[日]'
+							// 		year: "YYYY[年]",
+							// 	},
+							// 	parser: "YYYY",
+							// },
 							gridLines: {
 								drawOnChartArea: false,
 							},
