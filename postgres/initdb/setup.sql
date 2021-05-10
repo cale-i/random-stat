@@ -7,20 +7,23 @@ GRANT ALL PRIVILEGES ON DATABASE testdb TO testuser;
 -- for test
 ALTER USER testuser CREATEDB;
 
-CREATE TABLE test(
-        id integer UNIQUE,
-        name varchar(10)
-);
 
-INSERT INTO test VALUES
-    (
-        1001,
-        'alice'
-    ),
-    (
-        1002,
-        'bob'
-    );
+-- CREATE TABLE test(
+--         id integer UNIQUE,
+--         name varchar(10)
+-- );
+
+-- INSERT INTO test VALUES
+--     (
+--         1001,
+--         'alice'
+--     ),
+--     (
+--         1002,
+--         'bob'
+--     );
+
+
 
 -- INSERT INTO book VALUES(
 --     '2596a762-7c07-4974-85cf-4293af4c0312',
