@@ -173,7 +173,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.table_name,
+					text: self.statData.first.table.name,
 				},
 				hover: {
 					intersect: false,
@@ -235,7 +235,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.second.table_name,
+					text: self.statData.second.table.name,
 				},
 				hover: {
 					intersect: false,
@@ -301,7 +301,7 @@ export default {
 				title: {
 					display: true,
 					// text: "",
-					text: `${self.statData.first.table_name}   /   ${self.statData.second.table_name}`,
+					text: `${self.statData.first.table.name}   /   ${self.statData.second.table.name}`,
 				},
 				hover: {
 					intersect: false,

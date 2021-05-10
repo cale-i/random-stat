@@ -118,10 +118,15 @@ class TimeSeriesAPIView(views.APIView):
                 break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
+        table = {
+            'id': serializer.data[0]['stats_code']['id'],
+            'name': serializer.data[0]['stats_code']['table_name']
+        }
         data = {
             'results': serializer.data,
             'unit': serializer.data[0]['unit'],
-            'table_name': serializer.data[0]['stats_code']['table_name'],
+            # 'table_name': serializer.data[0]['stats_code']['table_name'],
+            'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
             'area_list': self.get_area_list(),
