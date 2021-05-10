@@ -72,10 +72,7 @@ const itemModule = {
 const chartModule = {
     namespaced: true,
     state: {
-        chartURL:'chronological/',
-        searchURL: 'search/',
-    },
-    getters: {
+		chartURL: "timeseries/",
         chartURL: state => state.chartURL,
         searchURL: state => state.searchURL,
     },

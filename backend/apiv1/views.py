@@ -33,7 +33,7 @@ from apiv1.serializers import (
 )
 
 
-class ChronologicalFilter(filters.FilterSet):
+class TimeSeriesFilter(filters.FilterSet):
     # time = filters.CharFilter(field_name='time__id', method='get_time')
     area = filters.CharFilter(field_name='area__id', method='get_area')
     time = filters.CharFilter(field_name='time__id', method='get_time')
@@ -77,7 +77,7 @@ class ChronologicalFilter(filters.FilterSet):
             return qs
 
 
-class ChronologicalAPIView(views.APIView):
+class TimeSeriesAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
 
         queryset = StatsData.objects.all() \
@@ -105,7 +105,7 @@ class ChronologicalAPIView(views.APIView):
             #     'area': '00000'
             # }
 
-            filterset = ChronologicalFilter(
+            filterset = TimeSeriesFilter(
                 params,
                 queryset=queryset
             )
@@ -146,7 +146,7 @@ class ChronologicalAPIView(views.APIView):
 
         # 検索用
         print(request.data)
-        filterset = ChronologicalFilter(request.data, queryset=queryset)
+        filterset = TimeSeriesFilter(request.data, queryset=queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 

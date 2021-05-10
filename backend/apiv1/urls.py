@@ -4,8 +4,8 @@ from apiv1 import views
 
 app_name = 'apiv1'
 urlpatterns = [
-    path('chronological/', views.ChronologicalAPIView.as_view()),
-    path('search/', views.ChronologicalAPIView.as_view()),
+    path('timeseries/', views.TimeSeriesAPIView.as_view()),
+    path('search/', views.TimeSeriesAPIView.as_view()),
 
 
 
