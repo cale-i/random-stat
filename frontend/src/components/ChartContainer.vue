@@ -98,6 +98,7 @@ export default {
 						data: self.statData.first.results.map((e) => e.value),
 						backgroundColor: "#00a040",
 
+						categoryPercentage: 0.4,
 						borderWidth: 2,
 						borderColor: transparentWhite,
 						yAxisID: "first-y-axis",
@@ -126,6 +127,7 @@ export default {
 						data: self.statData.second.results.map((e) => e.value),
 						backgroundColor: "#bd3f4c",
 
+						categoryPercentage: 0.4,
 						borderWidth: 2,
 						borderColor: transparentWhite,
 						yAxisID: "second-y-axis",
@@ -149,6 +151,7 @@ export default {
 						data: self.statData.first.results.map((e) => e.value),
 						backgroundColor: "#00a040",
 
+						categoryPercentage: 0.4,
 						borderWidth: 2,
 						borderColor: transparentWhite,
 						yAxisID: "second-y-axis",
@@ -187,7 +190,6 @@ export default {
 					xAxes: [
 						{
 							// type: "bar",
-							categoryPercentage: 0.4,
 
 							// time: {
 							// 	unit: "year",
@@ -249,7 +251,6 @@ export default {
 					xAxes: [
 						{
 							// type: "time",
-							categoryPercentage: 0.4,
 							// time: {
 							// 	unit: "year",
 							// 	displayFormats: {
@@ -316,7 +317,6 @@ export default {
 						{
 							// グリッドラインを消す
 							// type: "time",
-							categoryPercentage: 0.4,
 							// time: {
 							// 	unit: "year",
 							// 	displayFormats: {
