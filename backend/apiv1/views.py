@@ -6,6 +6,7 @@ from rest_framework import (
     status
 )
 
+import datetime
 import random
 
 from estat.models import (
@@ -34,6 +35,7 @@ from apiv1.serializers import (
 
 
 class TimeSeriesFilter(filters.FilterSet):
+
     # time = filters.CharFilter(field_name='time__id', method='get_time')
     area = filters.CharFilter(field_name='area__id', method='get_area')
     time = filters.CharFilter(field_name='time__id', method='get_time')
@@ -44,6 +46,9 @@ class TimeSeriesFilter(filters.FilterSet):
         method='get_sub_category'
     )
 
+    stats_code = filters.CharFilter(
+        field_name='stats_code__id', method='get_stats_code')
+
     def get_area(self, queryset, name, value):
         return queryset.filter(**{name: value})
 
@@ -53,11 +58,15 @@ class TimeSeriesFilter(filters.FilterSet):
     def get_sub_category(self, queryset, name, value):
         return self.separate_params(queryset, name, value)
 
+    def get_stats_code(self, queryset, name, value):
+        return self.separate_params(queryset, name, value)
+
     # def get_random_data(self, queryset, name, value)
 
     # def add_prefix(self, queryset, name, value):
     #     prefix = name
     #     return prefix
+
     def separate_params(self, queryset, name, value):
 
         # listで送られたvalueが勝手にstrに変換されるためlistに変換
@@ -78,9 +87,8 @@ class TimeSeriesFilter(filters.FilterSet):
 
 
 class TimeSeriesAPIView(views.APIView):
-    def get(self, request, *args, **kwargs):
-
-        queryset = StatsData.objects.all() \
+    def __init__(self):
+        self.queryset = StatsData.objects.all() \
             .select_related('area') \
             .select_related('time') \
             .select_related('stats_code') \
@@ -90,7 +98,14 @@ class TimeSeriesAPIView(views.APIView):
             .prefetch_related('category') \
             .prefetch_related('category__stats_code') \
             .prefetch_related('sub_category') \
-            .prefetch_related('sub_category__category')
+            .prefetch_related('sub_category__category') \
+            .prefetch_related('area__stats_code') \
+            .order_by('time')
+
+    def get(self, request, *args, **kwargs):
+        start = datetime.datetime.now()
+        print(f'start: {start}')
+
         # 存在しないパターンの組み合わせの場合、もう一度取得する
         queryset_length = 0
         time_out = 0
@@ -107,8 +122,9 @@ class TimeSeriesAPIView(views.APIView):
 
             filterset = TimeSeriesFilter(
                 params,
-                queryset=queryset
+                queryset=self.queryset
             )
+
             queryset_length = len(filterset.qs)
             print(queryset_length)
 
@@ -122,6 +138,7 @@ class TimeSeriesAPIView(views.APIView):
             'id': serializer.data[0]['stats_code']['id'],
             'name': serializer.data[0]['stats_code']['table_name']
         }
+
         data = {
             'results': serializer.data,
             'unit': serializer.data[0]['unit'],
@@ -129,48 +146,58 @@ class TimeSeriesAPIView(views.APIView):
             'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
-            'area_list': self.get_area_list(),
+            'area_list': self.get_area_list(table['id']),
             'category_list': self.make_category_list(
                 category=serializer.data[0]['category']),
+            'stats_code_list': self.get_stats_id_list(),
         }
+
+        end = datetime.datetime.now()
+        print(f'end: {end}')
+        print(f'time: {end-start}')
+        # print(data['unit']) # string
+        # print(data['table']) #dict
+        print(data['area'])
+        # print(data['sub_category'])
+        # print(data['area_list'])
+        # print(data['category_list'])
+        # print(data['stats_code_list'])
 
         return Response(data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        queryset = StatsData.objects.all() \
-            .select_related('area') \
-            .select_related('time') \
-            .select_related('stats_code') \
-            .select_related('stats_code__stat_name') \
-            .select_related('stats_code__gov_org') \
-            .select_related('stats_code__title') \
-            .prefetch_related('category') \
-            .prefetch_related('category__stats_code') \
-            .prefetch_related('sub_category') \
-            .prefetch_related('sub_category__category')
-
         # 検索用
         print(request.data)
-        filterset = TimeSeriesFilter(request.data, queryset=queryset)
+
+        filterset = TimeSeriesFilter(request.data, queryset=self.queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-
+        table = {
+            'id': serializer.data[0]['stats_code']['id'],
+            'name': serializer.data[0]['stats_code']['table_name']
+        }
         data = {
             'results': serializer.data,
             'unit': serializer.data[0]['unit'],
-            'table_name': serializer.data[0]['stats_code']['table_name'],
+            # 'table_name': serializer.data[0]['stats_code']['table_name'],
+            'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
-            'area_list': self.get_area_list(),
+            'area_list': self.get_area_list(table['id']),
             'category_list': self.make_category_list(
                 category=serializer.data[0]['category']),
+            'stats_code_list': self.get_stats_id_list(),
         }
+
         return Response(data, status.HTTP_200_OK)
 
-    def get_area_list(self):
+    def get_area_list(self, stats_code):
         # areaデータのリスト
+        stats_code_queryset = StatsCode.objects.get(id=stats_code)
+        area_queryset = stats_code_queryset.area_set.all()
+
         serializer = AreaSerializer(
-            instance=Area.objects.all(),
+            instance=area_queryset,
             many=True
         )
         return serializer.data
@@ -208,23 +235,123 @@ class TimeSeriesAPIView(views.APIView):
             'area': '',
         }
 
-        #  get random prefix(stat_name_id + gov_org_id + title_id)
-        stats_code_queryset = random.choice(StatsCode.objects.all())
+        # stats code
+        stats_code_list = StatsCode.objects.all()
+        stats_code_queryset = random.choice(stats_code_list)
         stats_code_id = stats_code_queryset.id
+        params['stats_code'] = stats_code_id
 
         # get category allay
         category_queryset = Category.objects.filter(
             stats_code_id__id__icontains=stats_code_id)
+        # category_queryset = stats_code_queryset.category_set.all()
+
+        category_list = []
+        for cat_id in category_queryset:
+            category_list.append(cat_id)
+            sub_category_queryset = random.choice(SubCategory.objects.filter(
+                category_id__id__icontains=cat_id.id))
+            params['sub_category'].append(sub_category_queryset.id)
+        # for category in category_queryset:
+        #     sub_category_queryset = random.choice(
+        #         category.subcategory_set.all())
+        #     params['sub_category'].append(sub_category_queryset.id)
+
+        # get random area
+        area_queryset = random.choice(
+            stats_code_queryset.area_set.all())
+
+        # area_queryset = random.choice(
+        #     Area.objects.all())
+        area_id = area_queryset.id
+        params['area'] = area_id
+
+        return params
+
+    # get_stats_id_list 登録されているすべてのstats codeを返す
+    def get_stats_id_list(self):
+        queryset = StatsCode.objects.all()
+
+        res = [
+            {
+                'id': q.id,
+                'name': q.table_name,
+            } for q in queryset]
+
+        return res
+
+
+class StatsCodeAPIView(TimeSeriesAPIView):
+    def get(self):
+        return Response(None, status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, *args, **kwargs):
+
+        # 検索用
+        print(request.data)
+        params = self.get_random_data(request.data['stats_code_id'])
+        print(params)
+
+        filterset = TimeSeriesFilter(params, queryset=self.queryset)
+
+        serializer = StatsDataSerializer(instance=filterset.qs, many=True)
+        table = {
+            'id': serializer.data[0]['stats_code']['id'],
+            'name': serializer.data[0]['stats_code']['table_name']
+        }
+        data = {
+            'results': serializer.data,
+            'unit': serializer.data[0]['unit'],
+            # 'table_name': serializer.data[0]['stats_code']['table_name'],
+            'table': table,
+            'area': serializer.data[0]['area'],
+            'sub_category': serializer.data[0]['sub_category'],
+            'area_list': self.get_area_list(table['id']),
+            'category_list': self.make_category_list(
+                category=serializer.data[0]['category']),
+            'stats_code_list': self.get_stats_id_list(),
+        }
+
+        return Response(data, status.HTTP_200_OK)
+
+    def get_random_data(self, stats_code_id=''):
+        print(stats_code_id)
+        params = {
+            'stats_code': stats_code_id,
+            'sub_category': [],
+            'area': '',
+        }
+
+        #  get random prefix(stat_name_id + gov_org_id + title_id)
+        if stats_code_id:
+            stats_code_queryset = StatsCode.objects.get(
+                id=stats_code_id)
+            print(stats_code_queryset)
+        else:
+            stats_code_queryset = random.choice(StatsCode.objects.all())
+            stats_code_id = stats_code_queryset.id
+            params['stats_code'] = stats_code_id
+
+        # get category allay
+        category_queryset = Category.objects.filter(
+            stats_code_id__id__icontains=stats_code_id)
+        # category_queryset = stats_code_queryset.category_set.all()
 
         for cat_id in category_queryset:
             sub_category_queryset = random.choice(SubCategory.objects.filter(
                 category_id__id__icontains=cat_id.id))
             params['sub_category'].append(sub_category_queryset.id)
 
+        # for category in category_queryset:
+        #     sub_category_queryset = random.choice(
+        #         category.subcategory_set.all())
+        #     params['sub_category'].append(sub_category_queryset.id)
+
         # get random area
         area_queryset = random.choice(
-            Area.objects.all())
+            stats_code_queryset.area_set.all())
+        # area_queryset = random.choice(
+        #     Area.objects.all())
 
         params['area'] = area_queryset.id
-        print(params)
         return params

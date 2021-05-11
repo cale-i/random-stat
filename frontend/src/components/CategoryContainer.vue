@@ -83,7 +83,6 @@ export default {
 		},
 		searchStatData() {
 			this.$emit("catchSelected", this.selected);
-			// console.log(this.selected);
 		},
 	},
 	watch: {
@@ -94,6 +93,10 @@ export default {
 		},
 		subCategory: function(newValue) {
 			// console.log(newValue);
+			// console.log(this.selected.subCategory);
+			// 別統計表を再取得した場合、別統計表のsubCategoryが追加登録されてしまうため、
+			// 必ず初期化
+			this.selected.subCategory = {};
 			newValue.map((e) => {
 				this.selected.subCategory[e.category.id] = e.id;
 			});

@@ -67,10 +67,12 @@ const chartModule = {
 	state: {
 		chartURL: "timeseries/",
 		searchURL: "search/",
+		searchStatsCodeURL: "search/statscode/",
 	},
 	getters: {
 		chartURL: (state) => state.chartURL,
 		searchURL: (state) => state.searchURL,
+		searchStatsCodeURL: (state) => state.searchStatsCodeURL,
 	},
 	mutations: {},
 	actions: {
@@ -86,6 +88,15 @@ const chartModule = {
 			return api({
 				method: "post",
 				url: context.getters.searchURL,
+				data,
+			}).then((response) => {
+				return response.data;
+			});
+		},
+		searchStatsCodeChart(context, data) {
+			return api({
+				method: "post",
+				url: context.getters.searchStatsCodeURL,
 				data,
 			}).then((response) => {
 				return response.data;

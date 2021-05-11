@@ -18,6 +18,13 @@
 				<b-col md="6">
 					<b-card>
 						<b-button @click="getStatData('first')">別データを取得</b-button>
+						<StatsCodeContainer
+							v-if="loaded.first"
+							:stats-code-list="statData.first.stats_code_list"
+							:statsCodeID="statData.first.table.id"
+							@catchSelected="searchStatsCode('first', $event)"
+						/>
+
 						<chart
 							v-if="loaded.first"
 							:chart-data="displayDataFirst"
@@ -60,12 +67,15 @@
 // import dayjs from 'dayjs'
 import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
+import StatsCodeContainer from "./StatsCodeContainer";
+
 // import BarChart from "./chart/BarChart.vue"
 export default {
 	name: "ChartContainer",
 	components: {
 		chart,
 		CategoryContainer,
+		StatsCodeContainer,
 		// BarChart
 	},
 	data: () => ({
@@ -377,15 +387,30 @@ export default {
 		},
 		async searchStatData(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
+
 			const params = {
 				area: selected.area,
 				sub_category: Object.values(selected.subCategory),
 			};
-			// console.log(params);
+			console.log(params);
 			// console.log(this.statData);
 			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchChart",
+				params
+			);
+		},
+		async searchStatsCode(target, selected) {
+			// CategoryContainerコンポーネントにて指定した条件のデータを取得
+
+			const params = {
+				stats_code_id: selected.statsCodeID,
+			};
+			console.log(params);
+			// console.log(this.statData);
+			// console.log(await this.$store.dispatch("chart/searchChart", params));
+			this.statData[target] = await this.$store.dispatch(
+				"chart/searchStatsCodeChart",
 				params
 			);
 		},
