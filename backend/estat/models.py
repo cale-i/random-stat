@@ -197,6 +197,11 @@ class Area(models.Model):
         null=False,
         max_length=255
     )
+    stats_code = models.ManyToManyField(
+        StatsCode,
+        verbose_name='統計表 表ID',
+
+    )
 
 
 class Time(models.Model):
