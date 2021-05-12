@@ -43,6 +43,12 @@
 				<b-col md="6">
 					<b-card>
 						<b-button @click="getStatData('second')">別データを取得</b-button>
+						<StatsCodeContainer
+							v-if="loaded.second"
+							:stats-code-list="statData.second.stats_code_list"
+							:statsCodeID="statData.second.table.id"
+							@catchSelected="searchStatsCode('second', $event)"
+						/>
 						<chart
 							v-if="loaded.second"
 							:chart-data="displayDataSecond"
@@ -88,6 +94,10 @@ export default {
 			firstChart: false,
 			secondChart: false,
 		},
+		timeSeriesData: {
+			first: null,
+			second: null,
+		},
 	}),
 	computed: {
 		displayDataFirst() {
@@ -100,12 +110,13 @@ export default {
 
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.statData.first.results.map((e) => e.time.date.slice(0, 4)),
+				labels: self.timeSeriesData.first.map((e) => e.time),
+				// labels: self.statData.first.results.map((e) => e.time.date.slice(0, 4)),
 				datasets: [
 					{
 						label: `【${area}】${subCategory.join(" : ")}`,
 						type: "bar",
-						data: self.statData.first.results.map((e) => e.value),
+						data: self.timeSeriesData.first.map((e) => e.value),
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -127,14 +138,12 @@ export default {
 
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.statData.second.results.map((e) =>
-					e.time.date.slice(0, 4)
-				),
+				labels: self.timeSeriesData.second.map((e) => e.time),
 				datasets: [
 					{
 						label: `【${area}】${subCategory.join(" : ")}`,
 						type: "bar",
-						data: self.statData.second.results.map((e) => e.value),
+						data: self.timeSeriesData.second.map((e) => e.value),
 						backgroundColor: "#bd3f4c",
 
 						categoryPercentage: 0.4,
@@ -158,7 +167,7 @@ export default {
 					{
 						label: self.displayDataFirst.datasets[0].label,
 						type: "bar",
-						data: self.statData.first.results.map((e) => e.value),
+						data: self.timeSeriesData.first.map((e) => e.value),
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -169,7 +178,7 @@ export default {
 					{
 						label: self.displayDataSecond.datasets[0].label,
 						type: "line",
-						data: self.statData.second.results.map((e) => e.value),
+						data: self.timeSeriesData.second.map((e) => e.value),
 						backgroundColor: transparentWhite,
 
 						borderWidth: 2,
@@ -384,6 +393,7 @@ export default {
 		async getStatData(target) {
 			// ランダムデータを取得
 			this.statData[target] = await this.$store.dispatch("chart/getChart");
+			this.setTimeSeriesData();
 		},
 		async searchStatData(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
@@ -392,13 +402,13 @@ export default {
 				area: selected.area,
 				sub_category: Object.values(selected.subCategory),
 			};
-			console.log(params);
 			// console.log(this.statData);
 			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchChart",
 				params
 			);
+			this.setTimeSeriesData();
 		},
 		async searchStatsCode(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
@@ -406,13 +416,73 @@ export default {
 			const params = {
 				stats_code_id: selected.statsCodeID,
 			};
-			console.log(params);
 			// console.log(this.statData);
 			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchStatsCodeChart",
 				params
 			);
+			this.setTimeSeriesData();
+		},
+		setTimeSeriesData() {
+			// statData.<first/second>.resultsのvalue, time.idからtimeSeriesDataを作成する。
+
+			// first, second 両方のデータがNullでない場合にのみ実行
+			if (this.statData.first === null || this.statData.second === null) {
+				return;
+			}
+
+			// first.time, second.timeに存在する一意の値を格納
+			let timeSet = new Set();
+
+			let firstObj = {};
+			for (const el of this.statData.first.results) {
+				const year = el.time.date.slice(0, 4);
+				timeSet.add(year);
+				firstObj[year] = el.value;
+			}
+
+			let secondObj = {};
+			for (const el of this.statData.second.results) {
+				const year = el.time.date.slice(0, 4);
+				timeSet.add(year);
+				secondObj[year] = el.value;
+			}
+
+			for (const el of timeSet) {
+				firstObj[el] = firstObj[el] ? firstObj[el] : "0";
+				secondObj[el] = secondObj[el] ? secondObj[el] : "0";
+			}
+
+			// [{time: 1920, value: 0},{time: 1925, value: 100000}]の形に変形
+			let firstArrObj = [];
+			for (const [key, value] of Object.entries(firstObj)) {
+				firstArrObj.push({ time: key, value: value });
+			}
+			let secondArrObj = [];
+			for (const [key, value] of Object.entries(secondObj)) {
+				secondArrObj.push({ time: key, value: value });
+			}
+
+			// TODO ソート
+
+			this.timeSeriesData["first"] = firstArrObj;
+			this.timeSeriesData["second"] = secondArrObj;
+
+			// this.statData.first.results.map((e) =>
+			// 	timeSet.add(e.time.date.slice(0, 4))
+			// );
+			// this.statData.second.results.map((e) =>
+			// 	timeSet.add(e.time.date.slice(0, 4))
+			// );
+
+			// console.log(timeSet);
+
+			// 欠損値を0で埋める
+			// let firstData = {};
+			// timeSet.map((e) =>
+
+			// );
 		},
 	},
 	async mounted() {

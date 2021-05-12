@@ -1,10 +1,8 @@
 <template>
 	<div>
-		<b-row>
+		<b-row class="mt-3">
 			<b-col md="8">
-				<span class="stats-code">
-					統計表
-				</span>
+				<span class="stats-code"></span>
 				<b-form-select
 					v-model="selected.statsCodeID"
 					:options="statsCodeList"
@@ -14,7 +12,9 @@
 				></b-form-select>
 			</b-col>
 			<b-col md="4">
-				<b-button @click="searchStatData">左記統計表を表示</b-button>
+				<b-button @click="searchStatData" class="btn"
+					>左記統計表で検索</b-button
+				>
 			</b-col>
 		</b-row>
 	</div>
@@ -42,11 +42,9 @@ export default {
 		makeSelected() {
 			// 初期 IDを格納
 			this.selected.statsCodeID = this.statsCodeID;
-			console.log(this.selected.statsCodeID);
 		},
 		searchStatData() {
 			this.$emit("catchSelected", this.selected);
-			console.log(this.selected);
 		},
 	},
 	watch: {
@@ -64,5 +62,8 @@ export default {
 <style scoped>
 .stats-code {
 	font-weight: bold;
+}
+.btn {
+	font-size: 0.7em;
 }
 </style>
