@@ -60,6 +60,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class AreaSerializer(serializers.ModelSerializer):
+    stats_code = StatsCodeSerializer(many=True)
 
     class Meta:
         model = Area

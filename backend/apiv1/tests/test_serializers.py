@@ -245,7 +245,7 @@ class TestStatsCodeSerializer(TestCase):
     StatsCodeSerializerのテストクラス
     """
     input_data = {
-        'id': '00200521_00200_001',
+        'id': '0003410379',
         'statistics_name': '時系列データ 男女，年齢，配偶関係',
         'table_name': '男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）',
         'explanation': ' 1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
@@ -302,7 +302,7 @@ class TestCategorySerializer(TestCase):
     CategorySerializerのテストクラス
     """
     input_data = {
-        'id': '0020504_00200_001_tab',
+        'id': '0003410379_tab',
         'name': '総数，男及び女_時系列',
         'stats_code': TestStatsCodeSerializer.input_data.copy()
     }
@@ -357,7 +357,7 @@ class TestSubCategorySerializer(TestCase):
     """
 
     input_data = {
-        'id': '00200521_00200_001_tab_020',
+        'id': '0003410379_tab_020',
         'name': '人口',
         'unit': '人',
         'category': TestCategorySerializer.input_data.copy(),
@@ -414,6 +414,7 @@ class TestAreaSerializer(TestCase):
     input_data = {
         'id': '00000',
         'name': '全国',
+        'stats_code': [TestStatsCodeSerializer.input_data.copy()]
     }
 
     def test_input_valid(self):
@@ -458,23 +459,6 @@ class TestAreaSerializer(TestCase):
             [e.code for e in serializer.errors['name']],
             ['blank'],
         )
-
-    def test_output_data(self):
-        """出力データの内容検証"""
-        input_data = self.input_data.copy()
-        # オブジェクトを作成
-        area = Area.objects.create(
-            id=input_data['id'],
-            name=input_data['name'],
-        )
-        serializer = AreaSerializer(instance=area)
-
-        # シリアライザの出力内容を検証
-        expected_data = {
-            'id': area.id,
-            'name': area.name,
-        }
-        self.assertDictEqual(serializer.data, expected_data)
 
 
 class TestTimeSerializer(TestCase):
@@ -552,7 +536,7 @@ class TestStatsDataSerializer(TestCase):
     StatsDataSerializerのテストクラス
     """
     input_data = {
-        'id': '00200521_00200_001_area_00000_cat01_100_tab_020_time_2015000000',
+        'id': '0003410379_area_00000_cat01_100_tab_020_time_2015000000',
         'unit': '人',
         'value': '127094745',
         'area': TestAreaSerializer.input_data.copy(),
