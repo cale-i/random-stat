@@ -23,7 +23,12 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --noinput
 
+# test data
+# bash startup/db/startup_database.sh
+
+
 # nginx settings
 mv ./startup/nginx.conf /etc/nginx/conf.d/default.conf
 service nginx start
 gunicorn config.wsgi:application --bind=unix:/var/run/gunicorn/gunicorn.sock
+
