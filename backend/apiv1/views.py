@@ -155,13 +155,6 @@ class TimeSeriesAPIView(views.APIView):
         end = datetime.datetime.now()
         print(f'end: {end}')
         print(f'time: {end-start}')
-        # print(data['unit']) # string
-        # print(data['table']) #dict
-        print(data['area'])
-        # print(data['sub_category'])
-        # print(data['area_list'])
-        # print(data['category_list'])
-        # print(data['stats_code_list'])
 
         return Response(data, status.HTTP_200_OK)
 
@@ -290,7 +283,6 @@ class StatsCodeAPIView(TimeSeriesAPIView):
         # 検索用
         print(request.data)
         params = self.get_random_data(request.data['stats_code_id'])
-        print(params)
 
         filterset = TimeSeriesFilter(params, queryset=self.queryset)
 
@@ -315,7 +307,6 @@ class StatsCodeAPIView(TimeSeriesAPIView):
         return Response(data, status.HTTP_200_OK)
 
     def get_random_data(self, stats_code_id=''):
-        print(stats_code_id)
         params = {
             'stats_code': stats_code_id,
             'sub_category': [],
@@ -326,7 +317,6 @@ class StatsCodeAPIView(TimeSeriesAPIView):
         if stats_code_id:
             stats_code_queryset = StatsCode.objects.get(
                 id=stats_code_id)
-            print(stats_code_queryset)
         else:
             stats_code_queryset = random.choice(StatsCode.objects.all())
             stats_code_id = stats_code_queryset.id
