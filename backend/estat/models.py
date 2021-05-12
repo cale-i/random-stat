@@ -55,7 +55,7 @@ class Title(models.Model):
     id = models.CharField(
         verbose_name='統計コード',
         primary_key=True,
-        max_length=3
+        max_length=255
     )
     name = models.CharField(
         verbose_name='統計コード名',
