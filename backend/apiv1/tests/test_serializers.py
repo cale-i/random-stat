@@ -414,7 +414,6 @@ class TestAreaSerializer(TestCase):
     input_data = {
         'id': '00000',
         'name': '全国',
-        'stats_code': [TestStatsCodeSerializer.input_data.copy()]
     }
 
     def test_input_valid(self):
@@ -459,6 +458,23 @@ class TestAreaSerializer(TestCase):
             [e.code for e in serializer.errors['name']],
             ['blank'],
         )
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+        input_data = self.input_data.copy()
+        # オブジェクトを作成
+        area = Area.objects.create(
+            id=input_data['id'],
+            name=input_data['name'],
+        )
+        serializer = AreaSerializer(instance=area)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'id': area.id,
+            'name': area.name,
+        }
+        self.assertDictEqual(serializer.data, expected_data)
 
 
 class TestTimeSerializer(TestCase):
