@@ -4,5 +4,8 @@ django-debug-toolbar
 django-environ
 django-filter
 djangorestframework
+djangorestframework-simplejwt
+djoser
+python-dotenv
 psycopg2
 gunicorn

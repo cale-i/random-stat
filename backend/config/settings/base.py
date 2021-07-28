@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 
 ###############
@@ -41,10 +42,14 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     'django_filters',
+    'djoser',
+
 
     # My Applications
     'estat.apps.EstatConfig',
     'apiv1.apps.Apiv1Config',
+    'accounts.apps.AccountsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -131,16 +136,32 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 
 
+####################################
+#          Authentication          #
+####################################
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
 ##################
 # REST Framework #
 ##################
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100,
-
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     # Base API policies
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
 }

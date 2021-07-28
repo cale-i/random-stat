@@ -11,10 +11,20 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('apiv1.urls')),
-    # path('example/', include('example.urls')),
+
+
+    # ROOT
     path('', TemplateView.as_view(template_name='index.html')),
 
+    # JWT
+    path('api/v1/auth/', include('djoser.urls')),
+    path('api/v1/auth/', include('djoser.urls.jwt')),
+    
+    # API
+    path('api/v1/', include('apiv1.urls')),
+    
+    # Redirect
+    re_path('', RedirectView.as_view(url='/')),
 ]
 
 if settings.DEBUG:
