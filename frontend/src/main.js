@@ -1,26 +1,27 @@
-import Vue from 'vue'
+import Vue from "vue";
 // BootstrapVue
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
 
-import * as filters from './filters'
+import * as filters from "./filters";
 
-Vue.config.productionTip = process.env.NODE_ENV === 'production'
+Vue.config.productionTip = process.env.NODE_ENV === "production";
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 
 // フィルタの読み込み
-Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key]);
+Object.keys(filters).forEach((key) => {
+	Vue.filter(key, filters[key]);
 });
 
 new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+	router,
+	store,
+	render: (h) => h(App),
+}).$mount("#app");
