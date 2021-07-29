@@ -1,7 +1,10 @@
 <template>
 	<div id="header">
 		<b-navbar type="dark" variant="dark" fixed="top">
-			<b-navbar-brand href="/">Random Stat</b-navbar-brand>
+			<b-navbar-brand href="/" class="navbar-brand">
+				<b-icon icon="bar-chart-line" aria-hidden="true"></b-icon>
+				Random Stat
+			</b-navbar-brand>
 
 			<b-navbar-nav class="ml-auto">
 				<b-nav-item to="/login" active-class="active">
@@ -56,5 +59,11 @@ export default {
 <style scoped>
 #header {
 	margin-bottom: 60px;
+}
+.navbar-brand {
+	font-size: 1.5em;
+}
+.navbar-nav {
+	font-size: 1.2em;
 }
 </style>
