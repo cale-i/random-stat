@@ -21,9 +21,15 @@ export default {
 			today: "",
 		};
 	},
-	methods: {},
+	methods: {
+		async authReload() {
+			await this.$store.dispatch("auth/reload");
+		},
+	},
 
-	mounted() {},
+	mounted() {
+		this.authReload();
+	},
 	created() {},
 	computed: {},
 };
