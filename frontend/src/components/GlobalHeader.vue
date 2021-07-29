@@ -6,25 +6,50 @@
 				Random Stat
 			</b-navbar-brand>
 
-			<b-navbar-nav class="ml-auto">
-				<b-nav-item to="/login" active-class="active">
-					<b-icon icon="person-fill" aria-hidden="true"></b-icon>
-					Login
-				</b-nav-item>
+			<b-navbar-nav class="ml-auto navbar-nav">
+				<template v-if="isLoggedIn">
+					<b-nav-item @click="logout" active-class="active">
+						<b-icon icon="power" aria-hidden="true"></b-icon>
+						Logout
+					</b-nav-item>
+				</template>
+
+				<template v-else>
+					<b-nav-item to="/login" active-class="active">
+						<b-icon icon="person" aria-hidden="true"></b-icon>
+						Login
+					</b-nav-item>
+				</template>
 
 				<b-nav-item-dropdown no-caret right>
 					<template #button-content>
 						<b-icon icon="list" aria-hidden="true"></b-icon>
 					</template>
-					<b-dropdown-item-button to="/account">
-						<b-icon icon="person-fill" aria-hidden="true"></b-icon>
-						Account
-					</b-dropdown-item-button>
 
-					<b-dropdown-item-button @click="logout" variant="info">
-						<b-icon icon="power" aria-hidden="true"></b-icon>
-						Logout
-					</b-dropdown-item-button>
+					<template v-if="isLoggedIn">
+						<b-dropdown-item to="/dashboard">
+							<b-icon icon="house-door" aria-hidden="true"></b-icon>
+							Dashboard
+						</b-dropdown-item>
+
+						<b-dropdown-item to="/dashboard/account">
+							<b-icon icon="gear" aria-hidden="true"></b-icon>
+							Account
+						</b-dropdown-item>
+
+						<b-dropdown-divider></b-dropdown-divider>
+
+						<b-dropdown-item-button @click="logout" variant="info">
+							<b-icon icon="power" aria-hidden="true"></b-icon>
+							Logout
+						</b-dropdown-item-button>
+					</template>
+					<template v-else>
+						<b-dropdown-item to="/login" variant="success">
+							<b-icon icon="person" aria-hidden="true"></b-icon>
+							Login
+						</b-dropdown-item>
+					</template>
 				</b-nav-item-dropdown>
 			</b-navbar-nav>
 		</b-navbar>
@@ -36,7 +61,11 @@ export default {
 	components: {},
 	props: {},
 	data: () => ({}),
-	computed: {},
+	computed: {
+		isLoggedIn: function() {
+			return this.$store.getters["auth/isLoggedIn"];
+		},
+	},
 	methods: {
 		logout() {
 			this.$store.dispatch("auth/logout");
