@@ -11,7 +11,7 @@ import CreateAccountPage from "@/pages/User/CreateAccountPage";
 import DashboardBasePage from "@/pages/User/Perm/DashboardBasePage";
 import DashboardHomePage from "@/pages/User/Perm/DashboardHomePage";
 
-import UserPage from "@/pages/User/Perm/UserPage";
+import AccountPage from "@/pages/User/Perm/AccountPage";
 
 import SetUsernamePage from "@/pages/User/Perm/Auth/SetUsernamePage";
 import SetEmailPage from "@/pages/User/Perm/Auth/SetEmailPage";
@@ -42,7 +42,7 @@ const router = new VueRouter({
 			meta: { requiresAuth: true },
 			children: [
 				{ path: "", component: DashboardHomePage },
-				{ path: "user", component: UserPage },
+				{ path: "account", component: AccountPage },
 				{ path: "set-username", component: SetUsernamePage },
 				{ path: "set-email", component: SetEmailPage },
 				{ path: "set-password", component: SetPasswordPage },
