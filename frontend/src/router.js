@@ -5,7 +5,7 @@ import store from "@/store";
 
 // import HomePage from "@/pages/HomePage";
 
-import LoginPage from "@/pages/User/LoginPage";
+// import LoginPage from "@/pages/User/LoginPage";
 import CreateAccountPage from "@/pages/User/CreateAccountPage";
 
 import DashboardBasePage from "@/pages/User/Perm/DashboardBasePage";
@@ -29,7 +29,7 @@ const router = new VueRouter({
 				import("@/pages/HomePage" /* webpackChunkName: "Home" */),
 			name: "home",
 		},
-		{ path: "/login", component: LoginPage, name: "login" },
+		// { path: "/login", component: LoginPage, name: "login" },
 		{
 			path: "/create-account",
 			component: CreateAccountPage,
@@ -81,12 +81,12 @@ router.beforeEach((to, from, next) => {
 						next();
 					})
 					.catch(() => {
-						// 再取得できない場合login画面へ
-						forceToLoginPage(to, from, next);
+						// 再取得できない場合ホーム画面へ
+						forceToHome(to, from, next);
 					});
 			} else {
-				// 認証用トークンがない場合は、ログイン画面へ
-				forceToLoginPage(to, from, next);
+				// 認証用トークンがない場合は、ホーム画面へ
+				forceToHome(to, from, next);
 			}
 		}
 	} else {
@@ -95,11 +95,11 @@ router.beforeEach((to, from, next) => {
 	}
 });
 
-// ログイン画面へ強制移動
-function forceToLoginPage(to, from, next) {
+// ホーム画面へ強制移動
+function forceToHome(to, from, next) {
 	console.log("force user to login page");
 	next({
-		path: "/login",
+		path: "/",
 		// 遷移先のURLはクエリ文字列として付加
 		query: { next: to.fullPath },
 	});

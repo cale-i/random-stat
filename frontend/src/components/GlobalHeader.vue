@@ -15,10 +15,11 @@
 				</template>
 
 				<template v-else>
-					<b-nav-item to="/login" active-class="active">
+					<b-nav-item v-b-modal.loginModal>
 						<b-icon icon="person" aria-hidden="true"></b-icon>
 						Login
 					</b-nav-item>
+					<LoginModal />
 				</template>
 
 				<b-nav-item-dropdown no-caret right>
@@ -57,8 +58,12 @@
 </template>
 
 <script>
+import LoginModal from "@/components/auth/LoginModal.vue";
+
 export default {
-	components: {},
+	components: {
+		LoginModal,
+	},
 	props: {},
 	data: () => ({}),
 	computed: {
