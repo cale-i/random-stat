@@ -45,11 +45,13 @@
 							Logout
 						</b-dropdown-item-button>
 					</template>
+
 					<template v-else>
-						<b-dropdown-item to="/login" variant="success">
+						<b-dropdown-item v-b-modal.loginModal variant="success">
 							<b-icon icon="person" aria-hidden="true"></b-icon>
 							Login
 						</b-dropdown-item>
+						<LoginModal />
 					</template>
 				</b-nav-item-dropdown>
 			</b-navbar-nav>
