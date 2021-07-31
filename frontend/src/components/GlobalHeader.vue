@@ -19,7 +19,6 @@
 						<b-icon icon="person" aria-hidden="true"></b-icon>
 						Login
 					</b-nav-item>
-					<LoginModal />
 				</template>
 
 				<b-nav-item-dropdown no-caret right>
@@ -51,11 +50,13 @@
 							<b-icon icon="person" aria-hidden="true"></b-icon>
 							Login
 						</b-dropdown-item>
-						<LoginModal />
 					</template>
 				</b-nav-item-dropdown>
 			</b-navbar-nav>
 		</b-navbar>
+		<div>
+			<LoginModal />
+		</div>
 	</div>
 </template>
 
