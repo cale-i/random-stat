@@ -1,17 +1,29 @@
 <template>
-	<b-modal id="loginModal" centered>
+	<b-modal
+		id="loginModal"
+		title="Login"
+		header-bg-variant="dark"
+		header-text-variant="light"
+		body-bg-variant="light"
+		body-text-variant="dark"
+		footer-bg-variant="light"
+		footer-text-variant="dark"
+		centered
+		no-stacking
+		size="md"
+	>
 		<template #modal-header="{}">
-			<router-link to="/create-account/" class="btn btn-sm btn-warning">
-				アカウントを作成
-			</router-link>
-			<h5>
-				<b-icon icon="bar-chart-line" aria-hidden="true"></b-icon> Random Stat
-			</h5>
+			<b-col md="4">
+				<div v-b-modal.signUpModal class="btn btn-sm btn-warning">
+					Sign Up
+				</div>
+			</b-col>
+			<b-col md="4">
+				<h4 class="text-center">Login</h4>
+			</b-col>
+			<b-col md="4"></b-col>
 		</template>
 		<template #default="{}">
-			<div class="card-header">
-				<h3 class="text-center font-weight-light">Login</h3>
-			</div>
 			<div class="card-body">
 				<b-form @submit.prevent="submitLogin">
 					<b-form-group
@@ -52,7 +64,7 @@
 						class="d-flex align-items-center justify-content-between mt-4 mb-0"
 					>
 						<a class="small" href="password.html">Forgot Password?</a>
-						<b-button class="" variant="success" type="submit">
+						<b-button size="md" variant="success" type="submit">
 							Login
 						</b-button>
 					</div>
