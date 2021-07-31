@@ -46,6 +46,13 @@
 					</template>
 
 					<template v-else>
+						<b-dropdown-item v-b-modal.signUpModal>
+							<b-icon icon="pen" aria-hidden="true"></b-icon>
+							アカウントを作成
+						</b-dropdown-item>
+
+						<b-dropdown-divider></b-dropdown-divider>
+
 						<b-dropdown-item v-b-modal.loginModal variant="success">
 							<b-icon icon="person" aria-hidden="true"></b-icon>
 							Login
@@ -57,14 +64,19 @@
 		<div>
 			<LoginModal />
 		</div>
+		<div>
+			<SignUpModal />
+		</div>
 	</div>
 </template>
 
 <script>
+import SignUpModal from "@/components/auth/SignUpModal.vue";
 import LoginModal from "@/components/auth/LoginModal.vue";
 
 export default {
 	components: {
+		SignUpModal,
 		LoginModal,
 	},
 	props: {},

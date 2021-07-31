@@ -6,7 +6,7 @@ import store from "@/store";
 // import HomePage from "@/pages/HomePage";
 
 // import LoginPage from "@/pages/User/LoginPage";
-import CreateAccountPage from "@/pages/User/CreateAccountPage";
+// import CreateAccountPage from "@/pages/User/CreateAccountPage";
 
 import DashboardBasePage from "@/pages/User/Perm/DashboardBasePage";
 import DashboardHomePage from "@/pages/User/Perm/DashboardHomePage";
@@ -30,11 +30,7 @@ const router = new VueRouter({
 			name: "home",
 		},
 		// { path: "/login", component: LoginPage, name: "login" },
-		{
-			path: "/create-account",
-			component: CreateAccountPage,
-			name: "create-account",
-		},
+		// {path: "/create-account",component: CreateAccountPage,name: "create-account",},
 
 		{
 			path: "/dashboard",
