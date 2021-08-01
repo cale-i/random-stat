@@ -9,14 +9,14 @@
 			<b-navbar-nav class="ml-auto navbar-nav">
 				<template v-if="isLoggedIn">
 					<b-nav-item @click="logout" active-class="active">
-						<b-icon icon="power" aria-hidden="true"></b-icon>
+						<b-icon icon="power" aria-hidden="true" variant="info"></b-icon>
 						Logout
 					</b-nav-item>
 				</template>
 
 				<template v-else>
 					<b-nav-item v-b-modal.loginModal>
-						<b-icon icon="person" aria-hidden="true"></b-icon>
+						<b-icon icon="person" aria-hidden="true" variant="success"></b-icon>
 						Login
 					</b-nav-item>
 				</template>
