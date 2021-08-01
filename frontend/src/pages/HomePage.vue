@@ -28,7 +28,11 @@ export default {
 	},
 	methods: {
 		async authReload() {
-			await this.$store.dispatch("auth/reload");
+			// Tokenが存在する場合はユーザー情報を取得する
+			const token = localStorage.getItem("access");
+			if (token != null) {
+				await this.$store.dispatch("auth/reload");
+			}
 		},
 	},
 
