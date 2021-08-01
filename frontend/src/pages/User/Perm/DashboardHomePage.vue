@@ -7,7 +7,19 @@
 
 			<b-col md="8">
 				<h1>ダッシュボード ほめ</h1>
-				aaa
+				<p v-b-modal.modal-login>Launch centered modal</p>
+
+				<b-modal id="modal-login" centered title="BootstrapVue">
+					<p class="my-4">Vertically centered modal!</p>
+				</b-modal>
+
+				<b-button v-b-modal.modal-login>
+					<b-icon icon="person" aria-hidden="true"></b-icon>
+					Login
+				</b-button>
+				<b-modal id="modal-login">
+					test
+				</b-modal>
 			</b-col>
 		</b-row>
 		<b-row> </b-row>
