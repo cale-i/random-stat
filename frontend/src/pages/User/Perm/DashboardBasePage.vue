@@ -2,16 +2,8 @@
 	<div>
 		<GlobalHeader />
 		<GlobalMessage />
-		<div>
-			<div class="row">
-				<div class="col-md-3"></div>
-				<div class="main col-md-9">
-					<b-row>
-						<router-view />
-					</b-row>
-				</div>
-			</div>
-		</div>
+
+		<router-view />
 	</div>
 </template>
 
@@ -29,25 +21,10 @@ export default {
 		user: {},
 	}),
 	computed: {},
-	methods: {
-		logout() {
-			this.$store.dispatch("auth/logout");
-			this.$store.dispatch("message/setInfoMessage", {
-				message: "ログアウトしました。",
-			});
-
-			console.log("success logout");
-
-			// クエリ文字列に「next」がなければホーム画面へ
-			// const next = this.$route.query.next || "/";
-			this.$router.replace("/login");
-		},
-	},
+	methods: {},
 	watch: {},
 	mounted() {},
-	// updated() {
-	//   this.makeSelected();
-	// },
+	updated() {},
 };
 </script>
 <style scoped></style>
