@@ -16,7 +16,7 @@
 		<b-alert
 			variant="warning"
 			:show="message.dismissCountDown"
-			v-show="message.warnings"
+			v-show="message.warnings.length"
 			dismissible
 			fade
 			style="z-index: 2000;"
