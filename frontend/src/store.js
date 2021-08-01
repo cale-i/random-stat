@@ -201,12 +201,14 @@ const messageModule = {
 		error: "",
 		warnings: [],
 		info: "",
+		dismissCountDown: 0,
 	},
 
 	getters: {
 		error: (state) => state.error,
 		warnings: (state) => state.warnings,
 		info: (state) => state.info,
+		dismissCountDown: (state) => state.dismissCountDown,
 	},
 
 	mutations: {
@@ -225,6 +227,11 @@ const messageModule = {
 			state.error = "";
 			state.warnings = [];
 			state.info = "";
+			state.dismissCountDown = 0;
+		},
+		setAlertTimer(state) {
+			// Alertのタイマーを設定
+			state.dismissCountDown = 5;
 		},
 	},
 
@@ -233,18 +240,21 @@ const messageModule = {
 		setErrorMessage(context, payload) {
 			context.commit("clearMessages");
 			context.commit("setMessage", { error: payload.message });
+			context.commit("setAlertTimer");
 		},
 
 		// Warningメッセージ(複数)表示
 		setWarningMessage(context, payload) {
 			context.commit("clearMessages");
 			context.commit("setMessage", { warnings: payload.message });
+			context.commit("setAlertTimer");
 		},
 
 		// Infoメッセージ表示
 		setInfoMessage(context, payload) {
 			context.commit("clearMessages");
 			context.commit("setMessage", { info: payload.message });
+			context.commit("setAlertTimer");
 		},
 		clearAllMessages(content) {
 			content.commit("clearMessages");

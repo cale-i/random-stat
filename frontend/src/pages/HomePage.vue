@@ -1,12 +1,16 @@
 <template>
 	<div id="home-page">
 		<GlobalHeader />
+
+		<GlobalMessage />
+
 		<ChartContainer />
 	</div>
 </template>
 
 <script>
 import GlobalHeader from "@/components/GlobalHeader.vue";
+import GlobalMessage from "@/components/GlobalMessage.vue";
 import ChartContainer from "@/components/ChartContainer.vue";
 
 // import { mapGetters } from 'vuex'
@@ -14,6 +18,7 @@ import ChartContainer from "@/components/ChartContainer.vue";
 export default {
 	components: {
 		GlobalHeader,
+		GlobalMessage,
 		ChartContainer,
 	},
 	data: function() {

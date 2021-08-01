@@ -42,7 +42,7 @@ api.interceptors.response.use(
 		if (status === 400) {
 			// バリデーション警告
 			message = [].concat.apply([], Object.values(error.response.data));
-			store.dispatch("message/setWarningMessages", { message });
+			store.dispatch("message/setWarningMessage", { message });
 		} else if (status === 401) {
 			// 認証エラー
 			const token = localStorage.getItem("access");

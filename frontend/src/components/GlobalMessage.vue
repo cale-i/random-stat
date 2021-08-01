@@ -3,22 +3,24 @@
 	<div id="messages">
 		<b-alert
 			variant="danger"
-			show="3"
+			:show="message.dismissCountDown"
+			v-show="message.error"
 			dismissible
 			fade
-			v-show="message.error"
-			class="mb-0"
+			style="z-index: 2000;"
+			class="mb-0 position-fixed fixed-top"
 		>
 			{{ message.error }}
 		</b-alert>
 
 		<b-alert
 			variant="warning"
-			show
+			:show="message.dismissCountDown"
+			v-show="message.warnings"
 			dismissible
 			fade
-			v-show="message.warnings.length > 0"
-			class="mb-0"
+			style="z-index: 2000;"
+			class="mb-0 position-fixed fixed-top"
 		>
 			<p v-for="warning in message.warnings" :key="warning" class="mb-0">
 				{{ warning }}
@@ -27,11 +29,12 @@
 
 		<b-alert
 			variant="info"
-			show
+			:show="message.dismissCountDown"
 			v-show="message.info"
 			dismissible
 			fade
-			class="mb-0"
+			style="z-index: 2000;"
+			class="mb-0 position-fixed fixed-top"
 		>
 			{{ message.info }}
 		</b-alert>
