@@ -13,7 +13,9 @@ const api = axios.create({
 api.interceptors.request.use(
 	function(config) {
 		// メッセージをクリア
-		store.dispatch("message/clearAllMessages");
+		// ログアウト時のメッセージが表示されないため
+		// エラー時にのみクリアするよう変更
+		// store.dispatch("message/clearAllMessages");
 		// 認証用トークンがあればリクエストヘッダに乗せる
 		const token = localStorage.getItem("access");
 		if (token) {
@@ -36,6 +38,9 @@ api.interceptors.response.use(
 		// console.log("error.response", error.response);
 		const status = error.response ? error.response.status : 500;
 		console.log(status);
+
+		// メッセージをクリア
+		store.dispatch("message/clearAllMessages");
 
 		// エラーの内容に応じてstoreのメッセージを更新
 		let message;
