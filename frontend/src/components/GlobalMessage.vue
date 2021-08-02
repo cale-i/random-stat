@@ -13,6 +13,12 @@
 			class="mb-0 position-fixed fixed-top"
 		>
 			{{ message.error }}
+			<b-progress
+				variant="danger"
+				:max="message.dismissSecs"
+				:value="message.dismissCountDown"
+				height="4px"
+			></b-progress>
 		</b-alert>
 
 		<b-alert
@@ -29,6 +35,12 @@
 			<p v-for="warning in message.warnings" :key="warning" class="mb-0">
 				{{ warning }}
 			</p>
+			<b-progress
+				variant="warning"
+				:max="message.dismissSecs"
+				:value="message.dismissCountDown"
+				height="4px"
+			></b-progress>
 		</b-alert>
 
 		<b-alert
@@ -43,6 +55,12 @@
 			class="mb-0 position-fixed fixed-top"
 		>
 			{{ message.info }}
+			<b-progress
+				variant="info"
+				:max="message.dismissSecs"
+				:value="message.dismissCountDown"
+				height="4px"
+			></b-progress>
 		</b-alert>
 	</div>
 </template>
