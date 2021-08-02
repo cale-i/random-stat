@@ -201,6 +201,7 @@ const messageModule = {
 		error: "",
 		warnings: [],
 		info: "",
+		dismissSecs: 5,
 		dismissCountDown: 0,
 	},
 
@@ -208,6 +209,7 @@ const messageModule = {
 		error: (state) => state.error,
 		warnings: (state) => state.warnings,
 		info: (state) => state.info,
+		dismissSecs: (state) => state.dismissSecs,
 		dismissCountDown: (state) => state.dismissCountDown,
 	},
 
@@ -231,7 +233,11 @@ const messageModule = {
 		},
 		setAlertTimer(state) {
 			// Alertのタイマーを設定
-			state.dismissCountDown = 5;
+			state.dismissCountDown = state.dismissSecs;
+		},
+		countDownChanged(state, dismissCountDown) {
+			// Alertのカウントダウンを制御
+			state.dismissCountDown = dismissCountDown;
 		},
 	},
 
