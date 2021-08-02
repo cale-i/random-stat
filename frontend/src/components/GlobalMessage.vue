@@ -6,6 +6,8 @@
 			:show="message.dismissCountDown"
 			v-show="message.error"
 			dismissible
+			@dismissed="message.dismissCountDown = 0"
+			@dismiss-count-down="countDownChanged"
 			fade
 			style="z-index: 2000;"
 			class="mb-0 position-fixed fixed-top"
@@ -18,6 +20,8 @@
 			:show="message.dismissCountDown"
 			v-show="message.warnings.length"
 			dismissible
+			@dismissed="message.dismissCountDown = 0"
+			@dismiss-count-down="countDownChanged"
 			fade
 			style="z-index: 2000;"
 			class="mb-0 position-fixed fixed-top"
@@ -32,6 +36,8 @@
 			:show="message.dismissCountDown"
 			v-show="message.info"
 			dismissible
+			@dismissed="message.dismissCountDown = 0"
+			@dismiss-count-down="countDownChanged"
 			fade
 			style="z-index: 2000;"
 			class="mb-0 position-fixed fixed-top"
@@ -51,6 +57,11 @@ export default {
 			return this.$store.state.message;
 		},
 	},
-	methods: {},
+	methods: {
+		countDownChanged(dismissCountDown) {
+			this.$store.commit("message/countDownChanged", dismissCountDown);
+		},
+	},
+	mounted() {},
 };
 </script>
