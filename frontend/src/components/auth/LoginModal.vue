@@ -32,6 +32,7 @@
 						label-cols-md="3"
 						label-align-md="right"
 						label-for="inputEmail"
+						class="my-4"
 					>
 						<b-form-input
 							id="inputEmail"
@@ -49,6 +50,7 @@
 						label-cols-md="3"
 						label-align-md="right"
 						label-for="inputPassword"
+						class="my-4"
 					>
 						<b-form-input
 							id="inputPassword"
