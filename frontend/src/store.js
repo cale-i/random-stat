@@ -52,19 +52,23 @@ const authModule = {
 	namespaced: true,
 	state: {
 		email: "",
+		username: "",
 		isLoggedIn: false,
 	},
 	getters: {
 		email: (state) => state.email,
+		username: (state) => state.username,
 		isLoggedIn: (state) => state.isLoggedIn,
 	},
 	mutations: {
 		setUserData(state, payload) {
 			state.email = payload.user.email;
+			state.username = payload.user.username;
 			state.isLoggedIn = true;
 		},
 		clearUserData(state) {
 			state.email = "";
+			state.username = "";
 			state.isLoggedIn = false;
 		},
 	},
