@@ -134,11 +134,11 @@ export default {
 	methods: {
 		submitSignUp() {
 			// confirm password
-			console.log();
 			if (this.form.password !== this.form.rePassword) {
 				console.log("パスワードが一致しません");
 				return;
 			}
+
 			// Sign Up
 			this.$store
 				.dispatch("auth/createAccount", {
