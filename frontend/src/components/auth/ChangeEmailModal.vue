@@ -27,12 +27,14 @@
 						label-cols-md="3"
 						label-align-md="right"
 						label-for="inputEmail"
+						class="mt-5"
 					>
 						<b-form-input
 							id="inputEmail"
 							v-model="form.newEmail"
 							type="email"
 							required
+							placeholder="新しいメールアドレス"
 							autofocus
 							autocomplete="true"
 						></b-form-input>
@@ -44,15 +46,19 @@
 						label-cols-md="3"
 						label-align-md="right"
 						label-for="inputConfirmEmail"
+						class="mb-2"
 					>
 						<b-form-input
 							id="inputConfirmEmail"
 							v-model="form.confirmEmail"
 							type="email"
 							required
-							autofocus
+							placeholder="確認"
 							autocomplete="true"
 						></b-form-input>
+						<b-form-valid-feedback :state="validation">
+							<br />
+						</b-form-valid-feedback>
 						<b-form-invalid-feedback :state="validation">
 							Emailが一致しません｡
 						</b-form-invalid-feedback>
@@ -76,7 +82,7 @@
 					</b-form-group>
 
 					<div
-						class="d-flex align-items-center justify-content-between mt-4 mb-0"
+						class="d-flex align-items-center justify-content-between mt-2 mb-0"
 					>
 						<div></div>
 						<b-button size="md" variant="success" type="submit">

@@ -28,6 +28,7 @@
 						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputCurrentPassword"
+						class="mb-5"
 					>
 						<b-form-input
 							id="inputCurrentPassword"
@@ -70,6 +71,10 @@
 							placeholder="確認"
 							required
 						></b-form-input>
+
+						<b-form-valid-feedback :state="validation">
+							<br />
+						</b-form-valid-feedback>
 						<b-form-invalid-feedback :state="validation">
 							パスワードが一致しません｡
 						</b-form-invalid-feedback>
