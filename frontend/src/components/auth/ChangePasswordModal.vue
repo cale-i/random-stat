@@ -70,6 +70,9 @@
 							placeholder="確認"
 							required
 						></b-form-input>
+						<b-form-invalid-feedback :state="validation">
+							パスワードが一致しません｡
+						</b-form-invalid-feedback>
 					</b-form-group>
 
 					<div
@@ -100,9 +103,21 @@ export default {
 			reNewPassword: "",
 		},
 	}),
-	computed: {},
+	computed: {
+		validation() {
+			// rePasswordが空白の場合はvalidation error messageを表示させない｡
+			if (!this.form.reNewPassword) return true;
+			return this.form.newPassword === this.form.reNewPassword;
+		},
+	},
 	methods: {
 		changePassword() {
+			// confirm password
+			if (this.form.newPassword !== this.form.reNewPassword) {
+				console.log("パスワードが一致しません");
+				return;
+			}
+
 			this.$store
 				.dispatch("auth/setPassword", {
 					current_password: this.form.currentPassword,
