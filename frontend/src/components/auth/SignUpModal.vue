@@ -90,6 +90,10 @@
 							required
 							autocomplete="true"
 						></b-form-input>
+						<b-form-valid-feedback :state="validation">
+							<br />
+						</b-form-valid-feedback>
+
 						<b-form-invalid-feedback :state="validation">
 							パスワードが一致しません｡
 						</b-form-invalid-feedback>
