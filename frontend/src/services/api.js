@@ -57,7 +57,13 @@ api.interceptors.response.use(
 				message = "認証エラー";
 			}
 			store.dispatch("auth/logout");
-			store.dispatch("message/setErrorMessage", { message });
+			store.dispatch("message/setErrorMessage", {
+				message,
+			});
+
+			// rootへ戻る
+			const next = "/";
+			this.$router.replace(next);
 		} else if (status === 403) {
 			// 権限エラー
 			message = "権限エラー";
