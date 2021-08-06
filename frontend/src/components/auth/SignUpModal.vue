@@ -90,6 +90,9 @@
 							required
 							autocomplete="true"
 						></b-form-input>
+						<b-form-invalid-feedback :state="validation">
+							パスワードが一致しません｡
+						</b-form-invalid-feedback>
 					</b-form-group>
 					<div
 						class="d-flex align-items-center justify-content-between mt-4 mb-0"
@@ -121,7 +124,13 @@ export default {
 			rePassword: "",
 		},
 	}),
-	computed: {},
+	computed: {
+		validation() {
+			// rePasswordが空白の場合はvalidation error messageを表示させない｡
+			if (!this.form.rePassword) return true;
+			return this.form.password === this.form.rePassword;
+		},
+	},
 	methods: {
 		submitSignUp() {
 			// confirm password
