@@ -53,6 +53,9 @@
 							autofocus
 							autocomplete="true"
 						></b-form-input>
+						<b-form-invalid-feedback :state="validation">
+							Emailが一致しません｡
+						</b-form-invalid-feedback>
 					</b-form-group>
 
 					<b-form-group
@@ -100,15 +103,19 @@ export default {
 			password: "",
 		},
 	}),
-	computed: {},
+	computed: {
+		validation() {
+			// rePasswordが空白の場合はvalidation error messageを表示させない｡
+			if (!this.form.confirmEmail) return true;
+			return this.form.newEmail === this.form.confirmEmail;
+		},
+	},
 	methods: {
 		changeEmail() {
 			console.log(this.form);
-			// todo
-			// validation
-			// user bootstrap util
+
 			if (this.form.newEmail !== this.form.confirmEmail) {
-				console.log("email validation error");
+				console.log("Emailが一致しません");
 				return;
 			}
 			this.$store
