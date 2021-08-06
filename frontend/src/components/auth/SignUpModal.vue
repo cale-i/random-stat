@@ -144,23 +144,11 @@ export default {
 						// クエリ文字列に「next」がなければホーム画面へ
 						const next = this.$route.query.next || "/";
 						this.$router.replace(next);
-						// Toastを表示
-						const msg = "登録しました";
-						this.showToast(true, msg);
 
 						// ログインモーダルを表示
 						this.$bvModal.show("loginModal");
 					}
 				});
-		},
-		showToast(append = false, msg) {
-			this.$bvToast.toast(msg, {
-				title: "Sign Up",
-				variant: "success",
-				toaster: "b-toaster-top-full",
-				autoHideDelay: 5000,
-				appendToast: append,
-			});
 		},
 	},
 	watch: {},
