@@ -28,7 +28,7 @@
 						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputCurrentPassword"
-						class="mb-5"
+						class="my-5"
 					>
 						<b-form-input
 							id="inputCurrentPassword"
