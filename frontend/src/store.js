@@ -141,14 +141,6 @@ const authModule = {
 				return user;
 			});
 		},
-		// ユーザー情報取得
-		getUserData() {
-			return api.get("/auth/users/me/").then((response) => {
-				const user = response.data;
-				// storeのユーザー情報を更新
-				return user;
-			});
-		},
 		// アカウント作成
 		createAccount(context, payload) {
 			console.log(payload);
