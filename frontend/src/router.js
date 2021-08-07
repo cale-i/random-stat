@@ -13,8 +13,6 @@ import DashboardHomePage from "@/pages/User/Perm/DashboardHomePage";
 
 import AccountPage from "@/pages/User/Perm/AccountPage";
 
-import DeleteAccountPage from "@/pages/User/Perm/Auth/DeleteAccountPage";
-
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -36,7 +34,6 @@ const router = new VueRouter({
 			children: [
 				{ path: "", component: DashboardHomePage },
 				{ path: "account", component: AccountPage },
-				{ path: "delete-account", component: DeleteAccountPage },
 			],
 		},
 		{ path: "*", redirect: "/" },
