@@ -154,6 +154,10 @@ export default {
 				.then((response) => {
 					if (response) {
 						console.log("success");
+						this.$store.dispatch("message/setInfoMessage", {
+							message: "アカウントを作成しました｡",
+						});
+
 						// クエリ文字列に「next」がなければホーム画面へ
 						const next = this.$route.query.next || "/";
 						this.$router.replace(next);
