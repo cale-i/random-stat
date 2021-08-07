@@ -8,8 +8,8 @@
 				</aside>
 			</b-col>
 			<b-col md="8">
-				<h1>アカウント管理</h1>
-				<b-form-row class="username my-3">
+				<h1 class="mb-5">アカウント管理</h1>
+				<b-form-row class="my-3">
 					<b-col md="3">
 						<label class="m-2" for="inputUsername">Username:</label>
 					</b-col>
@@ -23,13 +23,18 @@
 						></b-form-input>
 					</b-col>
 					<b-col md="3">
-						<b-button size="md" variant="success" @click="changeUsername">
-							変更
+						<b-button
+							size="md"
+							variant="success"
+							@click="changeUsername"
+							class="w-100"
+						>
+							ユーザー名変更
 						</b-button>
 					</b-col>
 				</b-form-row>
 
-				<b-form-row class="email my-3">
+				<b-form-row class="my-3">
 					<b-col md="3">
 						<label class="m-2" for="inputEmail">Email:</label>
 					</b-col>
@@ -44,21 +49,21 @@
 						></b-form-input>
 					</b-col>
 					<b-col md="3">
-						<div v-b-modal.changeEmailModal class="btn btn-success">
-							変更
+						<div v-b-modal.changeEmailModal class="btn btn-success w-100">
+							Email変更
 						</div>
 					</b-col>
 				</b-form-row>
 
-				<b-row>
-					<b-col></b-col>
-					<b-col> </b-col>
-					<b-col>
-						<div v-b-modal.changePasswordModal class="btn btn-primary">
+				<b-form-row class="my-3">
+					<b-col md="3"> </b-col>
+					<b-col md="6"> </b-col>
+					<b-col md="3">
+						<div v-b-modal.changePasswordModal class="btn btn-success w-100">
 							パスワード変更
 						</div>
 					</b-col>
-				</b-row>
+				</b-form-row>
 
 				<b-row>
 					<b-col md="8"></b-col>
@@ -110,9 +115,7 @@ export default {
 		},
 	},
 	watch: {},
-	mounted() {
-		// this.getUserData();
-	},
+	mounted() {},
 	updated() {},
 };
 </script>
