@@ -165,16 +165,18 @@ const authModule = {
 		deleteAccount(context, payload) {
 			return api
 				.delete("/auth/users/me/", {
-					current_password: payload.current_password,
+					data: {
+						current_password: payload.current_password,
+					},
 				})
 				.then((response) => {
 					console.log("deleted");
 					console.log(response);
 					context.dispatch("logout");
-				})
-				.catch((response) => {
-					console.log(response);
 				});
+			// .catch((response) => {
+			// console.log("response", response);
+			// });
 		},
 		updateField(context, payload) {
 			// patch操作は同一URIに対し、
