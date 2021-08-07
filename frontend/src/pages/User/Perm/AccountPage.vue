@@ -65,24 +65,27 @@
 					</b-col>
 				</b-form-row>
 
-				<b-row>
-					<b-col md="8"></b-col>
-					<b-col>
-						<router-link to="delete-account" class="btn btn-warning"
-							>アカウント削除</router-link
-						>
+				<b-form-row class="my-3">
+					<b-col md="3"> </b-col>
+					<b-col md="6"> </b-col>
+					<b-col md="3">
+						<div v-b-modal.deleteAccountModal class="btn btn-danger w-100 mt-5">
+							アカウント削除
+						</div>
 					</b-col>
-				</b-row>
+				</b-form-row>
 			</b-col>
 		</b-row>
 		<ChangeEmailModal />
 		<ChangePasswordModal />
+		<DeleteAccountModal />
 	</div>
 </template>
 
 <script>
 import ChangeEmailModal from "@/components/auth/ChangeEmailModal.vue";
 import ChangePasswordModal from "@/components/auth/ChangePasswordModal.vue";
+import DeleteAccountModal from "@/components/auth/DeleteAccountModal.vue";
 
 // import { mapGetters } from "vuex";
 
@@ -90,6 +93,7 @@ export default {
 	components: {
 		ChangeEmailModal,
 		ChangePasswordModal,
+		DeleteAccountModal,
 	},
 	props: {},
 	data: () => ({}),
