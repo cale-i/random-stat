@@ -60,7 +60,8 @@ class CustomUser(AbstractUser):
         'Email address',
         unique=True,
         error_messages={
-            'unique': "A user with that email already exists.",
+            # 'unique': "A user with that email already exists.",
+            'unique': "このメールアドレスは使用できません｡",
         },)
 
     USERNAME_FIELD = 'email'
