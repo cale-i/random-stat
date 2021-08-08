@@ -9,6 +9,7 @@
 			</b-col>
 			<b-col md="8">
 				<h1 class="mb-5">アカウント管理</h1>
+				<AvaterUpload />
 				<b-form-row class="my-3">
 					<b-col md="3">
 						<label class="m-2" for="inputUsername">Username:</label>
@@ -87,6 +88,8 @@ import ChangeEmailModal from "@/components/account/auth/ChangeEmailModal.vue";
 import ChangePasswordModal from "@/components/account/auth/ChangePasswordModal.vue";
 import DeleteAccountModal from "@/components/account/auth/DeleteAccountModal.vue";
 
+import AvaterUpload from "@/components/account/AvaterUpload.vue";
+
 // import { mapGetters } from "vuex";
 
 export default {
@@ -94,6 +97,7 @@ export default {
 		ChangeEmailModal,
 		ChangePasswordModal,
 		DeleteAccountModal,
+		AvaterUpload,
 	},
 	props: {},
 	data: () => ({}),
