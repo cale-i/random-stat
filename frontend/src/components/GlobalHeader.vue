@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import SignUpModal from "@/components/auth/SignUpModal.vue";
-import LoginModal from "@/components/auth/LoginModal.vue";
+import SignUpModal from "@/components/account/auth/SignUpModal.vue";
+import LoginModal from "@/components/account/auth/LoginModal.vue";
 
 export default {
 	components: {
