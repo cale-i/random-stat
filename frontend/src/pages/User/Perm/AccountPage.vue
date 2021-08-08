@@ -83,9 +83,9 @@
 </template>
 
 <script>
-import ChangeEmailModal from "@/components/auth/ChangeEmailModal.vue";
-import ChangePasswordModal from "@/components/auth/ChangePasswordModal.vue";
-import DeleteAccountModal from "@/components/auth/DeleteAccountModal.vue";
+import ChangeEmailModal from "@/components/account/auth/ChangeEmailModal.vue";
+import ChangePasswordModal from "@/components/account/auth/ChangePasswordModal.vue";
+import DeleteAccountModal from "@/components/account/auth/DeleteAccountModal.vue";
 
 // import { mapGetters } from "vuex";
 
