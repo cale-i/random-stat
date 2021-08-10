@@ -266,11 +266,44 @@ const messageModule = {
 	},
 };
 
+// アバター関連
+const avatarModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {
+		avatarImage: null,
+	},
+	getters: {
+		avatarImage: (state) => state.avatarImage,
+	},
+	mutations: {
+		setavatarImage(state, payload) {
+			state.avatarImage = payload.avatarImage;
+		},
+	},
+	actions: {
+		uploadImage(context, payload) {
+			console.log("in actions", payload.formData);
+			return api
+				.post("/upload/avatar/", payload.formData)
+				.then((response) => {
+					// PATHを変数に入れる
+					console.log(response);
+					return response;
+				})
+				.catch((response) => {
+					console.log(response);
+				});
+		},
+	},
+};
+
 const store = new Vuex.Store({
 	modules: {
 		chart: chartModule,
 		auth: authModule,
 		message: messageModule,
+		avatar: avatarModule,
 	},
 });
 
