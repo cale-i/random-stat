@@ -11,10 +11,22 @@
 				v-model="form.image"
 				accept="image/png, .png"
 				@input="onInputImage"
+				class="mb-3"
 				plain
 			></b-form-file>
-			<b-button @click="show">表示</b-button>
-			<b-button type="submit">Upload</b-button>
+			<div v-if="previewSrc" class="position-relative">
+				<!-- Cancel -->
+				<b-button
+					type="button"
+					variant="warning"
+					class="position-absolute"
+					style="left: 0;top: 0;"
+					@click="removeImage"
+				>
+					Cancel
+				</b-button>
+			</div>
+			<b-button type="submit" variant="success">Upload</b-button>
 		</b-form>
 	</div>
 </template>
@@ -54,6 +66,10 @@ export default {
 				? URL.createObjectURL(this.form.image)
 				: null;
 		},
+		removeImage() {
+			this.form.image = null;
+			this.previewSrc = null;
+		},
 		show() {
 			// TODO: remove
 			console.log(this.form.image);
@@ -62,9 +78,11 @@ export default {
 			// 選択したファイルをフォームにしてアップロードする
 			const formData = new FormData();
 			formData.append("image", this.form.image);
+
 			this.$store.dispatch("avatar/uploadImage", {
 				formData,
 			});
+
 			// .then(() => {
 			// 	console.log("success");
 			// 	this.$store.dispatch("message/setInfoMessage", {
