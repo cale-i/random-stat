@@ -1,5 +1,10 @@
-from django.db import models
+import os
+import uuid
+
 from django.contrib.auth import get_user_model
+from django.core.validators import (FileExtensionValidator,
+                                    validate_image_file_extension)
+from django.db import models
 
 import uuid
 from django.core.validators import FileExtensionValidator, validate_image_file_extension

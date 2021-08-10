@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from rest_framework import serializers, status, views
+from rest_framework import status, views
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,9 +14,7 @@ User = get_user_model()
 class UserAvaterAPIView(views.APIView):
     parser_classes = [MultiPartParser]
     permission_classes = (IsAuthenticated,)
-    queryset = User.objects.all()
 
-    # @login_required(login_url='/')
     def get(self, request, *args, **kwargs):
         # TODO
         # ユーザーIDに応じたアバターURLを取得
@@ -34,7 +32,8 @@ class UserAvaterAPIView(views.APIView):
 
         serializer = UserProfileSerializer(
             instance=request.POST,
-            data=request.data)
+            data=request.data
+        )
 
         if serializer.is_valid() is False:
             # Validation Error
@@ -52,10 +51,6 @@ class UserAvaterAPIView(views.APIView):
         )
 
         # TODO
-        #
-        # file保存
-        # S3のPATHを取得
-        # S3_BASE_URL = ''
         # UPLOAD_URL = f'{S3_BASE_URL}/{file.name}'
         # UPLOAD_URL = settings.BASE_DIR
         # path = os.path.join(UPLOAD_URL, file.name)
