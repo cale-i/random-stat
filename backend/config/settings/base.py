@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework.authtoken',  # For Account Deletion
     'axes',  # Keeping track of suspicious login attempts
+    'django_cleanup',  # Automatically deletes old image
 
 
     # My Applications

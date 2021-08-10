@@ -7,6 +7,7 @@ djangorestframework
 djangorestframework-simplejwt
 djoser
 django-axes
+django-cleanup
 pillow
 python-dotenv
 psycopg2
