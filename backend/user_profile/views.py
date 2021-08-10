@@ -39,15 +39,14 @@ class UserAvaterAPIView(views.APIView):
             # Validation Error
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.get(pk=request.user.id)
-        image = serializer.validated_data.get('image', None)
-
-        user_profile, created = UserProfile.objects.update_or_create(
-            user=user,
-            defaults={
-                'user': user,
-                'image': image,
-            },
+        '''
+        サムネイル画像をユーザーIDに紐づけて保存
+        画像の縮小加工等はdjango-imagekitによりmodels内で処理される
+        同時にExifも削除される
+        '''
+        self.save_user_profile(
+            user_id=request.user.id,
+            image=serializer.validated_data.get('image')
         )
 
         # TODO
@@ -58,3 +57,14 @@ class UserAvaterAPIView(views.APIView):
         # # S3にimg本体を保存
 
         return Response('uploaded', status.HTTP_200_OK)
+
+    def save_user_profile(self, user_id, image):
+        user = User.objects.get(pk=user_id)
+
+        user_profile, created = UserProfile.objects.update_or_create(
+            user=user,
+            defaults={
+                'user': user,
+                'image': image,
+            },
+        )
