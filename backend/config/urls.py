@@ -19,10 +19,17 @@ urlpatterns = [
     # JWT
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
-    
+
+    # file upload
+    path('api/v1/upload/', include('user_profile.urls')),
+
     # API
     path('api/v1/', include('apiv1.urls')),
-    
+
+
+
+
+
     # Redirect
     re_path('', RedirectView.as_view(url='/')),
 ]

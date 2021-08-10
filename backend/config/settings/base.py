@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'estat.apps.EstatConfig',
     'apiv1.apps.Apiv1Config',
     'accounts.apps.AccountsConfig',
+    'user_profile.apps.UserProfileConfig',
 
 ]
 
