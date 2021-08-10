@@ -1,12 +1,11 @@
 from django.db import models
-# from accounts.models import CustomUser
 from django.contrib.auth import get_user_model
 
 import uuid
 from django.core.validators import FileExtensionValidator, validate_image_file_extension
 
 import os
-IMAGE_EXTENSIONS = ['png', 'jpg', 'gif']
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif']
 
 User = get_user_model()
 
@@ -38,7 +37,7 @@ class UserProfile(models.Model):
         # upload_to="avatar/",
         upload_to=get_image_path,
         validators=[
-            FileExtensionValidator(IMAGE_EXTENSIONS),
+            FileExtensionValidator(ALLOWED_EXTENSIONS),
             validate_image_file_extension
         ]
     )
