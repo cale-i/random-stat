@@ -9,6 +9,7 @@ djoser
 django-axes
 django-cleanup
 pillow
+django-imagekit
 python-dotenv
 psycopg2
 gunicorn

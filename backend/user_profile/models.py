@@ -5,11 +5,9 @@ from django.contrib.auth import get_user_model
 from django.core.validators import (FileExtensionValidator,
                                     validate_image_file_extension)
 from django.db import models
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
-import uuid
-from django.core.validators import FileExtensionValidator, validate_image_file_extension
-
-import os
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif']
 
 User = get_user_model()
@@ -36,11 +34,13 @@ class UserProfile(models.Model):
         primary_key=True
     )
 
-    image = models.ImageField(
+    image = ProcessedImageField(
         max_length=255,
         null=True,
-        # upload_to="avatar/",
+        blank=True,
         upload_to=get_image_path,
+        processors=[ResizeToFill(300, 300)],  # (width, height)
+        options={'quality': 60},
         validators=[
             FileExtensionValidator(ALLOWED_EXTENSIONS),
             validate_image_file_extension
