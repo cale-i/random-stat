@@ -79,17 +79,18 @@ export default {
 			const formData = new FormData();
 			formData.append("image", this.form.image);
 
-			this.$store.dispatch("avatar/uploadImage", {
-				formData,
-			});
+			this.$store
+				.dispatch("avatar/uploadImage", {
+					formData,
+				})
 
-			// .then(() => {
-			// 	console.log("success");
-			// 	this.$store.dispatch("message/setInfoMessage", {
-			// 		message: "アバターを変更しました｡",
-			// 	});
-			// 	// アバターsrcを変更
-			// });
+				.then(() => {
+					console.log("success");
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "アバターを変更しました｡",
+					});
+					// アバターsrcを変更
+				});
 		},
 	},
 	watch: {},

@@ -284,16 +284,11 @@ const avatarModule = {
 	actions: {
 		uploadImage(context, payload) {
 			console.log("in actions", payload.formData);
-			return api
-				.post("/upload/avatar/", payload.formData)
-				.then((response) => {
-					// PATHを変数に入れる
-					console.log(response);
-					return response;
-				})
-				.catch((response) => {
-					console.log(response);
-				});
+			return api.post("/upload/avatar/", payload.formData).then((response) => {
+				// PATHを変数に入れる
+				console.log(response);
+				return response;
+			});
 		},
 	},
 };
