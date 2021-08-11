@@ -16,9 +16,20 @@ class UserAvaterAPIView(views.APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        # TODO
+
         # ユーザーIDに応じたアバターURLを取得
-        pass
+        user_id = request.user.id
+        queryset = UserProfile.objects.filter(pk=user_id)
+
+        image_url = queryset.get(pk=user_id).image.url \
+            if queryset \
+            else "/media/avatar/default-avatar.jpg"
+
+        data = {
+            'image_url': image_url
+        }
+
+        return Response(data, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         '''
