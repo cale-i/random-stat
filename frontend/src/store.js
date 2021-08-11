@@ -307,7 +307,6 @@ const avatarModule = {
 			});
 		},
 		reload(context) {
-			console.log("リロード!");
 			return api.get("/user-profile/avatar/").then((response) => {
 				context.commit("setImageURL", response);
 				context.commit("setIsDefaultImage", response);
