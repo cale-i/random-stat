@@ -54,6 +54,7 @@
 							type="password"
 							placeholder="新しいパスワード"
 							required
+							autocomplete="true"
 						></b-form-input>
 					</b-form-group>
 
@@ -70,6 +71,7 @@
 							type="password"
 							placeholder="確認"
 							required
+							autocomplete="true"
 						></b-form-input>
 
 						<b-form-valid-feedback :state="validation">

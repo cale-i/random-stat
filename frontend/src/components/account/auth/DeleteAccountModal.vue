@@ -36,6 +36,7 @@
 							type="password"
 							placeholder="パスワード"
 							required
+							autocomplete="true"
 						></b-form-input>
 					</b-form-group>
 
@@ -52,6 +53,7 @@
 							type="password"
 							placeholder="確認"
 							required
+							autocomplete="true"
 						></b-form-input>
 
 						<b-form-valid-feedback :state="validation">
@@ -65,7 +67,7 @@
 					<div class="d-flex align-items-center justify-content-between mb-0">
 						<div></div>
 						<b-button size="md" variant="danger" type="submit">
-							変更
+							アカウント削除
 						</b-button>
 					</div>
 				</b-form>
