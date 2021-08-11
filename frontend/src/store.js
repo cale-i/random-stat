@@ -271,22 +271,28 @@ const avatarModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
 	state: {
-		avatarImage: null,
+		imageURL: null,
 	},
 	getters: {
-		avatarImage: (state) => state.avatarImage,
+		imageURL: (state) => state.imageURL,
 	},
 	mutations: {
-		setavatarImage(state, payload) {
-			state.avatarImage = payload.avatarImage;
+		setImageURL(state, response) {
+			state.imageURL =
+				process.env.NODE_ENV === "production"
+					? response.data.image_url
+					: `http://localhost:8000${response.data.image_url}`;
 		},
 	},
 	actions: {
 		uploadImage(context, payload) {
 			console.log("in actions", payload.formData);
 			return api.post("/upload/avatar/", payload.formData).then((response) => {
-				// PATHを変数に入れる
-				console.log(response);
+				context.commit("setImageURL", response);
+
+				return response;
+			});
+		},
 				return response;
 			});
 		},
