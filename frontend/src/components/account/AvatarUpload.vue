@@ -36,29 +36,17 @@ export default {
 			image: null,
 		},
 		previewSrc: null,
-		imageURL:
-			"https://www.minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg",
 	}),
 	computed: {
-		user: function() {
+		avatar: function() {
 			return this.$store.state.avatar;
 		},
 	},
 	methods: {
 		onInputImage() {
 			// ファイルを選択時にプレビューを表示する
-			// if (this.form.image) {
-			// 	const reader = new FileReader();
-			// 	reader.addEventListener("load", () => {
-			// 		this.previewSrc = reader.result;
-			// 	});
-			// 	reader.readAsDataURL(this.form.image);
-			// } else {
-			// 	console.log("null:", this.previewSrc);
-			// this.form.image = new File([""], "");
-			// }
-
-			// ファイルを選択しなかった場合form.imageがNULLになる
+			// ファイルを選択しなかった場合form.imageがNULLになるため､
+			// プレビュー画面もNULLとなる
 			this.previewSrc = this.form.image
 				? URL.createObjectURL(this.form.image)
 				: null;
@@ -66,10 +54,6 @@ export default {
 		removeImage() {
 			this.form.image = null;
 			this.previewSrc = null;
-		},
-		show() {
-			// TODO: remove
-			console.log(this.form.image);
 		},
 		uploadImage() {
 			// 選択したファイルをフォームにしてアップロードする
@@ -82,11 +66,9 @@ export default {
 				})
 
 				.then(() => {
-					console.log("success");
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "アバターを変更しました｡",
 					});
-					// アバターsrcを変更
 				});
 		},
 	},
