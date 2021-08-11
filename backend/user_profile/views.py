@@ -21,13 +21,22 @@ class UserAvaterAPIView(views.APIView):
         user_id = request.user.id
         queryset = UserProfile.objects.filter(pk=user_id)
 
-        image_url = queryset.get(pk=user_id).image.url \
-            if queryset \
-            else "/media/avatar/default-avatar.jpg"
-
+        # default response data
+        # 以下の場合はdefaultのdataを返す
+        #  1. UserProfileオブジェクトが存在しない
+        #  2. UserProfileのimageが存在しない
         data = {
-            'image_url': image_url
+            'is_default_image': True,
+            'image_url': '/media/avatar/default-avatar.jpg'
         }
+
+        # アバターが登録されている場合
+        if queryset:
+            user_profile = queryset.get(pk=user_id)
+            if user_profile.image:
+                # user_profile.imageがNULLでない場合
+                data['image_url'] = user_profile.image.url
+                data['is_default_image'] = False
 
         return Response(data, status.HTTP_200_OK)
 
