@@ -94,6 +94,7 @@ export default {
 		},
 		deleteImage() {
 			// 登録されたアバターをDBから削除する
+			if (confirm("アバターを削除します｡") === false) return;
 			this.$store.dispatch("avatar/deleteImage").then(() => {
 				this.$store.dispatch("message/setInfoMessage", {
 					message: "アバターを削除しました｡",
