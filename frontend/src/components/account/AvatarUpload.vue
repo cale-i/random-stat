@@ -2,14 +2,11 @@
 	<div class="container">
 		<b-form @submit.prevent="uploadImage">
 			<div>
-				<img
-					:src="previewSrc || imageURL"
-					style="max-width: 200px;max-height: 200px;"
-				/>
+				<img :src="previewSrc || avatar.imageURL" class="avatar-image" />
 			</div>
 			<b-form-file
 				v-model="form.image"
-				accept="image/png, .png"
+				accept="image/png, image/jpeg, image/gif"
 				@input="onInputImage"
 				class="mb-3"
 				plain
@@ -98,4 +95,12 @@ export default {
 	updated() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.avatar-image {
+	min-width: 200px;
+	max-width: 200px;
+	min-height: 200px;
+	max-height: 200px;
+	border-radius: 50%;
+}
+</style>
