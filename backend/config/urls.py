@@ -25,9 +25,6 @@ urlpatterns = [
     # API
     path('api/v1/', include('apiv1.urls')),
 
-
-    # # Redirect
-    # re_path('', RedirectView.as_view(url='/')),
 ]
 
 if settings.DEBUG:
@@ -40,3 +37,8 @@ if settings.DEBUG:
     # 開発用Webサーバ(runserver)使用時のメディアファイル配信設定
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    # Redirect
+    # DEBUG分岐以前で定義するとすべてリダイレクトされるためこの位置に置く
+    re_path('', RedirectView.as_view(url='/')), ]
