@@ -48,9 +48,11 @@ class UserAvaterAPIView(views.APIView):
             user_id=request.user.id,
             image=serializer.validated_data.get('image')
         )
-        media_url = user_profile.image.url
+        data = {
+            'image_url': user_profile.image.url
+        }
 
-        return Response(media_url, status.HTTP_200_OK)
+        return Response(data, status.HTTP_200_OK)
 
     def save_user_profile(self, user_id, image):
         '''
