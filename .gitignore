@@ -1,6 +1,7 @@
 **/venv
 **.env
 **/.vscode
+*media_root
 #  Local .terraform directories
 **/.terraform/*
 */.terraform*
