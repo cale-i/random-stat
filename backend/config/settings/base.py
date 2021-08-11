@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # For Account Deletion
     'axes',  # Keeping track of suspicious login attempts
     'django_cleanup',  # Automatically deletes old image
+    'imagekit',  # For processing images
 
 
     # My Applications
