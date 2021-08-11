@@ -1,12 +1,11 @@
+
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 from django.conf.urls import re_path
 from django.views.generic import TemplateView
 from django.views.generic import RedirectView
-
-
-from django.conf import settings
 
 
 urlpatterns = [
@@ -27,16 +26,17 @@ urlpatterns = [
     path('api/v1/', include('apiv1.urls')),
 
 
-
-
-
-    # Redirect
-    re_path('', RedirectView.as_view(url='/')),
+    # # Redirect
+    # re_path('', RedirectView.as_view(url='/')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
+    from django.conf.urls.static import static
 
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
     ]
+    # 開発用Webサーバ(runserver)使用時のメディアファイル配信設定
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
