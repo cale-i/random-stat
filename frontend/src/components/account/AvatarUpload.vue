@@ -70,6 +70,7 @@ export default {
 						message: "アバターを変更しました｡",
 					});
 				});
+			this.removeImage();
 		},
 	},
 	watch: {},
