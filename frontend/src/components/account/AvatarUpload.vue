@@ -38,7 +38,12 @@
 					Delete
 				</b-button>
 			</div>
-			<b-button type="submit" variant="success">Upload</b-button>
+			<b-button v-if="this.form.image" type="submit" variant="success"
+				>Upload
+			</b-button>
+			<b-button v-else type="submit" disabled>
+				Upload
+			</b-button>
 		</b-form>
 	</div>
 </template>
