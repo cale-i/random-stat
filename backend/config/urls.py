@@ -20,7 +20,7 @@ urlpatterns = [
     path('api/v1/auth/', include('djoser.urls.jwt')),
 
     # file upload
-    path('api/v1/upload/', include('user_profile.urls')),
+    path('api/v1/user-profile/', include('user_profile.urls')),
 
     # API
     path('api/v1/', include('apiv1.urls')),

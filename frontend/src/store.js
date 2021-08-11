@@ -292,15 +292,17 @@ const avatarModule = {
 	},
 	actions: {
 		uploadImage(context, payload) {
-			return api.post("/upload/avatar/", payload.formData).then((response) => {
-				context.commit("setImageURL", response);
+			return api
+				.post("/user-profile/avatar/", payload.formData)
+				.then((response) => {
+					context.commit("setImageURL", response);
 
-				return response;
-			});
+					return response;
+				});
 		},
 		reload(context) {
 			console.log("リロード!");
-			return api.get("/upload/avatar/").then((response) => {
+			return api.get("/user-profile/avatar/").then((response) => {
 				context.commit("setImageURL", response);
 
 				return response;
