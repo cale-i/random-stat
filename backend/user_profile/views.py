@@ -37,7 +37,7 @@ class UserAvaterAPIView(views.APIView):
 
         if serializer.is_valid() is False:
             # Validation Error
-            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
         '''
         サムネイル画像をユーザーIDに紐づけて保存
