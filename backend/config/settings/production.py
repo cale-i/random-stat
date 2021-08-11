@@ -31,3 +31,10 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 ##################
 # REST Framework #
 ##################
+
+##################
+#     MEDIA      #
+##################
+
+# S3
+# MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)

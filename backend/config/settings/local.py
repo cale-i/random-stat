@@ -1,6 +1,14 @@
 import environ
+import os
 
 from .base import *
+from .base import (
+    BASE_DIR,
+    INSTALLED_APPS,
+    MIDDLEWARE,
+    REST_FRAMEWORK
+)
+
 
 # Read .env if exists
 env = environ.Env()
