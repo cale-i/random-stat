@@ -23,7 +23,10 @@
 					Cancel
 				</b-button>
 			</div>
-			<div v-else class="position-relative">
+			<div
+				v-else-if="avatar.isDefaultImage === false"
+				class="position-relative"
+			>
 				<!-- Delete -->
 				<b-button
 					type="button"

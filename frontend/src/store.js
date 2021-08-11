@@ -277,10 +277,12 @@ const avatarModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
 	state: {
+		isDefaultImage: true,
 		imageURL: null,
 	},
 	getters: {
 		imageURL: (state) => state.imageURL,
+		isDefaultImage: (state) => state.isDefaultImage,
 	},
 	mutations: {
 		setImageURL(state, response) {
@@ -289,16 +291,15 @@ const avatarModule = {
 					? response.data.image_url
 					: `http://localhost:8000${response.data.image_url}`;
 		},
+		setIsDefaultImage(state, response) {
+			state.isDefaultImage = response.data.is_default_image;
+		},
 	},
 	actions: {
 		uploadImage(context, payload) {
-			return api
-				.post("/user-profile/avatar/", payload.formData)
-				.then((response) => {
-					context.commit("setImageURL", response);
-
-					return response;
-				});
+			return api.post("/user-profile/avatar/", payload.formData).then(() => {
+				context.dispatch("reload");
+			});
 		},
 		deleteImage(context) {
 			return api.delete("/user-profile/avatar/").then(() => {
@@ -309,6 +310,7 @@ const avatarModule = {
 			console.log("リロード!");
 			return api.get("/user-profile/avatar/").then((response) => {
 				context.commit("setImageURL", response);
+				context.commit("setIsDefaultImage", response);
 
 				return response;
 			});
