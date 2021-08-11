@@ -44,7 +44,7 @@ api.interceptors.response.use(
 
 		// エラーの内容に応じてstoreのメッセージを更新
 		let message;
-		if (status === 400) {
+		if (status === 400 || status === 415) {
 			// バリデーション警告
 			message = [].concat.apply([], Object.values(error.response.data));
 			store.dispatch("message/setWarningMessage", { message });
