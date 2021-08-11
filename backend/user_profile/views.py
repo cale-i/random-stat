@@ -1,4 +1,4 @@
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import status, views
 from rest_framework.parsers import MultiPartParser
@@ -44,21 +44,18 @@ class UserAvaterAPIView(views.APIView):
         画像の縮小加工等はdjango-imagekitによりmodels内で処理される
         同時にExifも削除される
         '''
-        self.save_user_profile(
+        user_profile = self.save_user_profile(
             user_id=request.user.id,
             image=serializer.validated_data.get('image')
         )
+        media_url = user_profile.image.url
 
-        # TODO
-        # UPLOAD_URL = f'{S3_BASE_URL}/{file.name}'
-        # UPLOAD_URL = settings.BASE_DIR
-        # path = os.path.join(UPLOAD_URL, file.name)
-
-        # # S3にimg本体を保存
-
-        return Response('uploaded', status.HTTP_200_OK)
+        return Response(media_url, status.HTTP_200_OK)
 
     def save_user_profile(self, user_id, image):
+        '''
+        user_idとimageを渡して保存し､UserProfileオブジェクトを返す
+        '''
         user = User.objects.get(pk=user_id)
 
         user_profile, created = UserProfile.objects.update_or_create(
@@ -68,3 +65,4 @@ class UserAvaterAPIView(views.APIView):
                 'image': image,
             },
         )
+        return user_profile
