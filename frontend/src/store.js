@@ -46,6 +46,7 @@ const chartModule = {
 		},
 	},
 };
+
 // 認証
 const authModule = {
 	strict: process.env.NODE_ENV !== "production",
@@ -85,6 +86,7 @@ const authModule = {
 					localStorage.setItem("access", response.data.access);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
+
 					return user;
 				});
 		},
@@ -134,9 +136,13 @@ const authModule = {
 		// ユーザー情報更新
 		reload(context) {
 			return api.get("/auth/users/me/").then((response) => {
-				const user = response.data;
 				// storeのユーザー情報を更新
+				const user = response.data;
 				context.commit("setUserData", { user });
+
+				// ユーザーアバターの読み込み
+				store.dispatch("avatar/reload");
+
 				console.log(user);
 				return user;
 			});
@@ -286,13 +292,17 @@ const avatarModule = {
 	},
 	actions: {
 		uploadImage(context, payload) {
-			console.log("in actions", payload.formData);
 			return api.post("/upload/avatar/", payload.formData).then((response) => {
 				context.commit("setImageURL", response);
 
 				return response;
 			});
 		},
+		reload(context) {
+			console.log("リロード!");
+			return api.get("/upload/avatar/").then((response) => {
+				context.commit("setImageURL", response);
+
 				return response;
 			});
 		},
