@@ -300,6 +300,11 @@ const avatarModule = {
 					return response;
 				});
 		},
+		deleteImage(context) {
+			return api.delete("/user-profile/avatar/").then(() => {
+				context.dispatch("reload");
+			});
+		},
 		reload(context) {
 			console.log("リロード!");
 			return api.get("/user-profile/avatar/").then((response) => {

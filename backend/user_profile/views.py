@@ -65,6 +65,20 @@ class UserAvaterAPIView(views.APIView):
 
         return Response(data, status.HTTP_200_OK)
 
+    def delete(self, request, *args, **kwargs):
+        # ユーザーIDに応じたアバターURLを取得
+        user_id = request.user.id
+        queryset = UserProfile.objects.filter(pk=user_id)
+        if queryset:
+            # モデルごと削除
+            user_profile = queryset.get(pk=user_id)
+            user_profile.delete()
+
+            return Response(status.HTTP_204_NO_CONTENT)
+        else:
+            # 削除するアバターが存在しない場合(不正なアクセス)
+            return Response('不正な操作です', status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def save_user_profile(self, user_id, image):
         '''
         user_idとimageを渡して保存し､UserProfileオブジェクトを返す

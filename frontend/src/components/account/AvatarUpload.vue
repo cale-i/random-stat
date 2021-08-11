@@ -23,6 +23,18 @@
 					Cancel
 				</b-button>
 			</div>
+			<div v-else class="position-relative">
+				<!-- Delete -->
+				<b-button
+					type="button"
+					variant="danger"
+					class="position-absolute"
+					style="left: 0;top: 0;"
+					@click="deleteImage"
+				>
+					Delete
+				</b-button>
+			</div>
 			<b-button type="submit" variant="success">Upload</b-button>
 		</b-form>
 	</div>
@@ -71,6 +83,14 @@ export default {
 					});
 				});
 			this.removeImage();
+		},
+		deleteImage() {
+			// 登録されたアバターをDBから削除する
+			this.$store.dispatch("avatar/deleteImage").then(() => {
+				this.$store.dispatch("message/setInfoMessage", {
+					message: "アバターを削除しました｡",
+				});
+			});
 		},
 	},
 	watch: {},
