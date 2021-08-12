@@ -286,10 +286,7 @@ const avatarModule = {
 	},
 	mutations: {
 		setImageURL(state, response) {
-			state.imageURL =
-				process.env.NODE_ENV === "production"
-					? response.data.image_url
-					: `http://localhost:8000${response.data.image_url}`;
+			state.imageURL = response.data.image_url;
 		},
 		setIsDefaultImage(state, response) {
 			state.isDefaultImage = response.data.is_default_image;
