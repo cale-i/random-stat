@@ -105,6 +105,7 @@ export default {
 					});
 					// クエリ文字列に「next」がなければダッシュボード画面へ
 					const next = this.$route.query.next || "/dashboard";
+					console.log("next:", next);
 					this.$router.replace(next);
 				})
 				.catch(() => {

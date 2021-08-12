@@ -158,10 +158,6 @@ export default {
 							message: "アカウントを作成しました｡",
 						});
 
-						// クエリ文字列に「next」がなければホーム画面へ
-						const next = this.$route.query.next || "/";
-						this.$router.replace(next);
-
 						// ログインモーダルを表示
 						this.$bvModal.show("loginModal");
 					}

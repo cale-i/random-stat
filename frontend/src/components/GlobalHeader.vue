@@ -92,9 +92,10 @@ export default {
 
 			console.log("success logout");
 
-			// クエリ文字列に「next」がなければホーム画面へ
-			// const next = this.$route.query.next || "/";
-			this.$router.replace("/");
+			// 現在のページが"/"でない場合"/"に移動
+			if (window.location.pathname !== "/") {
+				this.$router.replace("/");
+			}
 		},
 	},
 	watch: {},
