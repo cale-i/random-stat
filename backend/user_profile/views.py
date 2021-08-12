@@ -1,9 +1,10 @@
-# from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import status, views
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.files.storage import default_storage
+import os
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
@@ -27,7 +28,7 @@ class UserAvaterAPIView(views.APIView):
         #  2. UserProfileのimageが存在しない
         data = {
             'is_default_image': True,
-            'image_url': '/media/avatar/default-avatar.jpg'
+            'image_url': self.get_default_image(),
         }
 
         # アバターが登録されている場合
@@ -102,3 +103,18 @@ class UserAvaterAPIView(views.APIView):
             },
         )
         return user_profile
+
+    def get_default_image(self):
+        '''
+        S3からデフォルトのアバターイメージのURLを取得する関数
+        デフォルトのアバターイメージが存在しない場合空文字を返す
+        '''
+
+        FILE_DIR = 'avatar'
+        FILE_NAME = 'default-avatar.jpg'
+        FILE_PATH = os.path.join(FILE_DIR, FILE_NAME)
+
+        if (default_storage.exists(FILE_PATH) is False):
+            return ''
+
+        return default_storage.url(FILE_PATH)

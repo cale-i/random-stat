@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'axes',  # Keeping track of suspicious login attempts
     'django_cleanup',  # Automatically deletes old image
     'imagekit',  # For processing images
+    'storages',  # django-storages
 
 
     # My Applications
@@ -152,6 +153,13 @@ STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+AWS_STORAGE_BUCKET_NAME = ''
 
 
 ####################################
