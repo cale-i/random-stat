@@ -42,5 +42,6 @@ jobs:
               fi
             done
 
+            echo "start django unittest"
             docker-compose exec -T $IMAGE_NAME python3 /usr/src/app/manage.py test
           fi
