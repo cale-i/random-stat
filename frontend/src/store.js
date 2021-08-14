@@ -87,6 +87,8 @@ const authModule = {
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
 
+					// ログイン履歴
+					store.dispatch("loginRecord/login");
 					return user;
 				});
 		},
@@ -313,6 +315,34 @@ const avatarModule = {
 		},
 	},
 };
+// ログイン履歴
+const loginRecordModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		login() {
+			console.log("ログイン履歴");
+
+			return api.get("/login-record/login/").then((response) => {
+				// storeのユーザー情報を更新
+				console.log(response);
+
+				return response.data;
+			});
+		},
+		logout() {
+			console.log("ログアウト履歴");
+
+			api.get("/login-record/logout/").then((response) => {
+				// storeのユーザー情報を更新
+				console.log(response);
+			});
+		},
+	},
+};
 
 const store = new Vuex.Store({
 	modules: {
@@ -320,6 +350,7 @@ const store = new Vuex.Store({
 		auth: authModule,
 		message: messageModule,
 		avatar: avatarModule,
+		loginRecord: loginRecordModule,
 	},
 });
 

@@ -84,7 +84,9 @@ export default {
 		},
 	},
 	methods: {
-		logout() {
+		async logout() {
+			// logout signal fire
+			await this.$store.dispatch("loginRecord/logout");
 			this.$store.dispatch("auth/logout");
 			this.$store.dispatch("message/setInfoMessage", {
 				message: "ログアウトしました。",
