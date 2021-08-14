@@ -56,14 +56,17 @@ api.interceptors.response.use(
 			} else {
 				message = "認証エラー";
 			}
+			// ログアウト処理
 			store.dispatch("auth/logout");
+			// エラーメッセージ表示
 			store.dispatch("message/setErrorMessage", {
 				message,
 			});
 
-			// rootへ戻る
-			const next = "/";
-			this.$router.replace(next);
+			// 現在のページが"/"でない場合"/"に移動
+			if (window.location.pathname !== "/") {
+				this.$router.replace("/");
+			}
 		} else if (status === 403) {
 			// 権限エラー
 			message = "権限エラー";
