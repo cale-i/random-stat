@@ -19,6 +19,9 @@ urlpatterns = [
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
 
+    # Login Record
+    path('api/v1/login-record/', include('login_record.urls')),
+
     # file upload
     path('api/v1/user-profile/', include('user_profile.urls')),
 

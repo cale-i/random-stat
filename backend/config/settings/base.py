@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'apiv1.apps.Apiv1Config',
     'accounts.apps.AccountsConfig',
     'user_profile.apps.UserProfileConfig',
+    'login_record.apps.LoginRecordConfig',
 
 ]
 
