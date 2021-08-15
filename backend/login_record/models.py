@@ -33,17 +33,11 @@ class LoginRecord(models.Model):
         null=False,
         # unpack_ipv4=True
     )
-    device_type = models.CharField(
-        verbose_name='接続デバイス(PC, Android, iPhone, or blank',
-        max_length=7,
+    user_agent = models.CharField(
+        verbose_name='User-Agent',
+        max_length=255,
         blank=True,
-        null=True,
-    )
-    web_browser = models.CharField(
-        verbose_name='接続ブラウザ(Chrome, Firefox, Safari, etc)',
-        max_length=10,
-        blank=True,
-        null=True,
+        null=False,
     )
 
     def __str__(self):
@@ -81,11 +75,13 @@ def user_logged_in_callback(sender, request, user, **kwargs):
     ip_address = forwarded_addresses.split(',')[0] \
         if forwarded_addresses  \
         else request.META.get('REMOTE_ADDR')
+    user_agent = request.headers.get('User-Agent')
 
     LoginRecord.objects.create(
         user=user,
         login_time=timezone.now(),
         ip_address=ip_address,
+        user_agent=user_agent,
     )
 
 
