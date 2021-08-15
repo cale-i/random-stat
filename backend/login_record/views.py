@@ -1,12 +1,11 @@
-
-from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.contrib.auth import get_user_model, user_logged_in, user_logged_out
+from django.utils import timezone
 from rest_framework import status, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.contrib.auth import (
-    user_logged_in,
-    user_logged_out,
-)
+
+from .models import LoginRecord
 
 User = get_user_model()
 
@@ -19,16 +18,35 @@ class LoginRecorderAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
 
-        # user_logged_out signalsの発火
         # 有効期限切れTokenのログアウト情報を記録するために呼び出す
-        user_logged_out.send(sender=user.__class__,
-                             request=request, user=user)
+        self.fill_expired_logout_time(user, request)
 
         # user_logged_in signalsの発火
         user_logged_in.send(sender=user.__class__,
                             request=request, user=user)
 
         return Response(status.HTTP_204_NO_CONTENT)
+
+    def fill_expired_logout_time(self, user, reqest):
+        records = LoginRecord.objects.filter(
+            user=user, logout_time__isnull=True)
+
+        if not records:
+            # 不明なエラー
+            return
+
+        for record in records:
+            login_time = record.login_time
+            life_time = settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME')
+            now_time = timezone.now()
+
+            expiration_time = login_time + life_time
+
+            # 有効期限切れならTrue
+            is_expired = now_time > expiration_time
+            if is_expired:
+                record.logout_time = expiration_time
+                record.save()
 
 
 class LogoutRecorderAPIView(views.APIView):

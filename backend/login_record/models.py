@@ -91,22 +91,17 @@ def user_logged_out_callback(sender, request, user, **kwargs):
         # 不明なエラー
         return
 
-    # logout_timeが存在しないすべてのオブジェクトを埋める
-    for record in records:
+    record = records.latest('pk')
+    login_time = record.login_time
+    life_time = settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME')
+    now_time = timezone.now()
 
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        print('ログアウト処理')
-        login_time = record.login_time
-        life_time = settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME')
-        now_time = timezone.now()
+    expiration_time = login_time + life_time
 
-        expiration_time = login_time + life_time
+    # 有効期限切れならTrue
+    is_expired = now_time > expiration_time
+    record.logout_time = expiration_time \
+        if is_expired \
+        else now_time
 
-        # 有効期限切れならTrue
-        is_expired = now_time > expiration_time
-        record.logout_time = expiration_time \
-            if is_expired \
-            else now_time
-
-        record.save()
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+    record.save()
