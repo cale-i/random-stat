@@ -59,15 +59,6 @@ class LoginRecord(models.Model):
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     '''ログイン時に呼ばれる関数'''
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-    print('meta: ', request.META)
-    print('HTTP_USER_AGENT : ', request.META.get('HTTP_USER_AGENT'))
-    print('---------------------------------------------------------------')
-    print('headers', request.headers)
-    print('User-Agent', request.headers.get('User-Agent'))
-    print(request.META.get('HTTP_X_FORWARDED_FOR'))
-
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
     # IP addressを取得
     # reverse proxyを経由している場合､'REMOTE_ADDR'の値がreverse proxyのアドレスとなる
@@ -89,10 +80,12 @@ def user_logged_in_callback(sender, request, user, **kwargs):
 def user_logged_out_callback(sender, request, user, **kwargs):
     '''ログアウト時に呼ばれる関数'''
 
-    # ログインから30分以上経過している場合はlogin_time + 30分がlogout_time
-    # そうでない場合は､現在時刻
-
-    records = LoginRecord.objects.filter(user=user, logout_time__isnull=True)
+    '''User-Agentが一致する場合､同一セッションとみなす'''
+    records = LoginRecord.objects.filter(
+        user=user,
+        logout_time__isnull=True,
+        user_agent=request.headers.get('User-Agent'),
+    )
 
     if not records:
         # 不明なエラー
