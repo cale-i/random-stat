@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'user_profile.apps.UserProfileConfig',
     'login_record.apps.LoginRecordConfig',
+    'failed_login_attempt.apps.FailedLoginAttemptConfig',
 
 ]
 
