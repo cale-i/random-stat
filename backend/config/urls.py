@@ -22,6 +22,9 @@ urlpatterns = [
     # Login Record
     path('api/v1/login-record/', include('login_record.urls')),
 
+    # Login failed
+    path('api/v1/login-attempt/', include('failed_login_attempt.urls')),
+
     # file upload
     path('api/v1/user-profile/', include('user_profile.urls')),
 
