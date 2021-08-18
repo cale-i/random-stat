@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import LoginRecord
+from .serializers import RecordSerializer
+
 
 User = get_user_model()
 
@@ -60,3 +62,17 @@ class LogoutRecorderAPIView(views.APIView):
                              request=request, user=user)
 
         return Response(status.HTTP_204_NO_CONTENT)
+
+
+class RecordAPIView(views.APIView):
+    '''
+    ユーザーに紐付いたログイン履歴を返す
+    returnのフォーマット:[{},{},{}...]
+    pagenationは行わず､最新10件のみを返す
+    '''
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        records = LoginRecord.objects.filter(user=request.user)[:10]
+        serializer = RecordSerializer(records, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
