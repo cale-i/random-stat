@@ -1,17 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
 import store from "@/store";
-
-// import HomePage from "@/pages/HomePage";
-
-// import LoginPage from "@/pages/User/LoginPage";
-// import CreateAccountPage from "@/pages/User/CreateAccountPage";
-
-import DashboardBasePage from "@/pages/User/Perm/DashboardBasePage";
-import DashboardHomePage from "@/pages/User/Perm/DashboardHomePage";
-
-import AccountPage from "@/pages/User/Perm/AccountPage";
 
 Vue.use(VueRouter);
 
@@ -24,16 +13,53 @@ const router = new VueRouter({
 				import("@/pages/HomePage" /* webpackChunkName: "Home" */),
 			name: "home",
 		},
-		// { path: "/login", component: LoginPage, name: "login" },
-		// {path: "/create-account",component: CreateAccountPage,name: "create-account",},
-
 		{
 			path: "/dashboard",
-			component: DashboardBasePage,
+			component: () =>
+				import(
+					"@/pages/User/Perm/DashboardBasePage" /* webpackChunkName: "DashboardBase" */
+				),
 			meta: { requiresAuth: true },
 			children: [
-				{ path: "", component: DashboardHomePage },
-				{ path: "account", component: AccountPage },
+				{
+					path: "",
+					component: () =>
+						import(
+							"@/pages/User/Perm/DashboardHomePage" /* webpackChunkName: "DashboardHome" */
+						),
+					name: "dashboard",
+				},
+			],
+		},
+
+		{
+			path: "/account",
+			component: () =>
+				import(
+					"@/pages/User/Perm/AccountPage" /* webpackChunkName: "Account" */
+				),
+			meta: { requiresAuth: true },
+			children: [
+				{
+					path: "",
+					redirect: "settings",
+				},
+				{
+					path: "settings",
+					component: () =>
+						import(
+							"@/pages/User/Perm/AccountSettingsPage" /* webpackChunkName: "Settings" */
+						),
+					name: "settings",
+				},
+				{
+					path: "login-record",
+					component: () =>
+						import(
+							"@/pages/User/Perm/LoginRecordPage" /* webpackChunkName: "LoginRecord" */
+						),
+					name: "loginRecord",
+				},
 			],
 		},
 		{ path: "*", redirect: "/" },
