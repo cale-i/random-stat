@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container my-5">
 		<b-form @submit.prevent="uploadImage">
 			<div>
 				<img :src="previewSrc || avatar.imageURL" class="avatar-image" />
