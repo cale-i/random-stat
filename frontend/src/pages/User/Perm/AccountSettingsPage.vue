@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1 class="mb-5">アカウント管理</h1>
+		<h1 class="my-5">アカウント管理</h1>
 		<AvatarUpload />
 		<b-form-row class="my-3">
 			<b-col md="3">
