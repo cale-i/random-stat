@@ -325,17 +325,23 @@ const avatarModule = {
 const loginRecordModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
-	state: {},
-	getters: {},
-	mutations: {},
+	state: {
+		records: [],
+	},
+	getters: {
+		records: (state) => state.records,
+	},
+	mutations: {
+		setRecord(state, payload) {
+			state.records = payload.data;
+		},
+	},
 	actions: {
 		login() {
 			console.log("ログイン履歴");
 
 			return api.get("/login-record/login/").then((response) => {
 				// storeのユーザー情報を更新
-				console.log(response);
-
 				return response.data;
 			});
 		},
@@ -345,6 +351,11 @@ const loginRecordModule = {
 			api.get("/login-record/logout/").then((response) => {
 				// storeのユーザー情報を更新
 				console.log(response);
+			});
+		},
+		getRecord(context) {
+			api.get("/login-record/").then((response) => {
+				context.commit("setRecord", response);
 			});
 		},
 	},

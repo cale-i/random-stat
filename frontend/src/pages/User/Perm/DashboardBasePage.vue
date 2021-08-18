@@ -17,9 +17,7 @@ export default {
 		GlobalHeader,
 	},
 	props: {},
-	data: () => ({
-		user: {},
-	}),
+	data: () => ({}),
 	computed: {},
 	methods: {},
 	watch: {},

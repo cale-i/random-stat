@@ -32,7 +32,7 @@
 							Dashboard
 						</b-dropdown-item>
 
-						<b-dropdown-item to="/dashboard/account">
+						<b-dropdown-item to="/account/settings">
 							<b-icon icon="gear" aria-hidden="true"></b-icon>
 							Account
 						</b-dropdown-item>
