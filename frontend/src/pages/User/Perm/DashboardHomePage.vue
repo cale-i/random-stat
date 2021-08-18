@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<b-container>
 		<b-row>
 			<b-col md="4">
 				<GlobalSidebar />
@@ -23,7 +23,7 @@
 			</b-col>
 		</b-row>
 		<b-row> </b-row>
-	</div>
+	</b-container>
 </template>
 
 <script>
