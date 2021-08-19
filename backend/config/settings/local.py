@@ -25,6 +25,14 @@ SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+#####################
+# Site Map settings #
+#####################
+
+SITE_EMAIL = env('SITE_EMAIL')
+SITE_NAME = 'http://localhost:8080'
+DOMAIN = 'localhost:8080'
+
 ############
 # Database #
 ############

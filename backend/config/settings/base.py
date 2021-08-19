@@ -15,6 +15,8 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 #####################
 
 SITE_ID = 1
+SITE_EMAIL = ''
+SITE_NAME = ''
 
 #####################
 # Security settings #
@@ -170,8 +172,6 @@ AWS_STORAGE_BUCKET_NAME = ''
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 ##################
 # REST Framework #

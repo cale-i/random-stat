@@ -17,6 +17,13 @@ SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+#####################
+# Site Map settings #
+#####################
+
+SITE_EMAIL = env('SITE_EMAIL')
+SITE_NAME = 'Random Stat'
+DOMAIN = 'random-stat.work'
 
 ############
 # Database #
