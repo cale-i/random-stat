@@ -215,6 +215,7 @@ DJOSER = {
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
+    'SET_USERNAME_RETYPE': True,
     # 'SERIALIZERS': {},
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
