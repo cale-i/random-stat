@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<b-container>
 		<GlobalHeader />
 		<GlobalMessage />
 		<div class="container">
@@ -25,7 +25,7 @@
 				</b-col>
 			</b-row>
 		</div>
-	</div>
+	</b-container>
 </template>
 
 <script>
