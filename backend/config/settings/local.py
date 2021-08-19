@@ -146,3 +146,11 @@ CORS_ORIGIN_WHITELIST = (
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += [
     'rest_framework.renderers.BrowsableAPIRenderer']
+
+#################
+# Email Backend #
+#################
+
+EMAIL_HOST_USER = env('SITE_EMAIL')
+DEFAULT_FROM_EMAIL = env('SITE_EMAIL')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
