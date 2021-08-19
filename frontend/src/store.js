@@ -169,10 +169,6 @@ const authModule = {
 					const user = response.data;
 					console.log(user);
 					return user;
-				})
-				.catch((response) => {
-					console.log(response);
-					return undefined;
 				});
 		},
 		// アカウント削除
@@ -378,6 +374,22 @@ const failedLoginAttemptModule = {
 		},
 	},
 };
+const activationModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		activate(context, payload) {
+			console.log(payload);
+			return api.post("/auth/users/activation/", {
+				uid: payload.uid,
+				token: payload.token,
+			});
+		},
+	},
+};
 
 const store = new Vuex.Store({
 	modules: {
@@ -387,6 +399,7 @@ const store = new Vuex.Store({
 		avatar: avatarModule,
 		loginRecord: loginRecordModule,
 		failedLoginAttempt: failedLoginAttemptModule,
+		activation: activationModule,
 	},
 });
 
