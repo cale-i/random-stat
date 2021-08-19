@@ -216,6 +216,7 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SET_USERNAME_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
     # 'SERIALIZERS': {},
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
