@@ -144,6 +144,8 @@ export default {
 			}
 
 			// Sign Up
+			// メール送信完了まで処理が止まるため､非常に時間がかかる
+			// 失敗時は高速
 			this.$store
 				.dispatch("auth/createAccount", {
 					username: this.form.username,
@@ -151,17 +153,25 @@ export default {
 					password: this.form.password,
 					rePassword: this.form.rePassword,
 				})
-				.then((response) => {
-					if (response) {
-						console.log("success");
-						this.$store.dispatch("message/setInfoMessage", {
-							message: "アカウントを作成しました｡",
-						});
+				.then(() => {
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "認証メールを送信しました｡",
+					});
 
-						// ログインモーダルを表示
-						this.$bvModal.show("loginModal");
-					}
+					// 	// ログインモーダルを表示
+					// 	this.$bvModal.show("loginModal");
+
+					// SignUpModalを閉じる
+					this.sendingActivationEmail = false;
+					this.$bvModal.hide("signUpModal");
+				})
+				.catch(() => {
+					this.sendingActivationEmail = false;
+					return;
 				});
+
+			// 認証メール送信完了までSpinner動かす
+			this.sendingActivationEmail = true;
 		},
 	},
 	watch: {},
