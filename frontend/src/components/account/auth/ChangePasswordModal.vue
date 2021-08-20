@@ -18,81 +18,82 @@
 			</b-col>
 			<b-col md="1"></b-col>
 		</template>
+		<b-overlay :show="changingPassword" rounded="sm">
+			<template #default="{}">
+				<div class="card-body">
+					<b-form @submit.prevent="changePassword">
+						<b-form-group
+							id="inputGroupCurrentPassword"
+							label="Current Password:"
+							label-cols-md="4"
+							label-align-md="right"
+							label-for="inputCurrentPassword"
+							class="my-5"
+						>
+							<b-form-input
+								id="inputCurrentPassword"
+								v-model="form.currentPassword"
+								type="password"
+								placeholder="現在のパスワード"
+								required
+								autofocus
+								autocomplete="true"
+							></b-form-input>
+						</b-form-group>
 
-		<template #default="{}">
-			<div class="card-body">
-				<b-form @submit.prevent="changePassword">
-					<b-form-group
-						id="inputGroupCurrentPassword"
-						label="Current Password:"
-						label-cols-md="4"
-						label-align-md="right"
-						label-for="inputCurrentPassword"
-						class="my-5"
-					>
-						<b-form-input
-							id="inputCurrentPassword"
-							v-model="form.currentPassword"
-							type="password"
-							placeholder="現在のパスワード"
-							required
-							autofocus
-							autocomplete="true"
-						></b-form-input>
-					</b-form-group>
+						<b-form-group
+							id="inputGroupNewPassword"
+							label="New Password:"
+							label-cols-md="4"
+							label-align-md="right"
+							label-for="inputNewPassword"
+						>
+							<b-form-input
+								id="inputNewPassword"
+								v-model="form.newPassword"
+								type="password"
+								placeholder="新しいパスワード"
+								required
+								autocomplete="true"
+							></b-form-input>
+						</b-form-group>
 
-					<b-form-group
-						id="inputGroupNewPassword"
-						label="New Password:"
-						label-cols-md="4"
-						label-align-md="right"
-						label-for="inputNewPassword"
-					>
-						<b-form-input
-							id="inputNewPassword"
-							v-model="form.newPassword"
-							type="password"
-							placeholder="新しいパスワード"
-							required
-							autocomplete="true"
-						></b-form-input>
-					</b-form-group>
+						<b-form-group
+							id="inputGroupConfirmPassword"
+							label="Confirm Password:"
+							label-cols-md="4"
+							label-align-md="right"
+							label-for="inputConfirmPassword"
+						>
+							<b-form-input
+								id="inputConfirmPassword"
+								v-model="form.reNewPassword"
+								type="password"
+								placeholder="確認"
+								required
+								autocomplete="true"
+							></b-form-input>
 
-					<b-form-group
-						id="inputGroupConfirmPassword"
-						label="Confirm Password:"
-						label-cols-md="4"
-						label-align-md="right"
-						label-for="inputConfirmPassword"
-					>
-						<b-form-input
-							id="inputConfirmPassword"
-							v-model="form.reNewPassword"
-							type="password"
-							placeholder="確認"
-							required
-							autocomplete="true"
-						></b-form-input>
+							<b-form-valid-feedback :state="validation">
+								<br />
+							</b-form-valid-feedback>
+							<b-form-invalid-feedback :state="validation">
+								パスワードが一致しません｡
+							</b-form-invalid-feedback>
+						</b-form-group>
 
-						<b-form-valid-feedback :state="validation">
-							<br />
-						</b-form-valid-feedback>
-						<b-form-invalid-feedback :state="validation">
-							パスワードが一致しません｡
-						</b-form-invalid-feedback>
-					</b-form-group>
-
-					<div
-						class="d-flex align-items-center justify-content-between mt-4 mb-0"
-					>
-						<div></div>
-						<b-button size="md" variant="primary" type="submit">
-							変更
-						</b-button>
-					</div>
-				</b-form>
-			</div>
-		</template>
+						<div
+							class="d-flex align-items-center justify-content-between mt-4 mb-0"
+						>
+							<div></div>
+							<b-button size="md" variant="primary" type="submit">
+								変更
+							</b-button>
+						</div>
+					</b-form>
+				</div>
+			</template>
+		</b-overlay>
 		<template #modal-footer="{}">
 			<div class="text-muted small">&copy; Random Stat 2021</div>
 		</template>
@@ -109,6 +110,7 @@ export default {
 			newPassword: "",
 			reNewPassword: "",
 		},
+		changingPassword: false,
 	}),
 	computed: {
 		validation() {
@@ -145,10 +147,12 @@ export default {
 						newPassword: "",
 						reNewPassword: "",
 					};
+					this.changingPassword = false;
 
 					// モーダルウィンドウを閉じる
 					this.$bvModal.hide(this.modalId);
 				});
+			this.changingPassword = true;
 		},
 	},
 	watch: {},
