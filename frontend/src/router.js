@@ -70,8 +70,16 @@ const router = new VueRouter({
 				),
 			name: "userActivate",
 		},
+		{
+			path: "/password/reset/confirm/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "activation" */
+				),
+			name: "passwordConfirmation",
+		},
 
-		// { path: "*", redirect: "/" },
+		{ path: "*", redirect: "/" },
 	],
 });
 

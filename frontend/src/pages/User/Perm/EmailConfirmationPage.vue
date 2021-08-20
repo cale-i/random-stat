@@ -2,6 +2,7 @@
 	<b-container>
 		<GlobalHeader />
 		<GlobalMessage />
+		<ResetPasswordConfirmationModal />
 		{{ resultMessage }}
 	</b-container>
 </template>
@@ -9,14 +10,22 @@
 <script>
 import GlobalMessage from "@/components/GlobalMessage.vue";
 import GlobalHeader from "@/components/GlobalHeader.vue";
+
+import ResetPasswordConfirmationModal from "@/components/account/auth/ResetPasswordConfirmationModal.vue";
+
 export default {
 	components: {
 		GlobalMessage,
 		GlobalHeader,
+		ResetPasswordConfirmationModal,
 	},
 	props: {},
 	data: () => ({
-		resultMessage: "アクティベーション中",
+		resultMessage: "確認中",
+		actions: {
+			userActivation: "activate",
+			resetPasswordConfirmation: "password",
+		},
 	}),
 	computed: {},
 	methods: {
@@ -76,6 +85,10 @@ export default {
 		if (action === this.actions.userActivation) {
 			// ユーザーアクティベーション処理
 			this.userActivation();
+		}
+		if (action === this.actions.resetPasswordConfirmation) {
+			// パスワード再設定処理
+			this.resetPasswordConfirmation();
 		}
 	},
 	updated() {},

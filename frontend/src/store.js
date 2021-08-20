@@ -402,6 +402,15 @@ const resetPasswordModule = {
 			console.log(payload.email);
 			return api.post("/auth/users/reset_password/", { email: payload.email });
 		},
+		confirmation(context, payload) {
+			console.log(payload);
+			return api.post("/auth/users/reset_password_confirm/", {
+				uid: payload.uid,
+				token: payload.token,
+				new_password: payload.re_new_password,
+				re_new_password: payload.re_new_password,
+			});
+		},
 	},
 };
 
