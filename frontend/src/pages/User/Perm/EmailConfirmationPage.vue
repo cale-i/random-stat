@@ -20,9 +20,28 @@ export default {
 	}),
 	computed: {},
 	methods: {
-		show: function() {
-			console.log(this.$route.params.uid);
-			console.log(this.$route.params.token);
+		getAction() {
+			// URLから処理を分岐
+			// 次の3つの候補がある
+			// 1, '/activate/{uid}/{token}'
+			// 2, '/password/reset/confirm/{uid}/{token}'
+			// 3, '/email/reset/confirm/{uid}/{token}'
+
+			// [
+			// 	"",
+			// 	"password", <= ここの文字列で処理を決定する
+			// 	"reset",
+			// 	"confirm",
+			// 	uid,
+			// 	token,
+			// ];
+			let pathname = window.location.pathname.split("/");
+			if (pathname.length < 2) {
+				return null;
+			}
+			return pathname[1];
+		},
+		userActivation() {
 			this.$store
 				.dispatch("activation/activate", {
 					uid: this.$route.params.uid,
@@ -30,34 +49,34 @@ export default {
 				})
 				.then((response) => {
 					console.log(response);
+					this.resultMessage = "アクティベーションを完了しました｡";
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "アクティベーション完了",
+					});
+					// 現在のページが"/"でない場合"/"に移動
+					if (window.location.pathname !== "/") {
+						this.$router.replace("/");
+					}
 				})
 				.catch((response) => {
 					console.log(response);
+					this.resultMessage = "アクティベーションに失敗しました｡";
 				});
+		},
+		resetPasswordConfirmation() {
+			// モーダル表示
+			this.$bvModal.show("resetPasswordConfirmationModal");
 		},
 	},
 	watch: {},
 	mounted() {
-		this.$store
-			.dispatch("activation/activate", {
-				uid: this.$route.params.uid,
-				token: this.$route.params.token,
-			})
-			.then((response) => {
-				console.log(response);
-				this.resultMessage = "アクティベーションを完了しました｡";
-				this.$store.dispatch("message/setInfoMessage", {
-					message: "アクティベーション完了",
-				});
-				// 現在のページが"/"でない場合"/"に移動
-				if (window.location.pathname !== "/") {
-					this.$router.replace("/");
-				}
-			})
-			.catch((response) => {
-				console.log(response);
-				this.resultMessage = "アクティベーションに失敗しました｡";
-			});
+		// 処理を分岐
+		const action = this.getAction();
+
+		if (action === this.actions.userActivation) {
+			// ユーザーアクティベーション処理
+			this.userActivation();
+		}
 	},
 	updated() {},
 };
