@@ -27,26 +27,28 @@
 			</b-col>
 		</b-form-row>
 
-		<b-form-row class="my-3">
-			<b-col md="3">
-				<label class="m-2" for="inputEmail">Email:</label>
-			</b-col>
-			<b-col md="6">
-				<b-form-input
-					id="inputEmail"
-					:placeholder="user.email"
-					type="email"
-					required
-					class=""
-					disabled
-				></b-form-input>
-			</b-col>
-			<b-col md="3">
-				<div v-b-modal.changeEmailModal class="btn btn-success w-100">
-					Email変更
-				</div>
-			</b-col>
-		</b-form-row>
+		<b-overlay :show="sendingConfirmationEmail" rounded="sm">
+			<b-form-row class="my-3">
+				<b-col md="3">
+					<label class="m-2" for="inputEmail">Email:</label>
+				</b-col>
+				<b-col md="6">
+					<b-form-input
+						id="inputEmail"
+						:placeholder="user.email"
+						type="email"
+						required
+						class=""
+						disabled
+					></b-form-input>
+				</b-col>
+				<b-col md="3">
+					<div @click="sendEmailChangeRequest" class="btn btn-success w-100">
+						Email変更
+					</div>
+				</b-col>
+			</b-form-row>
+		</b-overlay>
 
 		<b-form-row class="my-3">
 			<b-col md="3"> </b-col>
@@ -67,27 +69,26 @@
 				</div>
 			</b-col>
 		</b-form-row>
-		<ChangeEmailModal />
 		<ChangePasswordModal />
 		<DeleteAccountModal />
 	</div>
 </template>
 
 <script>
-import ChangeEmailModal from "@/components/account/auth/ChangeEmailModal.vue";
 import ChangePasswordModal from "@/components/account/auth/ChangePasswordModal.vue";
 import DeleteAccountModal from "@/components/account/auth/DeleteAccountModal.vue";
 import AvatarUpload from "@/components/account/AvatarUpload.vue";
 
 export default {
 	components: {
-		ChangeEmailModal,
 		ChangePasswordModal,
 		DeleteAccountModal,
 		AvatarUpload,
 	},
 	props: {},
-	data: () => ({}),
+	data: () => ({
+		sendingConfirmationEmail: false,
+	}),
 	computed: {
 		user: function() {
 			return this.$store.state.auth;
@@ -107,6 +108,28 @@ export default {
 						message: "ユーザー名を変更しました",
 					});
 				});
+		},
+		sendEmailChangeRequest() {
+			const confirmMsg =
+				"メールアドレス変更リクエストを送信します｡よろしいですか?";
+			if (confirm(confirmMsg) === false) {
+				return;
+			}
+
+			// 変更リクエスト送信
+			// 送信先メールアドレスは登録済みメールアドレスに限定する
+			this.$store
+				.dispatch("resetEmail/sendEmail")
+				.then(() => {
+					this.isResettingEmail = true;
+					this.$store.dispatch("message/setInfoMessage", {
+						message:
+							"メールアドレス変更リクエストを送信しました｡届いたメールから変更手続きを行って下さい｡",
+					});
+					this.sendingConfirmationEmail = false;
+				})
+				.catch();
+			this.sendingConfirmationEmail = true;
 		},
 	},
 	watch: {},
