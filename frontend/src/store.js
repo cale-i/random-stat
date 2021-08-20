@@ -413,6 +413,31 @@ const resetPasswordModule = {
 		},
 	},
 };
+// メールアドレス再設定
+const resetEmailModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail() {
+			const email = store.getters["auth/email"];
+			return api.post("/auth/users/reset_email/", { email });
+		},
+		confirmation(context, payload) {
+			console.log(payload);
+			return api
+				.post("/auth/users/reset_email_confirm/", {
+					uid: payload.uid,
+					token: payload.token,
+					new_email: payload.new_email,
+					re_new_email: payload.re_new_email,
+				})
+				.catch();
+		},
+	},
+};
 
 const store = new Vuex.Store({
 	modules: {
@@ -424,6 +449,7 @@ const store = new Vuex.Store({
 		failedLoginAttempt: failedLoginAttemptModule,
 		activation: activationModule,
 		resetPassword: resetPasswordModule,
+		resetEmail: resetEmailModule,
 	},
 });
 

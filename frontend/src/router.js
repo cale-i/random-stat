@@ -66,7 +66,7 @@ const router = new VueRouter({
 			path: "/activate/:uid/:token",
 			component: () =>
 				import(
-					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "activation" */
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "userActivate" */
 				),
 			name: "userActivate",
 		},
@@ -74,9 +74,17 @@ const router = new VueRouter({
 			path: "/password/reset/confirm/:uid/:token",
 			component: () =>
 				import(
-					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "activation" */
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "passwordConfirmation" */
 				),
 			name: "passwordConfirmation",
+		},
+		{
+			path: "/email/reset/confirm/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "emailConfirmation" */
+				),
+			name: "emailConfirmation",
 		},
 
 		{ path: "*", redirect: "/" },
