@@ -390,6 +390,20 @@ const activationModule = {
 		},
 	},
 };
+// パスワード再設定
+const resetPasswordModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail(context, payload) {
+			console.log(payload.email);
+			return api.post("/auth/users/reset_password/", { email: payload.email });
+		},
+	},
+};
 
 const store = new Vuex.Store({
 	modules: {
@@ -400,6 +414,7 @@ const store = new Vuex.Store({
 		loginRecord: loginRecordModule,
 		failedLoginAttempt: failedLoginAttemptModule,
 		activation: activationModule,
+		resetPassword: resetPasswordModule,
 	},
 });
 
