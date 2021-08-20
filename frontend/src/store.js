@@ -407,7 +407,7 @@ const resetPasswordModule = {
 			return api.post("/auth/users/reset_password_confirm/", {
 				uid: payload.uid,
 				token: payload.token,
-				new_password: payload.re_new_password,
+				new_password: payload.new_password,
 				re_new_password: payload.re_new_password,
 			});
 		},

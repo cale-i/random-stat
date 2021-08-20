@@ -217,6 +217,7 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'SET_USERNAME_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
     # 'SERIALIZERS': {},
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
