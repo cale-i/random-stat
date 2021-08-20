@@ -66,9 +66,9 @@ const router = new VueRouter({
 			path: "/activate/:uid/:token",
 			component: () =>
 				import(
-					"@/pages/User/Perm/ActivationPage" /* webpackChunkName: "activation" */
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "activation" */
 				),
-			name: "activation",
+			name: "userActivate",
 		},
 
 		// { path: "*", redirect: "/" },
