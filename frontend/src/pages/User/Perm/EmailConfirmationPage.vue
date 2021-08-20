@@ -3,6 +3,7 @@
 		<GlobalHeader />
 		<GlobalMessage />
 		<ResetPasswordConfirmationModal />
+		<ResetEmailConfirmationModal />
 		{{ resultMessage }}
 	</b-container>
 </template>
@@ -12,12 +13,14 @@ import GlobalMessage from "@/components/GlobalMessage.vue";
 import GlobalHeader from "@/components/GlobalHeader.vue";
 
 import ResetPasswordConfirmationModal from "@/components/account/auth/ResetPasswordConfirmationModal.vue";
+import ResetEmailConfirmationModal from "@/components/account/auth/ResetEmailConfirmationModal.vue";
 
 export default {
 	components: {
 		GlobalMessage,
 		GlobalHeader,
 		ResetPasswordConfirmationModal,
+		ResetEmailConfirmationModal,
 	},
 	props: {},
 	data: () => ({
@@ -25,6 +28,7 @@ export default {
 		actions: {
 			userActivation: "activate",
 			resetPasswordConfirmation: "password",
+			resetEmailConfirmation: "email",
 		},
 	}),
 	computed: {},
@@ -76,12 +80,15 @@ export default {
 			// モーダル表示
 			this.$bvModal.show("resetPasswordConfirmationModal");
 		},
+		resetEmailConfirmation() {
+			// モーダル表示
+			this.$bvModal.show("resetEmailConfirmationModal");
+		},
 	},
 	watch: {},
 	mounted() {
 		// 処理を分岐
 		const action = this.getAction();
-
 		if (action === this.actions.userActivation) {
 			// ユーザーアクティベーション処理
 			this.userActivation();
@@ -89,6 +96,9 @@ export default {
 		if (action === this.actions.resetPasswordConfirmation) {
 			// パスワード再設定処理
 			this.resetPasswordConfirmation();
+		}
+		if (action === this.actions.resetEmailConfirmation) {
+			this.resetEmailConfirmation();
 		}
 	},
 	updated() {},
