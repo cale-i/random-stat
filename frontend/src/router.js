@@ -78,6 +78,14 @@ const router = new VueRouter({
 				),
 			name: "passwordConfirmation",
 		},
+		{
+			path: "/email/reset/confirm/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "emailConfirmation" */
+				),
+			name: "emailConfirmation",
+		},
 
 		{ path: "*", redirect: "/" },
 	],
