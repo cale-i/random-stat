@@ -425,6 +425,17 @@ const resetEmailModule = {
 			const email = store.getters["auth/email"];
 			return api.post("/auth/users/reset_email/", { email });
 		},
+		confirmation(context, payload) {
+			console.log(payload);
+			return api
+				.post("/auth/users/reset_email_confirm/", {
+					uid: payload.uid,
+					token: payload.token,
+					new_email: payload.new_email,
+					re_new_email: payload.re_new_email,
+				})
+				.catch();
+		},
 	},
 };
 
