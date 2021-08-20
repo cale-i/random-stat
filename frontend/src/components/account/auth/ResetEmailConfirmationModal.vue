@@ -14,23 +14,23 @@
 		<template #modal-header="{}">
 			<b-col md="1"> </b-col>
 			<b-col>
-				<h4 class="text-center">メールアドレス変更</h4>
+				<h4 class="text-center">新しいメールアドレスの入力</h4>
 			</b-col>
 			<b-col md="1"></b-col>
 		</template>
 		<template #default="{}">
 			<div class="card-body">
-				<b-form @submit.prevent="changeEmail">
+				<b-form @submit.prevent="submitConfirmation">
 					<b-form-group
-						id="inputGroupEmail"
+						id="inputGroupNewEmail"
 						label="New Email:"
 						label-cols-md="3"
 						label-align-md="right"
-						label-for="inputEmail"
+						label-for="inputNewEmail"
 						class="mt-5"
 					>
 						<b-form-input
-							id="inputEmail"
+							id="inputNewEmail"
 							v-model="form.newEmail"
 							type="email"
 							required
@@ -41,16 +41,16 @@
 					</b-form-group>
 
 					<b-form-group
-						id="inputGroupConfirmEmail"
+						id="inputGroupReNewEmail"
 						label="Confirm:"
 						label-cols-md="3"
 						label-align-md="right"
-						label-for="inputConfirmEmail"
+						label-for="inputReNewEmail"
 						class="mb-2"
 					>
 						<b-form-input
-							id="inputConfirmEmail"
-							v-model="form.confirmEmail"
+							id="inputReNewEmail"
+							v-model="form.reNewEmail"
 							type="email"
 							required
 							placeholder="確認"
@@ -60,25 +60,8 @@
 							<br />
 						</b-form-valid-feedback>
 						<b-form-invalid-feedback :state="validation">
-							Emailが一致しません｡
+							メールアドレスが一致しません｡
 						</b-form-invalid-feedback>
-					</b-form-group>
-
-					<b-form-group
-						id="inputGroupPassword"
-						label="Password"
-						label-cols-md="3"
-						label-align-md="right"
-						label-for="inputPassword"
-					>
-						<b-form-input
-							id="inputPassword"
-							v-model="form.password"
-							type="password"
-							placeholder="password"
-							required
-							autocomplete="true"
-						></b-form-input>
 					</b-form-group>
 
 					<div
@@ -102,100 +85,49 @@
 export default {
 	props: {},
 	data: () => ({
-		modalId: "changeEmailModal",
+		modalId: "resetEmailConfirmationModal",
 		form: {
 			newEmail: "",
-			confirmEmail: "",
-			password: "",
+			reNewEmail: "",
 		},
 	}),
 	computed: {
 		validation() {
 			// rePasswordが空白の場合はvalidation error messageを表示させない｡
-			if (!this.form.confirmEmail) return true;
-			return this.form.newEmail === this.form.confirmEmail;
+			if (!this.form.reNewEmail) return true;
+			return this.form.newEmail === this.form.reNewEmail;
 		},
 	},
 	methods: {
-		changeEmail() {
-			console.log(this.form);
-
-			if (this.form.newEmail !== this.form.confirmEmail) {
-				console.log("Emailが一致しません");
+		submitConfirmation() {
+			// confirm email
+			if (this.form.newEmail !== this.form.reNewEmail) {
+				console.log("メールアドレスが一致しません");
 				return;
 			}
 			this.$store
-				.dispatch("auth/setEmail", {
+				.dispatch("resetEmail/confirmation", {
+					uid: this.$route.params.uid,
+					token: this.$route.params.token,
 					new_email: this.form.newEmail,
-					re_new_email: this.form.confirmEmail,
-					current_password: this.form.password,
+					re_new_email: this.form.reNewEmail,
 				})
-				.then(() => {
-					console.log("email changed!");
-					// message
+				.then((response) => {
+					console.log(response);
+					this.resultMessage = "メールアドレスを変更しました";
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "メールアドレスを変更しました",
 					});
 
-					// Clear input data
-					this.form = {
-						newEmail: "",
-						confirmEmail: "",
-						password: "",
-					};
-
-					// モーダルウィンドウを閉じる
-					this.$bvModal.hide(this.modalId);
+					// 現在のページが"/"でない場合"/"に移動
+					if (window.location.pathname !== "/") {
+						this.$router.replace("/");
+					}
 				});
 		},
 	},
 	watch: {},
 	mounted() {},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
-<style scoped>
-html,
-body {
-	height: 100%;
-}
-
-body {
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-align: center;
-	align-items: center;
-	padding-top: 40px;
-	padding-bottom: 40px;
-	background-color: #f5f5f5;
-}
-
-.form-signin {
-	width: 100%;
-	max-width: 330px;
-	padding: 15px;
-	margin: auto;
-}
-
-.form-signin .checkbox {
-	font-weight: 400;
-}
-
-.form-signin .form-floating:focus-within {
-	z-index: 2;
-}
-
-.form-signin input[type="text"] {
-	margin-bottom: -1px;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-	margin-bottom: 10px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-</style>
+<style scoped></style>
