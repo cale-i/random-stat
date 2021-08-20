@@ -219,6 +219,8 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': True,
     'USERNAME_RESET_CONFIRM_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
     # 'SERIALIZERS': {},
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
