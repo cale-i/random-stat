@@ -65,7 +65,12 @@
 					<div
 						class="d-flex align-items-center justify-content-between mt-4 mb-0"
 					>
-						<a class="small" href="password.html">Forgot Password?</a>
+						<div
+							v-b-modal.resetPasswordModal
+							class="btn btn-sm btn-link text-black-50"
+						>
+							パスワードをお忘れの場合
+						</div>
 						<b-button size="md" variant="success" type="submit">
 							Login
 						</b-button>

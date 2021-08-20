@@ -64,17 +64,20 @@
 
 		<LoginModal />
 		<SignUpModal />
+		<ResetPasswordModal />
 	</div>
 </template>
 
 <script>
 import SignUpModal from "@/components/account/auth/SignUpModal.vue";
 import LoginModal from "@/components/account/auth/LoginModal.vue";
+import ResetPasswordModal from "@/components/account/auth/ResetPasswordModal.vue";
 
 export default {
 	components: {
 		SignUpModal,
 		LoginModal,
+		ResetPasswordModal,
 	},
 	props: {},
 	data: () => ({}),
