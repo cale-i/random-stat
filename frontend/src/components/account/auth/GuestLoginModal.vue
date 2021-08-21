@@ -1,6 +1,6 @@
 <template>
 	<b-modal
-		id="loginModal"
+		:id="modalId"
 		title="Login"
 		header-bg-variant="dark"
 		header-text-variant="light"
@@ -13,19 +13,19 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="4">
+			<b-col md="3">
 				<div v-b-modal.signUpModal class="btn btn-sm btn-warning">
 					Sign Up
 				</div>
 			</b-col>
-			<b-col md="4">
-				<h4 class="text-center">Login</h4>
+			<b-col md="6">
+				<h4 class="text-center">Guest Login</h4>
 			</b-col>
-			<b-col md="4"> </b-col>
+			<b-col md="3"></b-col>
 		</template>
 		<template #default="{}">
 			<div class="card-body">
-				<b-form @submit.prevent="submitLogin">
+				<b-form @submit.prevent="submitGuestLogin">
 					<b-form-group
 						id="inputGroupEmail"
 						label="Email:"
@@ -41,6 +41,7 @@
 							placeholder="example@example.com"
 							required
 							autofocus
+							disabled
 						></b-form-input>
 					</b-form-group>
 
@@ -59,18 +60,14 @@
 							placeholder="password"
 							required
 							autocomplete="true"
+							disabled
 						></b-form-input>
 					</b-form-group>
 
 					<div
 						class="d-flex align-items-center justify-content-between mt-4 mb-0"
 					>
-						<div
-							v-b-modal.resetPasswordModal
-							class="btn btn-sm btn-link text-black-50"
-						>
-							パスワードをお忘れの場合
-						</div>
+						<div></div>
 						<b-button size="md" variant="success" type="submit">
 							Login
 						</b-button>
@@ -79,11 +76,7 @@
 			</div>
 		</template>
 		<template #modal-footer="{}">
-			<b-col md="3" v-b-modal.guestLoginModal class="btn btn-sm btn-info">
-				Guest Login
-			</b-col>
-			<b-col></b-col>
-			<b-col md="4" class="text-muted small">&copy; Random Stat 2021</b-col>
+			<div class="text-muted small">&copy; Random Stat 2021</div>
 		</template>
 	</b-modal>
 </template>
@@ -93,20 +86,19 @@ export default {
 	components: {},
 	props: {},
 	data: () => ({
+		modalId: "guestLoginModal",
 		form: {
-			email: "",
-			password: "",
+			email: "guest@randomstat.work",
+			password: "********",
 		},
 	}),
 	computed: {},
 	methods: {
-		submitLogin() {
+		submitGuestLogin() {
+			console.log("test");
 			// ログイン
 			this.$store
-				.dispatch("auth/login", {
-					email: this.form.email,
-					password: this.form.password,
-				})
+				.dispatch("guestLogin/login")
 				.then(() => {
 					console.log("success");
 					this.$store.dispatch("message/setInfoMessage", {

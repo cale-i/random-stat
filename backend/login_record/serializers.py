@@ -7,3 +7,10 @@ class RecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginRecord
         fields = ['login_time', 'logout_time', 'ip_address', 'user_agent']
+
+
+class GuestRecordSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = LoginRecord
+        fields = ['login_time', 'logout_time', ]
