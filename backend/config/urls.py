@@ -50,4 +50,8 @@ if settings.DEBUG:
 urlpatterns += [
     # Redirect
     # DEBUG分岐以前で定義するとすべてリダイレクトされるためこの位置に置く
-    re_path('', RedirectView.as_view(url='/')), ]
+    # リダイレクトの場合､/activation/等のURIが機能しないため､index.htmlを返す｡
+    # 存在しないURIの場合は､リダイレクトと同様に/を返す
+    re_path('', TemplateView.as_view(template_name='index.html')),
+    # re_path('', RedirectView.as_view(url='/')),
+]
