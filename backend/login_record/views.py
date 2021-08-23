@@ -19,7 +19,6 @@ class LoginRecorderAPIView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-
         # 有効期限切れTokenのログアウト情報を記録するために呼び出す
         self.fill_expired_logout_time(user, request)
 
