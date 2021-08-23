@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "@/store";
 
-const api = axios.create({
+export const api = axios.create({
 	baseURL: process.env.VUE_APP_ROOT_API,
 	timeout: 5000,
 	headers: {
@@ -80,4 +80,12 @@ api.interceptors.response.use(
 	}
 );
 
-export default api;
+export const refreshApi = axios.create({
+	baseURL: process.env.VUE_APP_ROOT_API,
+	timeout: 5000,
+	withCredentials: true,
+	headers: {
+		"Content-Type": "application/json",
+		"X-Requested-With": "XMLHttpRequest",
+	},
+});

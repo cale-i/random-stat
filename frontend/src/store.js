@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import api from "@/services/api";
+import { api, refreshApi } from "@/services/api";
 
 Vue.use(Vuex);
 
@@ -105,6 +105,24 @@ const authModule = {
 			// storeのユーザー情報をクリア
 			context.commit("clearUserData");
 			console.log("logouted");
+		},
+		// Refresh Token
+		refresh() {
+			return refreshApi
+				.post("/auth/jwt/refresh/")
+				.then((response) => {
+					// 認証用トークンをlocalStorageに保存
+					localStorage.setItem("access", response.data.access);
+					//ユーザー情報を取得してstoreのユーザー情報を更新
+					// const user = context.dispatch("reload");
+					console.log("in auth/refresh");
+
+					return true;
+				})
+				.catch(() => {
+					console.log("失敗");
+					return false;
+				});
 		},
 		setEmail(context, payload) {
 			// ユーザー名変更
@@ -458,7 +476,6 @@ const guestLoginModule = {
 		},
 	},
 };
-
 const store = new Vuex.Store({
 	modules: {
 		chart: chartModule,
