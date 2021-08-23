@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'login_record.apps.LoginRecordConfig',
     'failed_login_attempt.apps.FailedLoginAttemptConfig',
+    'auth_jwt.apps.AuthJwtConfig',
 
 ]
 
