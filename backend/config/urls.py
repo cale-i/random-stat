@@ -20,7 +20,9 @@ urlpatterns = [
 
     # JWT
     path('api/v1/auth/', include('djoser.urls')),
-    path('api/v1/auth/', include('djoser.urls.jwt')),
+
+    # auth_jwt
+    path('api/v1/auth/', include('auth_jwt.urls')),
 
     # Login Record
     path('api/v1/login-record/', include('login_record.urls')),
