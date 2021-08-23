@@ -10,7 +10,7 @@ from rest_framework.response import Response
 User = get_user_model()
 
 cookie_max_age = settings.SIMPLE_JWT.get(
-    'REFRESH_TOKEN_LIFETIME').seconds
+    'REFRESH_TOKEN_LIFETIME').total_seconds()
 samesite = settings.JWT_COOKIE.get('SAMESITE')
 secure = settings.JWT_COOKIE.get('SECURE')
 

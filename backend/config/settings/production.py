@@ -73,8 +73,7 @@ GUEST_PASSWORD = env('GUEST_PASSWORD')
 # Cookie Settings #
 ###################
 JWT_COOKIE = {
-    'SAMESITE': 'None',
-    # 'SAMESITE': 'Strict',
+    'SAMESITE': 'Strict',
     # 'SECURE': True, 本番時 True
     'SECURE': False,
 }
