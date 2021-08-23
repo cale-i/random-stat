@@ -67,3 +67,12 @@ EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
 #################
 GUEST_EMAIL = env('GUEST_EMAIL')
 GUEST_PASSWORD = env('GUEST_PASSWORD')
+
+
+###################
+# Cookie Settings #
+###################
+JWT_COOKIE = {
+    'SAMESITE': 'Strict',
+    'SECURE': True,
+}

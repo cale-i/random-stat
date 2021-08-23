@@ -23,7 +23,10 @@ DEBUG = True
 
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
 
 #####################
 # Site Map settings #
@@ -142,10 +145,19 @@ MIDDLEWARE += [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
     'http://127.0.0.1:8080',
 )
+
+###################
+# Cookie Settings #
+###################
+JWT_COOKIE = {
+    'SAMESITE': 'None',
+    'SECURE': False,
+}
 
 
 ##################
