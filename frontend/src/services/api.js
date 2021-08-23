@@ -4,6 +4,7 @@ import store from "@/store";
 export const api = axios.create({
 	baseURL: process.env.VUE_APP_ROOT_API,
 	timeout: 5000,
+	withCredentials: true,
 	headers: {
 		"Content-Type": "application/json",
 		"X-Requested-With": "XMLHttpRequest",
@@ -11,17 +12,24 @@ export const api = axios.create({
 });
 // 共通前処理
 api.interceptors.request.use(
-	function(config) {
+	async function(config) {
 		// メッセージをクリア
 		// ログアウト時のメッセージが表示されないため
 		// エラー時にのみクリアするよう変更
 		// store.dispatch("message/clearAllMessages");
 		// 認証用トークンがあればリクエストヘッダに乗せる
-		const token = localStorage.getItem("access");
-		if (token) {
-			config.headers.Authorization = `JWT ${token}`;
-			return config;
+		let token = localStorage.getItem("access");
+
+		if (!token) return config;
+
+		// 認証用トークンの有効期限を確認し､有効期限切れの場合はリフレッシュトークンを発行
+		if (isExpired(token)) {
+			// 認証用トークンが有効期限切れの場合の処理
+			await store.dispatch("auth/refresh");
+			token = localStorage.getItem("access");
 		}
+
+		config.headers.Authorization = `JWT ${token}`;
 		return config;
 	},
 	function(error) {
@@ -89,3 +97,20 @@ export const refreshApi = axios.create({
 		"X-Requested-With": "XMLHttpRequest",
 	},
 });
+
+const isExpired = (token) => {
+	// tokenをデコード
+	const base64Url = token.split(".")[1];
+	const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+	token = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+
+	const expirationTime = token.exp;
+	// getTime関数はミリ秒で取得するため､秒に揃えるため1000で除す
+	const nowTime = Math.floor(new Date().getTime() / 1000);
+
+	console.log("expiration: ", expirationTime);
+	console.log("nowTime: ", nowTime);
+	console.log(" expirationTime <= nowTime: ", expirationTime <= nowTime);
+
+	return expirationTime <= nowTime;
+};
