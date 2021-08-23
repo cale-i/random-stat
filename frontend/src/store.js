@@ -98,6 +98,18 @@ const authModule = {
 					return user;
 				});
 		},
+		guestLogin() {
+			return api.post("/auth/jwt/create/guest/").then((response) => {
+				// 認証用トークンをlocalStorageに保存
+				localStorage.setItem("access", response.data.access);
+				//ユーザー情報を取得してstoreのユーザー情報を更新
+				const user = store.dispatch("auth/reload");
+
+				// ログイン履歴
+				store.dispatch("loginRecord/login");
+				return user;
+			});
+		},
 		// logout/
 		logout(context) {
 			// 認証用トークンをlocalStorageから削除
@@ -456,26 +468,7 @@ const resetEmailModule = {
 		},
 	},
 };
-// ゲストログイン
-const guestLoginModule = {
-	strict: process.env.NODE_ENV !== "production",
-	namespaced: true,
-	actions: {
-		// login
-		login() {
-			return api.post("/auth/guest/jwt/create/").then((response) => {
-				// 認証用トークンをlocalStorageに保存
-				localStorage.setItem("access", response.data.access);
-				//ユーザー情報を取得してstoreのユーザー情報を更新
-				const user = store.dispatch("auth/reload");
 
-				// ログイン履歴
-				store.dispatch("loginRecord/login");
-				return user;
-			});
-		},
-	},
-};
 const store = new Vuex.Store({
 	modules: {
 		chart: chartModule,
@@ -487,7 +480,6 @@ const store = new Vuex.Store({
 		activation: activationModule,
 		resetPassword: resetPasswordModule,
 		resetEmail: resetEmailModule,
-		guestLogin: guestLoginModule,
 	},
 });
 
