@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'rest_framework.authtoken',  # For Account Deletion
-    'axes',  # Keeping track of suspicious login attempts
     'django_cleanup',  # Automatically deletes old image
     'imagekit',  # For processing images
     'storages',  # django-storages
@@ -59,7 +58,6 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'login_record.apps.LoginRecordConfig',
     'failed_login_attempt.apps.FailedLoginAttemptConfig',
-    'guest_login.apps.GuestLoginConfig',
 
 ]
 
@@ -72,8 +70,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
-    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -125,9 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Authenticaton Backends #
 ##########################
 AUTHENTICATION_BACKENDS = [
-    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
-    'axes.backends.AxesBackend',
-
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
 ]
