@@ -15,9 +15,6 @@ urlpatterns = [
     # ROOT
     path('', TemplateView.as_view(template_name='index.html')),
 
-    # Guest Login JWT
-    path('api/v1/auth/guest/', include('guest_login.urls')),
-
     # JWT
     path('api/v1/auth/', include('djoser.urls')),
 

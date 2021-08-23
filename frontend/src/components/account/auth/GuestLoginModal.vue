@@ -88,30 +88,23 @@ export default {
 	data: () => ({
 		modalId: "guestLoginModal",
 		form: {
-			email: "guest@randomstat.work",
+			email: "example@example.com",
 			password: "********",
 		},
 	}),
 	computed: {},
 	methods: {
 		submitGuestLogin() {
-			console.log("test");
-			// ログイン
-			this.$store
-				.dispatch("guestLogin/login")
-				.then(() => {
-					console.log("success");
-					this.$store.dispatch("message/setInfoMessage", {
-						message: "ログインしました。",
-					});
-					// クエリ文字列に「next」がなければダッシュボード画面へ
-					const next = this.$route.query.next || "/dashboard";
-					console.log("next:", next);
-					this.$router.replace(next);
-				})
-				.catch(() => {
-					// ログイン失敗
+			// ゲストログイン
+			this.$store.dispatch("auth/guestLogin").then(() => {
+				this.$store.dispatch("message/setInfoMessage", {
+					message: "ログインしました。",
 				});
+				// クエリ文字列に「next」がなければダッシュボード画面へ
+				const next = this.$route.query.next || "/dashboard";
+				console.log("next:", next);
+				this.$router.replace(next);
+			});
 		},
 	},
 	watch: {},

@@ -1,7 +1,3 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from datetime import timedelta
@@ -10,32 +6,20 @@ from django.utils import timezone
 
 User = get_user_model()
 
+initialization_interval = 12
 
-class GuestLoginAPIView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
 
-        data = {'email': settings.GUEST_EMAIL,
-                'password': settings.GUEST_PASSWORD
-                }
-
-        # 一定時間経過でユーザー名, アバターイメージ初期化
-        initialize_guest_data()
-
-        serializer = self.get_serializer(data=data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except TokenError as e:
-            # エラーの場合､認証情報が改竄されているため､初期化処理
-            raise InvalidToken(e.args[0])
-
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+def get_guest_credentials():
+    return {'email': settings.GUEST_EMAIL,
+            'password': settings.GUEST_PASSWORD
+            }
 
 
 def initialize_guest_data():
     # 一定時間経過でユーザー名, アバターイメージ初期化
     # 不適切なユーザー名･画像を定期的に削除することが目的
     user = User.objects.get(email=settings.GUEST_EMAIL)
-    refresh_time = user.date_joined + timedelta(hours=12)
+    refresh_time = user.date_joined + timedelta(hours=initialization_interval)
 
     # アカウント作成から一定時間経過していた場合初期化
     if refresh_time <= timezone.now():
