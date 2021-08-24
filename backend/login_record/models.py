@@ -24,6 +24,11 @@ class LoginRecord(models.Model):
         null=True,
         auto_now_add=True,
     )
+    refresh_time = models.DateTimeField(
+        verbose_name='リフレッシュトークン発行時刻',
+        blank=True,
+        null=True,
+    )
     logout_time = models.DateTimeField(
         verbose_name='ログアウト時刻',
         blank=True,
@@ -92,17 +97,23 @@ def user_logged_out_callback(sender, request, user, **kwargs):
     if record is None:
         return
 
-    login_time = record.login_time
-    life_time = settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME')
+    base_time = record.refresh_time \
+        if record.refresh_time \
+        else record.login_time
+    life_time = settings.SIMPLE_JWT.get('REFRESH_TOKEN_LIFETIME')
     now_time = timezone.now()
+    expiration_time = base_time + life_time
 
-    expiration_time = login_time + life_time
+    #  login(1)  refresh        exp(refresh+lifetime)
+    #    ↓          ↓            ↓
+    #    |----------|------------|------------ ~
+    #                     ↑               ↑
+    #                   login(2)       login(3)
 
-    # 有効期限切れならTrue
-    is_expired = now_time > expiration_time
-    record.logout_time = expiration_time \
-        if is_expired \
-        else now_time
+    # login(2) => min(login(2), exp) => login(2)
+    # login(3) => min(login(3), exp) => exp
+
+    record.logout_time = min(expiration_time, now_time)
 
     record.save()
 
