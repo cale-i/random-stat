@@ -95,15 +95,11 @@ export default {
 		},
 	},
 	methods: {
-		async logout() {
-			// logout signal fire
-			await this.$store.dispatch("loginRecord/logout");
+		logout() {
 			this.$store.dispatch("auth/logout");
 			this.$store.dispatch("message/setInfoMessage", {
 				message: "ログアウトしました。",
 			});
-
-			console.log("success logout");
 
 			// 現在のページが"/"でない場合"/"に移動
 			if (window.location.pathname !== "/") {

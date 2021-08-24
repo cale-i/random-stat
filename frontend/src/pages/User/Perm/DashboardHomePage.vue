@@ -4,7 +4,7 @@
 			<b-col md="4">
 				<GlobalSidebar />
 			</b-col>
-
+			<b-button @click="refresh">refresh</b-button>
 			<b-col md="8">
 				<h1>ダッシュボード ほめ</h1>
 				<p v-b-modal.modal-login>Launch centered modal</p>
@@ -38,7 +38,11 @@ export default {
 		user: {},
 	}),
 	computed: {},
-	methods: {},
+	methods: {
+		refresh() {
+			this.$store.dispatch("auth/refresh");
+		},
+	},
 	watch: {},
 	mounted() {},
 };

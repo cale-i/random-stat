@@ -6,5 +6,4 @@ app_name = 'login_record'
 urlpatterns = [
     # file upload
     path('', views.RecordAPIView.as_view()),
-    path('logout/', views.LogoutRecorderAPIView.as_view()),
 ]

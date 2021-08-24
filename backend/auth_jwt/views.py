@@ -7,8 +7,8 @@ from .guest import get_guest_credentials, initialize_guest_data
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework import status
 from rest_framework.response import Response
-from .signals import login_signal
-
+from .signals import login_signal, logout_signal
+from .utils import update_refresh_time
 
 cookie_max_age = settings.SIMPLE_JWT.get(
     'REFRESH_TOKEN_LIFETIME').total_seconds()
@@ -32,6 +32,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
     def finalize_response(self, request, response, *args, **kwargs):
 
         if response.data.get('access'):
+            logout_signal(request, response)
             login_signal(request, response)
 
         if response.data.get('refresh'):
@@ -51,6 +52,9 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
 
+        if response.data.get('access'):
+            update_refresh_time(access_token=response.data.get('access'))
+
         if response.data.get('refresh'):
             response.set_cookie(
                 'refresh_token',
@@ -61,6 +65,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                 secure=secure,
             )
             del response.data['refresh']
+
         return super().finalize_response(request, response, *args, **kwargs)
     serializer_class = CookieTokenRefreshSerializer
 
@@ -75,3 +80,23 @@ class GuestCookieTokenObtainPairView(CookieTokenObtainPairView):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class LogoutTokenRefreshView(TokenRefreshView):
+    '''ログアウト時に呼び出し､user_logged_out signalを経由してログイン情報の記録を行う'''
+    serializer_class = CookieTokenRefreshSerializer
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('access'):
+            # ログアウトシグナル
+            logout_signal(request, response)
+
+            del response.data['access']
+
+        if response.data.get('refresh'):
+            # Cookieに保存された旧 Refresh Token を削除
+            response.delete_cookie('refresh_token')
+
+            del response.data['refresh']
+
+        return super().finalize_response(request, response, *args, **kwargs)

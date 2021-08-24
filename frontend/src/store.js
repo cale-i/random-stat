@@ -108,11 +108,12 @@ const authModule = {
 		},
 		// logout/
 		logout(context) {
+			// server side ログアウト処理
+			refreshApi.post("/auth/jwt/logout/");
 			// 認証用トークンをlocalStorageから削除
 			localStorage.removeItem("access");
 			// storeのユーザー情報をクリア
 			context.commit("clearUserData");
-			console.log("logouted");
 		},
 		// Refresh Token
 		refresh() {
@@ -359,14 +360,6 @@ const loginRecordModule = {
 		},
 	},
 	actions: {
-		logout() {
-			console.log("ログアウト履歴");
-
-			api.get("/login-record/logout/").then((response) => {
-				// storeのユーザー情報を更新
-				console.log(response);
-			});
-		},
 		getRecord(context) {
 			api.get("/login-record/").then((response) => {
 				context.commit("setRecord", response);
