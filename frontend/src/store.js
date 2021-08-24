@@ -93,8 +93,6 @@ const authModule = {
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
 
-					// ログイン履歴
-					store.dispatch("loginRecord/login");
 					return user;
 				});
 		},
@@ -105,8 +103,6 @@ const authModule = {
 				//ユーザー情報を取得してstoreのユーザー情報を更新
 				const user = store.dispatch("auth/reload");
 
-				// ログイン履歴
-				store.dispatch("loginRecord/login");
 				return user;
 			});
 		},
@@ -363,14 +359,6 @@ const loginRecordModule = {
 		},
 	},
 	actions: {
-		login() {
-			console.log("ログイン履歴");
-
-			return api.get("/login-record/login/").then((response) => {
-				// storeのユーザー情報を更新
-				return response.data;
-			});
-		},
 		logout() {
 			console.log("ログアウト履歴");
 
