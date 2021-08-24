@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_cleanup',  # Automatically deletes old image
     'imagekit',  # For processing images
     'storages',  # django-storages
+    'rest_framework_simplejwt.token_blacklist',  # Refresh Token
 
 
     # My Applications
@@ -186,9 +187,10 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 
