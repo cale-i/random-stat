@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from django.conf import settings
 from .guest import get_guest_credentials, initialize_guest_data
 
@@ -9,23 +8,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from .signals import login_signal, logout_signal
 from .utils import update_refresh_time
+from .serializers import CookieTokenRefreshSerializer
 
 cookie_max_age = settings.SIMPLE_JWT.get(
     'REFRESH_TOKEN_LIFETIME').total_seconds()
 samesite = settings.JWT_COOKIE.get('SAMESITE')
 secure = settings.JWT_COOKIE.get('SECURE')
-
-
-class CookieTokenRefreshSerializer(TokenRefreshSerializer):
-    refresh = None
-
-    def validate(self, attrs):
-        attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
-        if attrs['refresh']:
-            return super().validate(attrs)
-        else:
-            raise InvalidToken(
-                'No valid token found in cookie \'refresh_token\'')
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
