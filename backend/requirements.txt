@@ -6,7 +6,6 @@ django-filter
 djangorestframework
 djangorestframework-simplejwt
 djoser
-django-axes
 django-cleanup
 pillow
 django-imagekit

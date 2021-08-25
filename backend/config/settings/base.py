@@ -99,6 +99,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ############
 
 DATABASES = {}
+ATOMIC_REQUESTS = False
 
 #######################
 # Password validation #

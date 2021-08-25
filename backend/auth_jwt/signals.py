@@ -1,4 +1,4 @@
-from django.contrib.auth import user_logged_in, user_logged_out
+from django.contrib.auth import user_logged_in, user_logged_out, user_login_failed
 from .utils import get_user
 
 
@@ -20,3 +20,8 @@ def logout_signal(request, response):
     user_logged_out.send(sender=user_obj.__class__,
                          request=request, user=user_obj)
     return
+
+
+def failed_login_signal(request):
+    user_login_failed.send(
+        sender=__name__, credentials=None, request=request)

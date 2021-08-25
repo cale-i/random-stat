@@ -81,12 +81,6 @@ const authModule = {
 					email: payload.email,
 					password: payload.password,
 				})
-				.catch(() => {
-					store.dispatch("failedLoginAttempt/fireSignal", {
-						email: payload.email,
-						password: payload.password,
-					});
-				})
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
@@ -368,23 +362,6 @@ const loginRecordModule = {
 	},
 };
 
-const failedLoginAttemptModule = {
-	strict: process.env.NODE_ENV !== "production",
-	namespaced: true,
-	state: {},
-	getters: {},
-	mutations: {},
-	actions: {
-		fireSignal(context, data) {
-			console.log(data);
-			api.post("/login-attempt/failed/", data).then((response) => {
-				console.log(response);
-
-				response.data;
-			});
-		},
-	},
-};
 const activationModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
@@ -457,7 +434,6 @@ const store = new Vuex.Store({
 		message: messageModule,
 		avatar: avatarModule,
 		loginRecord: loginRecordModule,
-		failedLoginAttempt: failedLoginAttemptModule,
 		activation: activationModule,
 		resetPassword: resetPasswordModule,
 		resetEmail: resetEmailModule,
