@@ -57,8 +57,7 @@ INSTALLED_APPS = [
     'apiv1.apps.Apiv1Config',
     'accounts.apps.AccountsConfig',
     'user_profile.apps.UserProfileConfig',
-    'login_record.apps.LoginRecordConfig',
-    'failed_login_attempt.apps.FailedLoginAttemptConfig',
+    'login_attempt.apps.LoginAttemptConfig',
     'auth_jwt.apps.AuthJwtConfig',
 
 ]
@@ -99,7 +98,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ############
 
 DATABASES = {}
-ATOMIC_REQUESTS = False
 
 #######################
 # Password validation #

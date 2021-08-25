@@ -355,7 +355,7 @@ const loginRecordModule = {
 	},
 	actions: {
 		getRecord(context) {
-			api.get("/login-record/").then((response) => {
+			api.get("/auth/record/login/").then((response) => {
 				context.commit("setRecord", response);
 			});
 		},

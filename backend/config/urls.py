@@ -22,10 +22,7 @@ urlpatterns = [
     path('api/v1/auth/', include('auth_jwt.urls')),
 
     # Login Record
-    path('api/v1/login-record/', include('login_record.urls')),
-
-    # Login failed
-    path('api/v1/login-attempt/', include('failed_login_attempt.urls')),
+    path('api/v1/auth/record/', include('login_attempt.urls')),
 
     # file upload
     path('api/v1/user-profile/', include('user_profile.urls')),

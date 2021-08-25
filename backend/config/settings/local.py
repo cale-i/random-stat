@@ -43,7 +43,7 @@ DOMAIN = 'localhost:8080'
 DATABASES = {
     'default': env.db()
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES['default']['ATOMIC_REQUESTS'] = False
 
 ###########
 # Logging #
