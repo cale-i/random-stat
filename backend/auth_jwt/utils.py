@@ -1,6 +1,9 @@
 from rest_framework_simplejwt.state import token_backend
 from django.contrib.auth import get_user_model
-from login_record.models import LoginRecord
+from login_attempt.models import LoginRecord
+from login_attempt.serializers import LoginRecordSerializer
+from rest_framework.exceptions import ValidationError
+
 from django.utils import timezone
 
 
@@ -27,5 +30,16 @@ def update_refresh_time(access_token):
         return
 
     record = records.latest('pk')
-    record.refresh_time = timezone.now()
-    record.save()
+
+    data = {
+        'refresh_time': timezone.now()
+
+    }
+    serializer = LoginRecordSerializer(
+        instance=record, data=data, partial=True)
+
+    try:
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+    except ValidationError as e:
+        raise ValidationError(e.args[0])
