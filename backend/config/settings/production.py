@@ -32,7 +32,7 @@ DOMAIN = 'random-stat.work'
 DATABASES = {
     'default': env.db()
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES['default']['ATOMIC_REQUESTS'] = False
 
 
 ##################
