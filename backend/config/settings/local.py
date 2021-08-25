@@ -155,7 +155,7 @@ CORS_ORIGIN_WHITELIST = (
 # Cookie Settings #
 ###################
 JWT_COOKIE = {
-    'SAMESITE': 'None',
+    'SAMESITE': 'Lax',
     'SECURE': False,
 }
 
