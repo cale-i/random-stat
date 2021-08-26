@@ -13,6 +13,7 @@ from .helpers import (
     get_http_accept,
     get_path_info,
     get_record,
+    has_same_record,
 )
 
 User = get_user_model()
@@ -89,6 +90,12 @@ def user_login_failed_callback(sender, request, **kwargs):
         'http_accept': get_http_accept(request),
         'path_info': get_path_info(request),
     }
+
+    # 認証Backendの数だけsignalが飛んでくるため､
+    # 同一のログイン試行で複数のinsertが発生する｡
+    # そのため､重複するinsertを除外する処理を行う
+    if has_same_record(data):
+        return
 
     serializer = FailedLoginAttemptSerializer(data=data)
 
