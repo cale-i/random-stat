@@ -229,3 +229,5 @@ DJOSER = {
         'username_reset': 'djoser.email.UsernameResetEmail',
     },
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

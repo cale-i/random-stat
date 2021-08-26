@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+import uuid
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,6 +47,9 @@ class CustomUser(AbstractUser):
     class Meta(AbstractUser.Meta):
         db_table = 'custom_user'
 
+    id = models.UUIDField(default=uuid.uuid4,
+                          primary_key=True, editable=False)
+
     username = models.CharField(
         'username',
         max_length=150,
@@ -64,6 +68,7 @@ class CustomUser(AbstractUser):
             'unique': "このメールアドレスは使用できません｡",
         },)
 
+    EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
