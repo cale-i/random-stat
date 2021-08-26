@@ -1,4 +1,7 @@
+from datetime import timedelta
+from django.utils import timezone
 from .models import LoginRecord
+from .models import FailedLoginAttempt
 
 
 def get_user_agent(request) -> str:
@@ -51,3 +54,15 @@ def get_record(user, request):
         return
 
     return records.latest('pk')
+
+
+def has_same_record(data: dict) -> bool:
+    '''直近1秒以内の重複するレコードの存在を確認'''
+    time_within_ms = 500
+    attempt_time = timezone.now() - timedelta(milliseconds=time_within_ms)
+    records = FailedLoginAttempt.objects.filter(
+        attempt_time__gte=attempt_time, **data)
+    print('\n\n\n\n')
+    print(records)
+    print('\n\n\n\n')
+    return bool(records)
