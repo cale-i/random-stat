@@ -62,7 +62,5 @@ def has_same_record(data: dict) -> bool:
     attempt_time = timezone.now() - timedelta(milliseconds=time_within_ms)
     records = FailedLoginAttempt.objects.filter(
         attempt_time__gte=attempt_time, **data)
-    print('\n\n\n\n')
-    print(records)
-    print('\n\n\n\n')
+
     return bool(records)
