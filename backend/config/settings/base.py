@@ -2,13 +2,12 @@ import os
 from datetime import timedelta
 
 
-###############
-# Build paths #
-###############
+#####################
+#    Build paths    #
+#####################
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 PROJECT_NAME = os.path.basename(BASE_DIR)
-
 
 #####################
 # Site Map settings #
@@ -23,15 +22,20 @@ SITE_NAME = ''
 #####################
 
 DEBUG = False
-
 ALLOWED_HOSTS = []
 
+#######################
+#  Database settings  #
+#######################
+
+DATABASES = {}
 
 #################
 # Core settings #
 #################
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +55,6 @@ INSTALLED_APPS = [
     'storages',  # django-storages
     'rest_framework_simplejwt.token_blacklist',  # Refresh Token
 
-
     # My Applications
     'estat.apps.EstatConfig',
     'apiv1.apps.Apiv1Config',
@@ -59,10 +62,10 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'login_attempt.apps.LoginAttemptConfig',
     'auth_jwt.apps.AuthJwtConfig',
-
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,7 +73,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -92,12 +94,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-############
-# Database #
-############
-
-DATABASES = {}
 
 #######################
 # Password validation #
@@ -121,6 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ##########################
 # Authenticaton Backends #
 ##########################
+
 AUTHENTICATION_BACKENDS = [
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
@@ -140,37 +137,49 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-################
-# Static files #
-################
+#######################
+#     Static files    #
+#######################
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+################################
+#      S3 Bucket settings      #
+################################
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = ''
 
+#######################
+#    Email Backend    #
+#######################
 
-####################################
-#          Authentication          #
-####################################
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+DEFAULT_FROM_EMAIL = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
+######################
+#   Models settings  #
+######################
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-
-##################
-# REST Framework #
-##################
+#################################
+#     Django REST framework     #
+#################################
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -184,6 +193,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 }
 
+##################
+#    simplejwt   #
+##################
+
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -191,18 +204,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
-
-
-#################
-# Email Backend #
-#################
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-DEFAULT_FROM_EMAIL = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 
 ##################
 #     djoser     #
@@ -219,7 +220,6 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    # 'SERIALIZERS': {},
     'EMAIL': {
         'activation': 'djoser.email.ActivationEmail',
         'confirmation': 'djoser.email.ConfirmationEmail',
@@ -229,5 +229,3 @@ DJOSER = {
         'username_reset': 'djoser.email.UsernameResetEmail',
     },
 }
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

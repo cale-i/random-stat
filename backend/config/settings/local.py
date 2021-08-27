@@ -14,20 +14,6 @@ from .base import (
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
-#####################
-# Security settings #
-#####################
-
-DEBUG = True
-
-SECRET_KEY = env('SECRET_KEY')
-
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-]
-
 #####################
 # Site Map settings #
 #####################
@@ -36,18 +22,63 @@ SITE_EMAIL = env('SITE_EMAIL')
 SITE_NAME = 'http://localhost:8080'
 DOMAIN = 'localhost:8080'
 
-############
-# Database #
-############
+#####################
+# Security settings #
+#####################
+
+DEBUG = True
+SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
+
+######################
+#   CORS settings    #
+######################
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+)
+
+#######################
+#  Database settings  #
+#######################
 
 DATABASES = {
     'default': env.db()
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = False
 
-###########
-# Logging #
-###########
+#######################
+#     Static files    #
+#######################
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
+
+################################
+#      S3 Bucket settings      #
+################################
+
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+#######################
+#    Email Backend    #
+#######################
+
+EMAIL_HOST_USER = env('SITE_EMAIL')
+DEFAULT_FROM_EMAIL = env('SITE_EMAIL')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
+
+#######################
+#       Logging       #
+#######################
 
 LOGGING = {
     # バージョンは「1」固定
@@ -94,30 +125,12 @@ LOGGING = {
     },
 }
 
-
-################
-# Static files #
-################
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
-
-################################
-#      S3 Bucket settings      #
-################################
-
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-
-#################
-# debug toolbar #
-#################
+#######################
+#    debug toolbar    #
+#######################
 
 if DEBUG:
+
     def show_toolbar(request):
         return True
 
@@ -132,51 +145,25 @@ if DEBUG:
     }
 
 
-########
-# CORS #
-########
-
-INSTALLED_APPS += [
-    'corsheaders',
-]
-
-MIDDLEWARE += [
-    'corsheaders.middleware.CorsMiddleware',
-]
-
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-)
-
-###################
-# Cookie Settings #
-###################
-JWT_COOKIE = {
-    'SAMESITE': 'Lax',
-    'SECURE': False,
-}
-
-
-##################
-# REST Framework #
-##################
+#################################
+#     Django REST framework     #
+#################################
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += [
     'rest_framework.renderers.BrowsableAPIRenderer']
 
-#################
-# Email Backend #
-#################
+#######################
+#     Guest Login     #
+#######################
 
-EMAIL_HOST_USER = env('SITE_EMAIL')
-DEFAULT_FROM_EMAIL = env('SITE_EMAIL')
-EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
-
-#################
-#  Guest Login  #
-#################
 GUEST_EMAIL = env('GUEST_EMAIL')
 GUEST_PASSWORD = env('GUEST_PASSWORD')
+
+#######################
+#   Cookie Settings   #
+#######################
+
+JWT_COOKIE = {
+    'SAMESITE': 'Lax',
+    'SECURE': False,
+}
