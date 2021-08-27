@@ -12,10 +12,14 @@ def get_ip_address(request) -> str:
     # IP addressを取得
     # reverse proxyを経由している場合､'REMOTE_ADDR'の値がreverse proxyのアドレスとなる
     forwarded_addresses = request.META.get('HTTP_X_FORWARDED_FOR')
-    ip_address = forwarded_addresses.split(',')[0] \
-        if forwarded_addresses  \
-        else request.META.get('REMOTE_ADDR')
-    return ip_address
+
+    if forwarded_addresses:
+        return forwarded_addresses.split(',')[0]
+    elif request.META.get('REMOTE_ADDR'):
+        return request.META.get('REMOTE_ADDR')
+    else:
+        # don't return blank
+        return None
 
 
 def get_username(request) -> str:
