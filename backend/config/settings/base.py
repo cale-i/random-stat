@@ -249,6 +249,7 @@ DJOSER = {
     # Redirected URL we listen on google console
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
         'http://localhost:8000/social/',
+        'http://localhost/social/',
     ],
 }
 
