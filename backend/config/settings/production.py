@@ -79,3 +79,11 @@ JWT_COOKIE = {
     # 'SECURE': True, 本番時 True
     'SECURE': False,
 }
+
+##################
+#   Social Auth  #
+##################
+
+# Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')

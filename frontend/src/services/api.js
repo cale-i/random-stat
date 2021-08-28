@@ -20,6 +20,7 @@ api.interceptors.request.use(
 		// 認証用トークンがあればリクエストヘッダに乗せる
 		let token = localStorage.getItem("access");
 
+		if (token === "undefined") return config;
 		if (!token) return config;
 
 		// 認証用トークンの有効期限を確認し､有効期限切れの場合はリフレッシュトークンを発行
@@ -114,3 +115,12 @@ const isExpired = (token) => {
 
 	return expirationTime <= nowTime;
 };
+
+export const socialApi = axios.create({
+	baseURL: process.env.VUE_APP_ROOT_API,
+	timeout: 5000,
+	withCredentials: true,
+	headers: {
+		"Content-Type": "application/x-www-form-urlencoded",
+	},
+});

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { api, refreshApi } from "@/services/api";
+import { api, refreshApi, socialApi } from "@/services/api";
 
 Vue.use(Vuex);
 
@@ -426,6 +426,44 @@ const resetEmailModule = {
 		},
 	},
 };
+// ソーシャル認証
+const socialAuthModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		googleLogin(context, payload) {
+			console.log(payload);
+			return api
+				.get("/auth/social/o/google-oauth2/", {
+					params: {
+						redirect_uri: "http://localhost:8000/social/",
+					},
+				})
+				.then((response) => {
+					const authorization_url = response.data.authorization_url;
+					console.log("in store", authorization_url);
+					window.location.href = authorization_url;
+				});
+		},
+		googleAuthenticate(context, payload) {
+			const formData = new URLSearchParams();
+			formData.append("code", payload.code);
+			formData.append("state", payload.state);
+
+			return socialApi
+				.post("/auth/social/o/google-oauth2/", formData)
+				.then((response) => {
+					// 認証用トークンをlocalStorageに保存
+					localStorage.setItem("access", response.data.access);
+					//ユーザー情報を取得してstoreのユーザー情報を更新
+					context.dispatch("reload");
+				});
+		},
+	},
+};
 
 const store = new Vuex.Store({
 	modules: {
@@ -437,6 +475,7 @@ const store = new Vuex.Store({
 		activation: activationModule,
 		resetPassword: resetPasswordModule,
 		resetEmail: resetEmailModule,
+		socialAuth: socialAuthModule,
 	},
 });
 

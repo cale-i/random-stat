@@ -10,6 +10,7 @@ django-cleanup
 pillow
 django-imagekit
 django-storages
+social-auth-app-django
 boto3
 python-dotenv
 psycopg2
