@@ -249,6 +249,7 @@ DJOSER = {
     # Redirected URL we listen on google console
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
         'http://localhost:8000/social/',
+        'http://localhost/social/',
     ],
 }
 
@@ -266,7 +267,10 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ]
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
-# SOCIAL_AUTH_POSTGRES_JSONFIELD = True  # Optional, how token will be saved in DB
+
+# For django 3.1+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_JSONFIELD_CUSTOM = 'django.db.models.JSONField'
 
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 # SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']

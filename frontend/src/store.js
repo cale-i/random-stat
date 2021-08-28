@@ -431,15 +431,28 @@ const socialAuthModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
 	state: {},
-	getters: {},
+	getters: {
+		redirectUrl: (state) => state.redirectUrl,
+	},
 	mutations: {},
 	actions: {
 		googleLogin(context, payload) {
 			console.log(payload);
+
+			const redirectPathname = "/social/";
+
+			let redirectBaseUrl = `https://random-stat.work${redirectPathname}`;
+			if (window.location.hostname === "localhost") {
+				// port === 8000 => ":8000", 80 => ""
+				const port = window.location.port ? ":8000" : "";
+
+				redirectBaseUrl = `http://localhost${port}${redirectPathname}`;
+			}
+			console.log(redirectBaseUrl);
 			return api
 				.get("/auth/social/o/google-oauth2/", {
 					params: {
-						redirect_uri: "http://localhost:8000/social/",
+						redirect_uri: redirectBaseUrl,
 					},
 				})
 				.then((response) => {
