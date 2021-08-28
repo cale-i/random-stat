@@ -167,3 +167,11 @@ JWT_COOKIE = {
     'SAMESITE': 'Lax',
     'SECURE': False,
 }
+
+##################
+#   Social Auth  #
+##################
+
+# Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')

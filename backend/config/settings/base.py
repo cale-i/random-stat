@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'django_cleanup',  # Automatically deletes old image
     'imagekit',  # For processing images
     'storages',  # django-storages
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',  # Refresh Token
+    'social_django',
 
     # My Applications
     'estat.apps.EstatConfig',
@@ -73,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -88,6 +91,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         }
     },
@@ -119,6 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ##########################
 
 AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -203,6 +209,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.AccessToken',
+    ),
 }
 
 ##################
@@ -228,4 +240,34 @@ DJOSER = {
         'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
         'username_reset': 'djoser.email.UsernameResetEmail',
     },
+    "LOGIN_FIELD": "email",  # Field we use to login on extended User model
+    'SERIALIZERS': {
+        # Custom Serializer to show more user data
+        'user': 'accounts.serializers.CustomUserSerializer',
+        'current_user': 'accounts.serializers.CustomUserSerializer',
+    },
+    # Redirected URL we listen on google console
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
+        'http://localhost:8000/social/',
+    ],
 }
+
+##################
+#   Social Auth  #
+##################
+
+# Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'openid',
+]
+
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+# SOCIAL_AUTH_POSTGRES_JSONFIELD = True  # Optional, how token will be saved in DB
+
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+# SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']
+# SESSION_COOKIE_SECURE = False

@@ -86,6 +86,14 @@ const router = new VueRouter({
 				),
 			name: "emailConfirmation",
 		},
+		{
+			path: "/social",
+			component: () =>
+				import(
+					"@/pages/User/Perm/social/RedirectPage" /* webpackChunkName: "social" */
+				),
+			name: "social",
+		},
 
 		{ path: "*", redirect: "/" },
 	],
