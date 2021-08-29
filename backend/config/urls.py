@@ -20,7 +20,8 @@ urlpatterns = [
     path('api/v1/auth/', include('auth_jwt.urls')),
 
     # Djoser Beta extension for social_django
-    path('api/v1/auth/social/', include('djoser.social.urls')),
+    # extend social_auth.urls
+    path('api/v1/auth/social/', include('social.urls')),
 
     # Login Record
     path('api/v1/auth/record/', include('login_attempt.urls')),
