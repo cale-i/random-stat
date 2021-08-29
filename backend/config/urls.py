@@ -5,12 +5,10 @@ from django.urls import path
 from django.conf.urls import include
 from django.conf.urls import re_path
 from django.views.generic import TemplateView
-from django.views.generic import RedirectView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
 
     # ROOT
     path('', TemplateView.as_view(template_name='index.html')),
@@ -33,6 +31,9 @@ urlpatterns = [
     # API
     path('api/v1/', include('apiv1.urls')),
 
+    # RedirectViewの場合､/activation/等のURIが機能しないため､TemplateViewでindex.htmlを返す｡
+    # 存在しないURIの場合は､RedirectViewと同様に/を返す
+    re_path('', TemplateView.as_view(template_name='index.html')),
 ]
 
 if settings.DEBUG:
@@ -45,12 +46,3 @@ if settings.DEBUG:
     # 開発用Webサーバ(runserver)使用時のメディアファイル配信設定
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-
-urlpatterns += [
-    # Redirect
-    # DEBUG分岐以前で定義するとすべてリダイレクトされるためこの位置に置く
-    # リダイレクトの場合､/activation/等のURIが機能しないため､index.htmlを返す｡
-    # 存在しないURIの場合は､リダイレクトと同様に/を返す
-    re_path('', TemplateView.as_view(template_name='index.html')),
-    # re_path('', RedirectView.as_view(url='/')),
-]
