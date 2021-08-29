@@ -241,11 +241,7 @@ DJOSER = {
         'username_reset': 'djoser.email.UsernameResetEmail',
     },
     "LOGIN_FIELD": "email",  # Field we use to login on extended User model
-    'SERIALIZERS': {
-        # Custom Serializer to show more user data
-        'user': 'accounts.serializers.CustomUserSerializer',
-        'current_user': 'accounts.serializers.CustomUserSerializer',
-    },
+    'SERIALIZERS': {},
     # Redirected URL we listen on google console
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
         'http://localhost:8000/social/',
