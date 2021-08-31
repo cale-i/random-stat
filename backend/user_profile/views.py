@@ -41,6 +41,7 @@ class UserAvaterAPIView(views.APIView):
         # UserProfileが存在する場合
 
         user_profile = queryset.get(pk=user_id)
+        data['image_url'] = None
         if user_profile.image:
                 # user_profile.imageがNULLでない場合
             data['image_url'] = user_profile.image.url
