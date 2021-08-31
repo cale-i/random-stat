@@ -9,4 +9,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('image',)
+        fields = ('image', 'social_image_url')
