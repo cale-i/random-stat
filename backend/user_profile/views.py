@@ -34,8 +34,12 @@ class UserAvaterAPIView(views.APIView):
             'image_url': get_default_image(),
         }
 
-        # アバターが登録されている場合
-        if queryset:
+        # UserProfileが存在しない場合
+        if not queryset:
+            return Response(data, status.HTTP_200_OK)
+
+        # UserProfileが存在する場合
+
         user_profile = queryset.get(pk=user_id)
         if user_profile.image:
                 # user_profile.imageがNULLでない場合
