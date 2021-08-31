@@ -29,6 +29,7 @@ class UserAvaterAPIView(views.APIView):
         # 以下の場合はdefaultのdataを返す
         #  1. UserProfileオブジェクトが存在しない
         #  2. UserProfileのimageが存在しない
+        #  3. UserProfileのsocial_image_urlが存在しない
         data = {
             'is_default_image': True,
             'image_url': get_default_image(),
@@ -42,10 +43,15 @@ class UserAvaterAPIView(views.APIView):
 
         user_profile = queryset.get(pk=user_id)
         data['image_url'] = None
+        # if user_profile.image
         if user_profile.image:
-                # user_profile.imageがNULLでない場合
+            # ユーザーがイメージを登録している場合
+            data['is_default_image'] = False
             data['image_url'] = user_profile.image.url
-                data['is_default_image'] = False
+
+        if user_profile.social_image_url:
+            # ソーシャルアカウントのイメージが存在する場合
+            data['social_image_url'] = user_profile.social_image_url
 
         return Response(data, status.HTTP_200_OK)
 
