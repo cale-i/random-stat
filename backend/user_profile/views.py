@@ -3,11 +3,14 @@ from rest_framework import status, views
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.core.files.storage import default_storage
-import os
+
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
+from .helpers import (
+    save_user_profile,
+    get_default_image
+)
 
 User = get_user_model()
 
@@ -26,18 +29,29 @@ class UserAvaterAPIView(views.APIView):
         # 以下の場合はdefaultのdataを返す
         #  1. UserProfileオブジェクトが存在しない
         #  2. UserProfileのimageが存在しない
+        #  3. UserProfileのsocial_image_urlが存在しない
         data = {
             'is_default_image': True,
-            'image_url': self.get_default_image(),
+            'image_url': get_default_image(),
         }
 
-        # アバターが登録されている場合
-        if queryset:
-            user_profile = queryset.get(pk=user_id)
-            if user_profile.image:
-                # user_profile.imageがNULLでない場合
-                data['image_url'] = user_profile.image.url
-                data['is_default_image'] = False
+        # UserProfileが存在しない場合
+        if not queryset:
+            return Response(data, status.HTTP_200_OK)
+
+        # UserProfileが存在する場合
+
+        user_profile = queryset.get(pk=user_id)
+        data['image_url'] = None
+        # if user_profile.image
+        if user_profile.image:
+            # ユーザーがイメージを登録している場合
+            data['is_default_image'] = False
+            data['image_url'] = user_profile.image.url
+
+        if user_profile.social_image_url:
+            # ソーシャルアカウントのイメージが存在する場合
+            data['social_image_url'] = user_profile.social_image_url
 
         return Response(data, status.HTTP_200_OK)
 
@@ -65,12 +79,13 @@ class UserAvaterAPIView(views.APIView):
         画像の縮小加工等はdjango-imagekitによりmodels内で処理される
         同時にExifも削除される
         '''
-        user_profile = self.save_user_profile(
+        user_profile = save_user_profile(
             user_id=request.user.id,
             image=serializer.validated_data.get('image')
         )
         data = {
-            'image_url': user_profile.image.url
+            'image_url': user_profile.image.url,
+            'social_image_url': user_profile.social_image_url,
         }
 
         return Response(data, status.HTTP_200_OK)
@@ -80,41 +95,12 @@ class UserAvaterAPIView(views.APIView):
         user_id = request.user.id
         queryset = UserProfile.objects.filter(pk=user_id)
         if queryset:
-            # モデルごと削除
+            # imageをNoneで上書き
             user_profile = queryset.get(pk=user_id)
-            user_profile.delete()
+            user_profile.image = None
+            user_profile.save()
 
             return Response(status.HTTP_204_NO_CONTENT)
         else:
             # 削除するアバターが存在しない場合(不正なアクセス)
             return Response('不正な操作です', status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def save_user_profile(self, user_id, image):
-        '''
-        user_idとimageを渡して保存し､UserProfileオブジェクトを返す
-        '''
-        user = User.objects.get(pk=user_id)
-
-        user_profile, created = UserProfile.objects.update_or_create(
-            user=user,
-            defaults={
-                'user': user,
-                'image': image,
-            },
-        )
-        return user_profile
-
-    def get_default_image(self):
-        '''
-        S3からデフォルトのアバターイメージのURLを取得する関数
-        デフォルトのアバターイメージが存在しない場合空文字を返す
-        '''
-
-        FILE_DIR = 'avatar'
-        FILE_NAME = 'default-avatar.jpg'
-        FILE_PATH = os.path.join(FILE_DIR, FILE_NAME)
-
-        if (default_storage.exists(FILE_PATH) is False):
-            return ''
-
-        return default_storage.url(FILE_PATH)

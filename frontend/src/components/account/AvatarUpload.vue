@@ -2,7 +2,10 @@
 	<div class="container my-5">
 		<b-form @submit.prevent="uploadImage">
 			<div>
-				<img :src="previewSrc || avatar.imageURL" class="avatar-image" />
+				<img
+					:src="previewSrc || avatar.imageURL || avatar.socialImageURL"
+					class="avatar-image"
+				/>
 			</div>
 			<b-form-file
 				v-model="form.image"
