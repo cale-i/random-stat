@@ -83,9 +83,10 @@ class UserAvaterAPIView(views.APIView):
         user_id = request.user.id
         queryset = UserProfile.objects.filter(pk=user_id)
         if queryset:
-            # モデルごと削除
+            # imageをNoneで上書き
             user_profile = queryset.get(pk=user_id)
-            user_profile.delete()
+            user_profile.image = None
+            user_profile.save()
 
             return Response(status.HTTP_204_NO_CONTENT)
         else:
