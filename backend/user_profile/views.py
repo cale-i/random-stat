@@ -3,11 +3,14 @@ from rest_framework import status, views
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.core.files.storage import default_storage
-import os
+
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
+from .helpers import (
+    save_user_profile,
+    get_default_image
+)
 
 User = get_user_model()
 
@@ -33,10 +36,10 @@ class UserAvaterAPIView(views.APIView):
 
         # アバターが登録されている場合
         if queryset:
-            user_profile = queryset.get(pk=user_id)
-            if user_profile.image:
+        user_profile = queryset.get(pk=user_id)
+        if user_profile.image:
                 # user_profile.imageがNULLでない場合
-                data['image_url'] = user_profile.image.url
+            data['image_url'] = user_profile.image.url
                 data['is_default_image'] = False
 
         return Response(data, status.HTTP_200_OK)
@@ -88,33 +91,3 @@ class UserAvaterAPIView(views.APIView):
         else:
             # 削除するアバターが存在しない場合(不正なアクセス)
             return Response('不正な操作です', status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def save_user_profile(self, user_id, image):
-        '''
-        user_idとimageを渡して保存し､UserProfileオブジェクトを返す
-        '''
-        user = User.objects.get(pk=user_id)
-
-        user_profile, created = UserProfile.objects.update_or_create(
-            user=user,
-            defaults={
-                'user': user,
-                'image': image,
-            },
-        )
-        return user_profile
-
-    def get_default_image(self):
-        '''
-        S3からデフォルトのアバターイメージのURLを取得する関数
-        デフォルトのアバターイメージが存在しない場合空文字を返す
-        '''
-
-        FILE_DIR = 'avatar'
-        FILE_NAME = 'default-avatar.jpg'
-        FILE_PATH = os.path.join(FILE_DIR, FILE_NAME)
-
-        if (default_storage.exists(FILE_PATH) is False):
-            return ''
-
-        return default_storage.url(FILE_PATH)
