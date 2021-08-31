@@ -31,7 +31,7 @@ class UserAvaterAPIView(views.APIView):
         #  2. UserProfileのimageが存在しない
         data = {
             'is_default_image': True,
-            'image_url': self.get_default_image(),
+            'image_url': get_default_image(),
         }
 
         # アバターが登録されている場合
@@ -68,7 +68,7 @@ class UserAvaterAPIView(views.APIView):
         画像の縮小加工等はdjango-imagekitによりmodels内で処理される
         同時にExifも削除される
         '''
-        user_profile = self.save_user_profile(
+        user_profile = save_user_profile(
             user_id=request.user.id,
             image=serializer.validated_data.get('image')
         )
