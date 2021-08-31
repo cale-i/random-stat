@@ -73,7 +73,8 @@ class UserAvaterAPIView(views.APIView):
             image=serializer.validated_data.get('image')
         )
         data = {
-            'image_url': user_profile.image.url
+            'image_url': user_profile.image.url,
+            'social_image_url': user_profile.social_image_url,
         }
 
         return Response(data, status.HTTP_200_OK)
