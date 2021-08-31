@@ -304,14 +304,19 @@ const avatarModule = {
 	state: {
 		isDefaultImage: true,
 		imageURL: null,
+		socialImageURL: null,
 	},
 	getters: {
 		imageURL: (state) => state.imageURL,
+		socialImageURL: (state) => state.socialImageURL,
 		isDefaultImage: (state) => state.isDefaultImage,
 	},
 	mutations: {
 		setImageURL(state, response) {
 			state.imageURL = response.data.image_url;
+		},
+		setSocialImageURL(state, response) {
+			state.socialImageURL = response.data.social_image_url;
 		},
 		setIsDefaultImage(state, response) {
 			state.isDefaultImage = response.data.is_default_image;
@@ -331,6 +336,7 @@ const avatarModule = {
 		reload(context) {
 			return api.get("/user-profile/avatar/").then((response) => {
 				context.commit("setImageURL", response);
+				context.commit("setSocialImageURL", response);
 				context.commit("setIsDefaultImage", response);
 
 				return response;
