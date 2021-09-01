@@ -436,11 +436,23 @@ const resetEmailModule = {
 const socialAuthModule = {
 	strict: process.env.NODE_ENV !== "production",
 	namespaced: true,
-	state: {},
-	getters: {
-		redirectUrl: (state) => state.redirectUrl,
+	state: {
+		providers: {
+			"google-oauth2": false,
+		},
 	},
-	mutations: {},
+	getters: {
+		providers: (state) => state.providers,
+	},
+	mutations: {
+		setProviders(state, payload) {
+			console.log(payload);
+			payload.map((arr) => {
+				state.providers[arr.provider] = true;
+			});
+			console.log(state);
+		},
+	},
 	actions: {
 		googleLogin(context, payload) {
 			console.log(payload);
@@ -480,6 +492,13 @@ const socialAuthModule = {
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					context.dispatch("reload");
 				});
+		},
+		getAssociatedServices(context) {
+			// 連携済みサービス一覧を取得
+			return api.get("/auth/social/").then((response) => {
+				console.log(response);
+				context.commit("setProviders", response.data);
+			});
 		},
 	},
 };
