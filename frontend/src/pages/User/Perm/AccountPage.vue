@@ -11,10 +11,20 @@
 								アカウント管理
 							</router-link>
 						</b-row>
+
 						<hr />
+
 						<b-row>
 							<router-link to="login-record" class="sidebar-item">
 								ログイン履歴
+							</router-link>
+						</b-row>
+
+						<hr />
+
+						<b-row>
+							<router-link to="social" class="sidebar-item">
+								アカウント連携
 							</router-link>
 						</b-row>
 					</aside>
