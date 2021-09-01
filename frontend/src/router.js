@@ -60,6 +60,14 @@ const router = new VueRouter({
 						),
 					name: "loginRecord",
 				},
+				{
+					path: "social",
+					component: () =>
+						import(
+							"@/pages/User/Perm/SocialAuthPage" /* webpackChunkName: "SocialAuth" */
+						),
+					name: "socialAuth",
+				},
 			],
 		},
 		{
