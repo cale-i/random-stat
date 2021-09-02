@@ -282,6 +282,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.create_user_profile',  # avatar設定
 )
 
+SOCIAL_AUTH_DISCONNECT_PIPELINE = (
+    # 'social_core.pipeline.disconnect.allowed_to_disconnect',
+    'social_core.pipeline.disconnect.get_entries',
+    'social_core.pipeline.disconnect.disconnect',
+)
+
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 # SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']
 # SESSION_COOKIE_SECURE = False
