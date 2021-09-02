@@ -446,11 +446,12 @@ const socialAuthModule = {
 	},
 	mutations: {
 		setProviders(state, payload) {
-			console.log(payload);
 			payload.map((arr) => {
 				state.providers[arr.provider] = true;
 			});
-			console.log(state);
+		},
+		initProviders(state) {
+			state.providers["google-oauth2"] = false;
 		},
 	},
 	actions: {
@@ -495,10 +496,19 @@ const socialAuthModule = {
 		},
 		getAssociatedServices(context) {
 			// 連携済みサービス一覧を取得
-			return api.get("/auth/social/").then((response) => {
-				console.log(response);
+
+			api.get("/auth/social/").then((response) => {
+				context.commit("initProviders");
 				context.commit("setProviders", response.data);
 			});
+		},
+		disconnect(context, payload) {
+			api
+				.post(`/auth/social/disconnect/${payload.provider}/`)
+				.then((response) => {
+					context.commit("initProviders");
+					context.commit("setProviders", response.data);
+				});
 		},
 	},
 };
