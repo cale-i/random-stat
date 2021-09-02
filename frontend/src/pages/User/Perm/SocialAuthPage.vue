@@ -3,7 +3,11 @@
 		<h1 class="my-5">アカウント連携</h1>
 
 		<div>
-			<div v-if="this.providers['google-oauth2']" class="btn btn-warning">
+			<div
+				v-if="this.providers['google-oauth2']"
+				@click="disconnect"
+				class="btn btn-warning"
+			>
 				Google連携解除
 			</div>
 			<div v-else class="btn btn-success">
@@ -23,7 +27,14 @@ export default {
 			return this.$store.getters["socialAuth/providers"];
 		},
 	},
-	methods: {},
+	methods: {
+		disconnect() {
+			console.log("in disconnect");
+			this.$store.dispatch("socialAuth/disconnect", {
+				provider: "google-oauth2",
+			});
+		},
+	},
 	watch: {},
 	mounted() {
 		this.$store.dispatch("socialAuth/getAssociatedServices");
