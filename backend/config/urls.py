@@ -8,28 +8,25 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
 
-    # ROOT
-    path('', TemplateView.as_view(template_name='index.html')),
-
-    # JWT
+    # djoser Sign Up
     path('api/v1/auth/', include('djoser.urls')),
 
-    # auth_jwt
+    # auth_jwt Login, Logout, Refresh
     path('api/v1/auth/', include('auth_jwt.urls')),
 
-    # Djoser Beta extension for social_django
-    # extend social_auth.urls
+    # Extended social_auth.urls disconnection
     path('api/v1/auth/social/', include('social.urls')),
 
     # Login Record
     path('api/v1/auth/record/', include('login_attempt.urls')),
 
-    # file upload
+    # File Upload
     path('api/v1/user-profile/', include('user_profile.urls')),
 
-    # API
+    # e-stat
     path('api/v1/', include('apiv1.urls')),
 
     # RedirectViewの場合､/activation/等のURIが機能しないため､TemplateViewでindex.htmlを返す｡
