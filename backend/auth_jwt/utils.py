@@ -43,3 +43,13 @@ def update_refresh_time(access_token):
         serializer.save()
     except ValidationError as e:
         raise ValidationError(e.args[0])
+
+
+def has_valid_password(access_token: str) -> bool:
+    '''有効なパスワードが設定されているかを判別'''
+    user = get_user(access_token)
+    if hasattr(user, 'has_usable_password'):
+        valid_password = user.has_usable_password()
+    else:
+        valid_password = True
+    return valid_password
