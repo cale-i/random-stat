@@ -46,7 +46,6 @@ api.interceptors.response.use(
 	function(error) {
 		// console.log("error.response", error.response);
 		const status = error.response ? error.response.status : 500;
-		console.log(status);
 
 		// メッセージをクリア
 		store.dispatch("message/clearAllMessages");
@@ -108,10 +107,6 @@ const isExpired = (token) => {
 	const expirationTime = token.exp;
 	// getTime関数はミリ秒で取得するため､秒に揃えるため1000で除す
 	const nowTime = Math.floor(new Date().getTime() / 1000);
-
-	console.log("expiration: ", expirationTime);
-	console.log("nowTime: ", nowTime);
-	console.log(" expirationTime <= nowTime: ", expirationTime <= nowTime);
 
 	return expirationTime <= nowTime;
 };

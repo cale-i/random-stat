@@ -283,7 +283,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_DISCONNECT_PIPELINE = (
-    # 'social_core.pipeline.disconnect.allowed_to_disconnect',
+    'social_core.pipeline.disconnect.allowed_to_disconnect',
     'social_core.pipeline.disconnect.get_entries',
     'social_core.pipeline.disconnect.disconnect',
 )
