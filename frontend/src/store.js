@@ -55,11 +55,13 @@ const authModule = {
 		email: "",
 		username: "",
 		isLoggedIn: false,
+		validPassword: false,
 	},
 	getters: {
 		email: (state) => state.email,
 		username: (state) => state.username,
 		isLoggedIn: (state) => state.isLoggedIn,
+		validPassword: (state) => state.validPassword,
 	},
 	mutations: {
 		setUserData(state, payload) {
@@ -71,6 +73,12 @@ const authModule = {
 			state.email = "";
 			state.username = "";
 			state.isLoggedIn = false;
+		},
+		setValidPassword(state, payload) {
+			// payload === response.data
+			console.log("in valipas", payload);
+			state.validPassword = payload.valid_password;
+			console.log(state.validPassword);
 		},
 	},
 	actions: {
@@ -84,16 +92,20 @@ const authModule = {
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
+					// 有効なパスワードが設定されているかを判別
+					context.commit("setValidPassword", response.data);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
 
 					return user;
 				});
 		},
-		guestLogin() {
+		guestLogin(context) {
 			return api.post("/auth/jwt/create/guest/").then((response) => {
 				// 認証用トークンをlocalStorageに保存
 				localStorage.setItem("access", response.data.access);
+				// 有効なパスワードが設定されているかを判別
+				context.commit("setValidPassword", response.data);
 				//ユーザー情報を取得してstoreのユーザー情報を更新
 				const user = store.dispatch("auth/reload");
 
@@ -110,15 +122,14 @@ const authModule = {
 			context.commit("clearUserData");
 		},
 		// Refresh Token
-		refresh() {
+		refresh(context) {
 			return refreshApi
 				.post("/auth/jwt/refresh/")
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
-					//ユーザー情報を取得してstoreのユーザー情報を更新
-					// const user = context.dispatch("reload");
-					console.log("in auth/refresh");
+					// 有効なパスワードが設定されているか
+					context.commit("setValidPassword", response.data);
 
 					return true;
 				})
@@ -474,8 +485,10 @@ const socialAuthModule = {
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
+					// 有効なパスワードが設定されているか
+					store.commit("auth/setValidPassword", response.data);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
-					context.dispatch("reload");
+					store.dispatch("auth/reload");
 				});
 		},
 		getAssociatedServices(context) {
