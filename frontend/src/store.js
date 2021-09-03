@@ -136,8 +136,7 @@ const authModule = {
 					re_new_email: payload.re_new_email,
 					current_password: payload.current_password,
 				})
-				.then((response) => {
-					console.log(response);
+				.then(() => {
 					return context.dispatch("reload");
 				});
 		},
@@ -157,8 +156,7 @@ const authModule = {
 					re_new_password: payload.re_new_password,
 					current_password: payload.current_password,
 				})
-				.then((response) => {
-					console.log(response);
+				.then(() => {
 					return context.dispatch("reload");
 				});
 		},
@@ -178,7 +176,6 @@ const authModule = {
 		},
 		// アカウント作成
 		createAccount(context, payload) {
-			console.log(payload);
 			return api
 				.post("/auth/users/", {
 					username: payload.username,
@@ -188,7 +185,6 @@ const authModule = {
 				})
 				.then((response) => {
 					const user = response.data;
-					console.log(user);
 					return user;
 				});
 		},
@@ -200,9 +196,7 @@ const authModule = {
 						current_password: payload.current_password,
 					},
 				})
-				.then((response) => {
-					console.log("deleted");
-					console.log(response);
+				.then(() => {
 					context.dispatch("logout");
 				});
 			// .catch((response) => {
@@ -212,9 +206,7 @@ const authModule = {
 		updateField(context, payload) {
 			// patch操作は同一URIに対し、
 			// { User.FIELDS_TO_UPDATE: VALUE } 形式のparamを送るため抽象化
-			return api.patch("/auth/users/me/", payload).then((response) => {
-				console.log("updated!");
-				console.log(response);
+			return api.patch("/auth/users/me/", payload).then(() => {
 				return context.dispatch("reload");
 			});
 		},
@@ -376,7 +368,6 @@ const activationModule = {
 	mutations: {},
 	actions: {
 		activate(context, payload) {
-			console.log(payload);
 			return api.post("/auth/users/activation/", {
 				uid: payload.uid,
 				token: payload.token,
@@ -393,11 +384,9 @@ const resetPasswordModule = {
 	mutations: {},
 	actions: {
 		sendEmail(context, payload) {
-			console.log(payload.email);
 			return api.post("/auth/users/reset_password/", { email: payload.email });
 		},
 		confirmation(context, payload) {
-			console.log(payload);
 			return api.post("/auth/users/reset_password_confirm/", {
 				uid: payload.uid,
 				token: payload.token,
@@ -420,7 +409,6 @@ const resetEmailModule = {
 			return api.post("/auth/users/reset_email/", { email });
 		},
 		confirmation(context, payload) {
-			console.log(payload);
 			return api
 				.post("/auth/users/reset_email_confirm/", {
 					uid: payload.uid,
@@ -455,9 +443,7 @@ const socialAuthModule = {
 		},
 	},
 	actions: {
-		googleLogin(context, payload) {
-			console.log(payload);
-
+		googleLogin() {
 			const redirectPathname = "/social/";
 
 			let redirectBaseUrl = `https://random-stat.work${redirectPathname}`;
@@ -467,7 +453,6 @@ const socialAuthModule = {
 
 				redirectBaseUrl = `http://localhost${port}${redirectPathname}`;
 			}
-			console.log(redirectBaseUrl);
 			return api
 				.get("/auth/social/o/google-oauth2/", {
 					params: {
@@ -476,7 +461,6 @@ const socialAuthModule = {
 				})
 				.then((response) => {
 					const authorization_url = response.data.authorization_url;
-					console.log("in store", authorization_url);
 					window.location.href = authorization_url;
 				});
 		},
