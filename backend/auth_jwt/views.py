@@ -7,7 +7,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework import status
 from rest_framework.response import Response
 from .signals import login_signal, logout_signal
-from .utils import update_refresh_time
+from .utils import update_refresh_time, has_valid_password
 from .serializers import CookieTokenRefreshSerializer
 
 cookie_max_age = settings.SIMPLE_JWT.get(
@@ -25,6 +25,9 @@ class CookieTokenObtainPairView(TokenObtainPairView):
         if access_token:
             logout_signal(request, response)
             login_signal(request, response)
+
+            # 有効なパスワードが設定されているか
+            response.data['valid_password'] = has_valid_password(access_token)
 
         if refresh_token:
             response.set_cookie(
