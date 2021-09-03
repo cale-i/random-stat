@@ -19,14 +19,17 @@ secure = settings.JWT_COOKIE.get('SECURE')
 class CookieTokenObtainPairView(TokenObtainPairView):
     def finalize_response(self, request, response, *args, **kwargs):
 
-        if response.data.get('access'):
+        access_token = response.data.get('access', None)
+        refresh_token = response.data.get('refresh', None)
+
+        if access_token:
             logout_signal(request, response)
             login_signal(request, response)
 
-        if response.data.get('refresh'):
+        if refresh_token:
             response.set_cookie(
                 'refresh_token',
-                response.data['refresh'],
+                refresh_token,
                 max_age=cookie_max_age,
                 httponly=True,
                 samesite=samesite,
