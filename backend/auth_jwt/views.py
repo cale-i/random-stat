@@ -52,6 +52,9 @@ class CookieTokenRefreshView(TokenRefreshView):
         if access_token:
             update_refresh_time(access_token=access_token)
 
+            # 有効なパスワードが設定されているか
+            response.data['valid_password'] = has_valid_password(access_token)
+
         if refresh_token:
             response.set_cookie(
                 'refresh_token',
