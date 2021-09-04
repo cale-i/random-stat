@@ -19,6 +19,7 @@ class CustomProviderAuthView(ProviderAuthView, CookieTokenObtainPairView):
 
 
 class UserSocialAuthAPIView(views.APIView):
+    # 連携済みサービス一覧を返す
     serializer_class = UserSocialAuthSerializer
     permission_classes = [IsAuthenticated]
 
@@ -27,8 +28,11 @@ class UserSocialAuthAPIView(views.APIView):
 
         queryset = UserSocialAuth.objects.filter(user=user)
         serializer = UserSocialAuthSerializer(instance=queryset, many=True)
-
-        return Response(serializer.data, status.HTTP_200_OK)
+        data = {
+            'valid_password': user.has_usable_password(),
+            'providers': serializer.data
+        }
+        return Response(data, status.HTTP_200_OK)
 
 
 class DisconnectView(views.APIView):
