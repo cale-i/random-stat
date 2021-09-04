@@ -517,6 +517,11 @@ const socialAuthModule = {
 					context.commit("setProviders", response.data);
 				});
 		},
+		setPasswordSendEmail(context, payload) {
+			return api.post("/auth/social/users/set_password/", {
+				email: payload.email,
+			});
+		},
 	},
 };
 
