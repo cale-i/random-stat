@@ -55,7 +55,7 @@ const authModule = {
 		email: "",
 		username: "",
 		isLoggedIn: false,
-		validPassword: false,
+		validPassword: true,
 	},
 	getters: {
 		email: (state) => state.email,
