@@ -55,7 +55,7 @@ const authModule = {
 		email: "",
 		username: "",
 		isLoggedIn: false,
-		validPassword: false,
+		validPassword: true,
 	},
 	getters: {
 		email: (state) => state.email,
@@ -398,12 +398,16 @@ const resetPasswordModule = {
 			return api.post("/auth/users/reset_password/", { email: payload.email });
 		},
 		confirmation(context, payload) {
-			return api.post("/auth/users/reset_password_confirm/", {
-				uid: payload.uid,
-				token: payload.token,
-				new_password: payload.new_password,
-				re_new_password: payload.re_new_password,
-			});
+			return api
+				.post("/auth/users/reset_password_confirm/", {
+					uid: payload.uid,
+					token: payload.token,
+					new_password: payload.new_password,
+					re_new_password: payload.re_new_password,
+				})
+				.then(() => {
+					store.dispatch("auth/logout");
+				});
 		},
 	},
 };
@@ -445,7 +449,10 @@ const socialAuthModule = {
 	},
 	mutations: {
 		setProviders(state, payload) {
-			payload.map((arr) => {
+			const providers = payload.providers;
+			if (providers === undefined) return;
+
+			providers.map((arr) => {
 				state.providers[arr.provider] = true;
 			});
 		},
@@ -497,6 +504,9 @@ const socialAuthModule = {
 			api.get("/auth/social/").then((response) => {
 				context.commit("initProviders");
 				context.commit("setProviders", response.data);
+				store.commit("auth/setValidPassword", response.data);
+			});
+		},
 			});
 		},
 		disconnect(context, payload) {
@@ -506,6 +516,11 @@ const socialAuthModule = {
 					context.commit("initProviders");
 					context.commit("setProviders", response.data);
 				});
+		},
+		setPasswordSendEmail(context, payload) {
+			return api.post("/auth/social/users/set_password/", {
+				email: payload.email,
+			});
 		},
 	},
 };

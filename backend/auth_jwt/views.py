@@ -46,13 +46,19 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
 
-        if response.data.get('access'):
-            update_refresh_time(access_token=response.data.get('access'))
+        access_token = response.data.get('access', None)
+        refresh_token = response.data.get('refresh', None)
 
-        if response.data.get('refresh'):
+        if access_token:
+            update_refresh_time(access_token=access_token)
+
+            # 有効なパスワードが設定されているか
+            response.data['valid_password'] = has_valid_password(access_token)
+
+        if refresh_token:
             response.set_cookie(
                 'refresh_token',
-                response.data['refresh'],
+                refresh_token,
                 max_age=cookie_max_age,
                 httponly=True,
                 samesite=samesite,

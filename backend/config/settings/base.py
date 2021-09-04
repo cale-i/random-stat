@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'login_attempt.apps.LoginAttemptConfig',
     'auth_jwt.apps.AuthJwtConfig',
+    'djoser_extend.apps.DjoserExtendConfig',
 ]
 
 MIDDLEWARE = [

@@ -19,8 +19,8 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 #####################
 
 SITE_EMAIL = env('SITE_EMAIL')
-SITE_NAME = 'http://localhost:8080'
-DOMAIN = 'localhost:8080'
+SITE_NAME = 'http://localhost:8000'
+DOMAIN = 'localhost:8000'  # Used for email confirmation URL
 
 #####################
 # Security settings #

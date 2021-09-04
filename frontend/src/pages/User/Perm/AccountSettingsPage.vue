@@ -49,16 +49,30 @@
 				</b-col>
 			</b-form-row>
 		</b-overlay>
-
-		<b-form-row class="my-3">
-			<b-col md="3"> </b-col>
-			<b-col md="6"> </b-col>
-			<b-col md="3">
-				<div v-b-modal.changePasswordModal class="btn btn-success w-100">
-					パスワード変更
-				</div>
-			</b-col>
-		</b-form-row>
+		<template v-if="this.validPassword">
+			<b-form-row class="my-3">
+				<b-col md="3"> </b-col>
+				<b-col md="6"> </b-col>
+				<b-col md="3">
+					<div v-b-modal.changePasswordModal class="btn btn-success w-100">
+						パスワード変更
+					</div>
+				</b-col>
+			</b-form-row>
+		</template>
+		<template v-else>
+			<b-overlay :show="sendingEmail" rounded="sm">
+				<b-form-row class="my-3">
+					<b-col md="3"> </b-col>
+					<b-col md="6"> </b-col>
+					<b-col md="3">
+						<div @click="setPassword" class="btn btn-success w-100">
+							パスワード設定
+						</div>
+					</b-col>
+				</b-form-row>
+			</b-overlay>
+		</template>
 
 		<b-form-row class="my-3">
 			<b-col md="3"> </b-col>
@@ -88,10 +102,14 @@ export default {
 	props: {},
 	data: () => ({
 		sendingConfirmationEmail: false,
+		sendingEmail: false,
 	}),
 	computed: {
 		user: function() {
 			return this.$store.state.auth;
+		},
+		validPassword() {
+			return this.$store.getters["auth/validPassword"];
 		},
 	},
 	methods: {
@@ -130,6 +148,22 @@ export default {
 				})
 				.catch();
 			this.sendingConfirmationEmail = true;
+		},
+
+		setPassword() {
+			const email = this.$store.getters["auth/email"];
+			console.log(email);
+			this.$store
+				.dispatch("socialAuth/setPasswordSendEmail", { email })
+				.then(() => {
+					console.log("success");
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "確認メールを送信しました｡",
+					});
+					this.sendingEmail = false;
+				});
+			// 確認メール送信完了までSpinner動かす
+			this.sendingEmail = true;
 		},
 	},
 	watch: {},
