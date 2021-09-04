@@ -504,6 +504,9 @@ const socialAuthModule = {
 			api.get("/auth/social/").then((response) => {
 				context.commit("initProviders");
 				context.commit("setProviders", response.data);
+				store.commit("auth/setValidPassword", response.data);
+			});
+		},
 			});
 		},
 		disconnect(context, payload) {
