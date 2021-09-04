@@ -14,6 +14,9 @@ urlpatterns = [
     # djoser Sign Up
     path('api/v1/auth/', include('djoser.urls')),
 
+    # djoser extend Set password for social auth
+    path('api/v1/auth/social/', include('djoser_extend.urls')),
+
     # auth_jwt Login, Logout, Refresh
     path('api/v1/auth/', include('auth_jwt.urls')),
 
