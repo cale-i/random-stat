@@ -449,7 +449,10 @@ const socialAuthModule = {
 	},
 	mutations: {
 		setProviders(state, payload) {
-			payload.map((arr) => {
+			const providers = payload.providers;
+			if (providers === undefined) return;
+
+			providers.map((arr) => {
 				state.providers[arr.provider] = true;
 			});
 		},
