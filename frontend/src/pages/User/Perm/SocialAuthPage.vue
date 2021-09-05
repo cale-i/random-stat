@@ -40,8 +40,9 @@ export default {
 	methods: {
 		connect() {
 			// アカウント連携
-			this.$store.dispatch("socialAuth/connectAuth", {
+			this.$store.dispatch("socialAuth/authenticate", {
 				provider: "google-oauth2",
+				action: "connect",
 			});
 		},
 		disconnect() {
@@ -87,7 +88,7 @@ export default {
 	watch: {},
 	async mounted() {
 		await this.complete();
-		this.$store.dispatch("socialAuth/getAssociatedServices");
+		this.$store.dispatch("socialAuth/getProviders");
 	},
 	updated() {},
 };
