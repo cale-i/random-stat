@@ -12,7 +12,7 @@
 				</p>
 			</template>
 			<template v-else>
-				<div class="btn btn-success">
+				<div @click="connect" class="btn btn-success">
 					Google連携
 				</div>
 			</template>
@@ -38,17 +38,55 @@ export default {
 		},
 	},
 	methods: {
+		connect() {
+			// アカウント連携
+			this.$store.dispatch("socialAuth/connectAuth", {
+				provider: "google-oauth2",
+			});
+		},
 		disconnect() {
 			// 連携解除可能か判別
 			if (!this.allowedToDisconnect) return;
 
-			this.$store.dispatch("socialAuth/disconnect", {
-				provider: "google-oauth2",
-			});
+			this.$store
+				.dispatch("socialAuth/disconnect", {
+					provider: "google-oauth2",
+				})
+				.then(() => {
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "アカウント連携を解除しました｡",
+					});
+				});
+		},
+		complete() {
+			// アカウント連携
+			// 認証後のリダイレクトを処理する
+			console.log("in comp");
+			const regex = /account\/social\/connect\//;
+			const pathname = window.location.pathname;
+			if (!pathname.match(regex)) {
+				return;
+			}
+
+			this.$store
+				.dispatch("socialAuth/connectComplete", {
+					code: this.$route.query.code,
+					state: this.$route.query.state,
+					provider: this.$route.params.provider,
+				})
+				.then(() => {
+					this.$store.dispatch("message/setInfoMessage", {
+						message: "アカウント連携が完了しました｡",
+					});
+
+					// 元のページに移動
+					this.$router.replace("/account/social/");
+				});
 		},
 	},
 	watch: {},
-	mounted() {
+	async mounted() {
+		await this.complete();
 		this.$store.dispatch("socialAuth/getAssociatedServices");
 	},
 	updated() {},

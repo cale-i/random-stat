@@ -9,7 +9,7 @@ from social_core.actions import do_disconnect
 from social_django.models import UserSocialAuth
 from social_django.utils import load_backend, load_strategy
 
-from social.serializers import UserSocialAuthSerializer
+from .serializers import CustomProviderAuthSerializer, UserSocialAuthSerializer
 
 User = get_user_model()
 
@@ -50,3 +50,9 @@ class DisconnectView(views.APIView):
             request.user,
             redirect_name=REDIRECT_FIELD_NAME
         )
+
+
+class ConnectView(ProviderAuthView):
+    '''djoser.social.viewsから拝借'''
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomProviderAuthSerializer

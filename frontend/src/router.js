@@ -62,11 +62,20 @@ const router = new VueRouter({
 				},
 				{
 					path: "social",
+					name: "socialAuth",
 					component: () =>
 						import(
 							"@/pages/User/Perm/SocialAuthPage" /* webpackChunkName: "SocialAuth" */
 						),
-					name: "socialAuth",
+					children: [
+						{
+							path: "connect/:provider",
+							component: () =>
+								import(
+									"@/pages/User/Perm/SocialAuthPage" /* webpackChunkName: "SocialAuth" */
+								),
+						},
+					],
 				},
 			],
 		},
