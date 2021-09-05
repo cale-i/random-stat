@@ -443,6 +443,7 @@ const socialAuthModule = {
 	state: {
 		providers: {
 			"google-oauth2": false,
+			github: false,
 		},
 	},
 	getters: {
@@ -459,31 +460,38 @@ const socialAuthModule = {
 		},
 		initProviders(state) {
 			state.providers["google-oauth2"] = false;
+			state.providers["github"] = false;
 		},
 	},
 	actions: {
-		googleLogin() {
-			const redirectPathname = "/social/";
+		authenticate(context, payload) {
+			// Login, SignUp, Connect共通
+			// example: payload = { provider: "google-oauth2", action: "connect" }
 
-			let redirectBaseUrl = `https://random-stat.work${redirectPathname}`;
-			if (window.location.hostname === "localhost") {
-				// port === 8000 => ":8000", 80 => ""
-				const port = window.location.port ? ":8000" : "";
-
-				redirectBaseUrl = `http://localhost${port}${redirectPathname}`;
+			// actionに応じてurl, redirect_urlを決定する｡
+			let pathname;
+			let url;
+			if (payload.action === "auth") {
+				pathname = "/social/";
+				url = `/auth/social/o/${payload.provider}/`;
+			} else if (payload.action === "connect") {
+				pathname = `/account/social/connect/${payload.provider}/`;
+				url = `/auth/social/connect/${payload.provider}/`;
 			}
+
+			const redirect_uri = `${window.location.origin}${pathname}`;
 			return api
-				.get("/auth/social/o/google-oauth2/", {
+				.get(url, {
 					params: {
-						redirect_uri: redirectBaseUrl,
+						redirect_uri,
 					},
 				})
 				.then((response) => {
-					const authorization_url = response.data.authorization_url;
-					window.location.href = authorization_url;
+					window.location.href = response.data.authorization_url;
 				});
 		},
-		googleAuthenticate(context, payload) {
+		authComplete(context, payload) {
+			// Login, SignUp用
 			const formData = new URLSearchParams();
 			formData.append("code", payload.code);
 			formData.append("state", payload.state);
@@ -499,36 +507,8 @@ const socialAuthModule = {
 					store.dispatch("auth/reload");
 				});
 		},
-		getAssociatedServices(context) {
-			// 連携済みサービス一覧を取得
-			api.get("/auth/social/services/").then((response) => {
-				console.log("in gas", response);
-				context.commit("initProviders");
-				context.commit("setProviders", response.data);
-				store.commit("auth/setValidPassword", response.data);
-			});
-		},
-		connectAuth(context, payload) {
-			let redirectURL = `https://random-stat.work/account/social/connect/${payload.provider}/`;
-
-			if (window.location.hostname === "localhost") {
-				// port === 8000 => ":8000", 80 => ""
-				const port = window.location.port ? ":8000" : "";
-				redirectURL = `http://localhost${port}/account/social/connect/${payload.provider}/`;
-			}
-
-			api
-				.get(`/auth/social/connect/${payload.provider}/`, {
-					params: {
-						redirect_uri: redirectURL,
-					},
-				})
-				.then((response) => {
-					const authorization_url = response.data.authorization_url;
-					window.location.href = authorization_url;
-				});
-		},
 		connectComplete(context, payload) {
+			// アカウント連携用
 			const formData = new URLSearchParams();
 			formData.append("code", payload.code);
 			formData.append("state", payload.state);
@@ -540,13 +520,11 @@ const socialAuthModule = {
 						"X-Requested-With": "XMLHttpRequest",
 					},
 				})
-				.then((response) => {
-					console.log("in connectC", response);
-					context.dispatch("getAssociatedServices");
+				.then(() => {
+					context.dispatch("getProviders");
 					// store.dispatch("auth/reload");
 				});
 		},
-
 		disconnect(context, payload) {
 			api
 				.post(`/auth/social/disconnect/${payload.provider}/`)
@@ -554,6 +532,14 @@ const socialAuthModule = {
 					context.commit("initProviders");
 					context.commit("setProviders", response.data);
 				});
+		},
+		getProviders(context) {
+			// 連携済みサービス一覧を取得
+			api.get("/auth/social/services/").then((response) => {
+				context.commit("initProviders");
+				context.commit("setProviders", response.data);
+				store.commit("auth/setValidPassword", response.data);
+			});
 		},
 		setPasswordSendEmail(context, payload) {
 			return api.post("/auth/social/users/set_password/", {
