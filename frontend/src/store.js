@@ -76,9 +76,7 @@ const authModule = {
 		},
 		setValidPassword(state, payload) {
 			// payload === response.data
-			console.log("in valipas", payload);
 			state.validPassword = payload.valid_password;
-			console.log(state.validPassword);
 		},
 	},
 	actions: {
@@ -500,15 +498,52 @@ const socialAuthModule = {
 		},
 		getAssociatedServices(context) {
 			// 連携済みサービス一覧を取得
-
-			api.get("/auth/social/").then((response) => {
+			api.get("/auth/social/services/").then((response) => {
+				console.log("in gas", response);
 				context.commit("initProviders");
 				context.commit("setProviders", response.data);
 				store.commit("auth/setValidPassword", response.data);
 			});
 		},
-			});
+		connectAuth(context, payload) {
+			let redirectURL = `https://random-stat.work/account/social/connect/${payload.provider}/`;
+
+			if (window.location.hostname === "localhost") {
+				// port === 8000 => ":8000", 80 => ""
+				const port = window.location.port ? ":8000" : "";
+				redirectURL = `http://localhost${port}/account/social/connect/${payload.provider}/`;
+			}
+
+			api
+				.get(`/auth/social/connect/${payload.provider}/`, {
+					params: {
+						redirect_uri: redirectURL,
+					},
+				})
+				.then((response) => {
+					const authorization_url = response.data.authorization_url;
+					window.location.href = authorization_url;
+				});
 		},
+		connectComplete(context, payload) {
+			const formData = new URLSearchParams();
+			formData.append("code", payload.code);
+			formData.append("state", payload.state);
+
+			return api
+				.post(`/auth/social/connect/${payload.provider}/`, formData, {
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+						"X-Requested-With": "XMLHttpRequest",
+					},
+				})
+				.then((response) => {
+					console.log("in connectC", response);
+					context.dispatch("getAssociatedServices");
+					// store.dispatch("auth/reload");
+				});
+		},
+
 		disconnect(context, payload) {
 			api
 				.post(`/auth/social/disconnect/${payload.provider}/`)
