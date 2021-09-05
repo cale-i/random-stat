@@ -105,9 +105,12 @@ const authModule = {
 				// 有効なパスワードが設定されているかを判別
 				context.commit("setValidPassword", response.data);
 				//ユーザー情報を取得してstoreのユーザー情報を更新
-				const user = store.dispatch("auth/reload");
+				store.dispatch("auth/reload");
 
-				return user;
+				// メッセージ表示
+				store.dispatch("message/setInfoMessage", {
+					message: "ログインしました。",
+				});
 			});
 		},
 		// logout/
