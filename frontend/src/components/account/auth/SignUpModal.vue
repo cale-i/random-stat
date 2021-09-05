@@ -1,185 +1,135 @@
 <template>
-	<b-modal
-		id="signUpModal"
-		header-bg-variant="dark"
-		header-text-variant="light"
-		body-bg-variant="light"
-		body-text-variant="dark"
-		footer-bg-variant="light"
-		footer-text-variant="dark"
-		centered
-		no-stacking
-		size="md"
-	>
-		<template #modal-header="{}">
-			<b-col md="4">
-				<div v-b-modal.loginModal class="btn btn-sm btn-success">
-					Login
-				</div>
-			</b-col>
-			<b-col>
-				<h4 class="text-center">Sign Up</h4>
-			</b-col>
-			<b-col md="4"></b-col>
-		</template>
-		<b-overlay :show="sendingActivationEmail" rounded="sm">
-			<template>
-				<div class="card-body form-signin mt-4">
-					<b-form @submit.prevent="submitSignUp">
-						<b-form-group
-							id="inputGroupUsername"
-							label="Username:"
-							label-cols-md="3"
-							label-align-md="right"
-							label-for="inputUsername"
-						>
-							<b-form-input
-								id="inputUsername"
-								v-model="form.username"
-								type="text"
-								placeholder="username"
-								required
-								autofocus
-							></b-form-input>
-						</b-form-group>
-
-						<b-form-group
-							id="inputGroupEmail"
-							label="Email:"
-							label-cols-md="3"
-							label-align-md="right"
-							label-for="inputEmail"
-						>
-							<b-form-input
-								id="inputEmail"
-								v-model="form.email"
-								type="email"
-								placeholder="example@example.com"
-								required
-							></b-form-input>
-						</b-form-group>
-
-						<b-form-group
-							id="inputGroupPassword"
-							label="Password"
-							label-cols-md="3"
-							label-align-md="right"
-							label-for="inputPassword"
-						>
-							<b-form-input
-								id="inputPassword"
-								v-model="form.password"
-								type="password"
-								placeholder="password"
-								required
-								autocomplete="true"
-							></b-form-input>
-						</b-form-group>
-
-						<b-form-group
-							id="inputGroupRePassword"
-							label="Confirm"
-							label-cols-md="3"
-							label-align-md="right"
-							label-for="inputRePassword"
-						>
-							<b-form-input
-								id="inputRePassword"
-								v-model="form.rePassword"
-								type="password"
-								placeholder="Confirm Password"
-								required
-								autocomplete="true"
-							></b-form-input>
-							<b-form-valid-feedback :state="validation">
-								<br />
-							</b-form-valid-feedback>
-
-							<b-form-invalid-feedback :state="validation">
-								パスワードが一致しません｡
-							</b-form-invalid-feedback>
-						</b-form-group>
-						<div
-							class="d-flex align-items-center justify-content-between mt-4 mb-0"
-						>
-							<div></div>
-
-							<b-button size="md" variant="warning" type="submit">
-								Resister
-							</b-button>
-						</div>
-					</b-form>
+	<div>
+		<b-modal
+			id="signUpModal"
+			header-bg-variant="dark"
+			header-text-variant="light"
+			body-bg-variant="light"
+			body-text-variant="dark"
+			footer-bg-variant="light"
+			footer-text-variant="dark"
+			centered
+			no-stacking
+			size="md"
+		>
+			<template #modal-header="{}">
+				<div class="header d-flex flex-grow-1">
+					<b-icon icon="bar-chart-line" aria-hidden="true"></b-icon>
+					<div class="ml-2">Random Stat</div>
 				</div>
 			</template>
-		</b-overlay>
+			<template #default="{}">
+				<div class="p-0">
+					<h4 class="text-center my-2 font-weight-bold">アカウント登録</h4>
 
-		<template #modal-footer="{}">
-			<div class="text-muted small">&copy; Random Stat 2021</div>
-		</template>
-	</b-modal>
+					<hr />
+
+					<div class="button google-login" @click="googleLogin">
+						<b-icon icon="google" aria-hidden="true"></b-icon>
+						<div>Google</div>
+					</div>
+					<div class="button github-login">
+						<b-icon icon="github" aria-hidden="true"></b-icon>
+						<div>GitHub</div>
+					</div>
+					<div class="button twitter-login">
+						<b-icon icon="twitter" aria-hidden="true"></b-icon>
+						<div>Twitter</div>
+					</div>
+
+					<hr />
+
+					<div v-b-modal.emailSignUpModal class="button email-login">
+						<b-icon icon="envelope-fill" aria-hidden="true"></b-icon>
+						<div>メールアドレス</div>
+					</div>
+
+					<hr />
+
+					<div v-b-modal.loginModal class="button sign-up">
+						<b-icon icon="pencil-square" aria-hidden="true"></b-icon>
+						<div>アカウントをお持ちの方</div>
+					</div>
+				</div>
+			</template>
+			<template #modal-footer="{}">
+				<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+					Random Stat 2021
+				</div>
+			</template>
+		</b-modal>
+		<EmailSignUpModal />
+	</div>
 </template>
 
 <script>
+import EmailSignUpModal from "@/components/account/auth/EmailSignUpModal";
+
 export default {
-	props: {},
-	data: () => ({
-		form: {
-			username: "",
-			email: "",
-			password: "",
-			rePassword: "",
-		},
-		sendingActivationEmail: false,
-	}),
-	computed: {
-		validation() {
-			// rePasswordが空白の場合はvalidation error messageを表示させない｡
-			if (!this.form.rePassword) return true;
-			return this.form.password === this.form.rePassword;
-		},
+	components: {
+		EmailSignUpModal,
 	},
+	props: {},
+	data: () => ({}),
+	computed: {},
 	methods: {
-		submitSignUp() {
-			// confirm password
-			if (this.form.password !== this.form.rePassword) {
-				console.log("パスワードが一致しません");
-				return;
-			}
-
-			// Sign Up
-			// メール送信完了まで処理が止まるため､非常に時間がかかる
-			// 失敗時は高速
-			this.$store
-				.dispatch("auth/createAccount", {
-					username: this.form.username,
-					email: this.form.email,
-					password: this.form.password,
-					rePassword: this.form.rePassword,
-				})
-				.then(() => {
-					this.$store.dispatch("message/setInfoMessage", {
-						message: "認証メールを送信しました｡",
-					});
-
-					// 	// ログインモーダルを表示
-					// 	this.$bvModal.show("loginModal");
-
-					// SignUpModalを閉じる
-					this.sendingActivationEmail = false;
-					this.$bvModal.hide("signUpModal");
-				})
-				.catch(() => {
-					this.sendingActivationEmail = false;
-					return;
-				});
-
-			// 認証メール送信完了までSpinner動かす
-			this.sendingActivationEmail = true;
+		googleLogin() {
+			this.$store.dispatch("socialAuth/googleLogin");
+		},
+		guestLogin() {
+			this.$store.dispatch("auth/guestLogin").then(() => {
+				// クエリ文字列に「next」がなければダッシュボード画面へ
+				const next = this.$route.query.next || "/dashboard";
+				this.$router.replace(next);
+			});
 		},
 	},
 	watch: {},
 	mounted() {},
-	updated() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 3rem;
+	font-size: 1.2rem;
+	color: white;
+	margin: 0.5rem 2rem;
+	user-select: none;
+}
+.button:hover {
+	opacity: 0.8;
+}
+.button > svg {
+	margin-right: 0.5rem;
+}
+.google-login {
+	background: #db4437;
+}
+.github-login {
+	background: #333;
+}
+.twitter-login {
+	background: #1da1f2;
+}
+.email-login {
+	background: #00a040;
+}
+.guest-login {
+	background: gray;
+}
+.sign-up {
+	background: #bd3f4c;
+}
+</style>

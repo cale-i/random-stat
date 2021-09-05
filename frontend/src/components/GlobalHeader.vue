@@ -53,18 +53,6 @@
 
 						<b-dropdown-divider></b-dropdown-divider>
 
-						<b-dropdown-item v-b-modal.loginGoogleModal>
-							<b-icon icon="google" aria-hidden="true"></b-icon>
-							Google
-						</b-dropdown-item>
-
-						<b-dropdown-divider></b-dropdown-divider>
-
-						<b-dropdown-item v-b-modal.guestLoginModal>
-							<b-icon icon="person" aria-hidden="true"></b-icon>
-							Guest Login
-						</b-dropdown-item>
-
 						<b-dropdown-item v-b-modal.loginModal variant="success">
 							<b-icon icon="person" aria-hidden="true"></b-icon>
 							Login
@@ -75,26 +63,20 @@
 		</b-navbar>
 
 		<LoginModal />
-		<GuestLoginModal />
 		<SignUpModal />
 		<ResetPasswordModal />
-		<SocialLoginGoogleModal />
 	</div>
 </template>
 
 <script>
-import SignUpModal from "@/components/account/auth/SignUpModal.vue";
+import SignUpModal from "@/components/account/auth/SignUpModal";
 import LoginModal from "@/components/account/auth/LoginModal.vue";
-import GuestLoginModal from "@/components/account/auth/GuestLoginModal.vue";
 import ResetPasswordModal from "@/components/account/auth/ResetPasswordModal.vue";
-import SocialLoginGoogleModal from "@/components/account/auth/SocialLoginGoogleModal.vue";
 export default {
 	components: {
 		SignUpModal,
 		LoginModal,
-		GuestLoginModal,
 		ResetPasswordModal,
-		SocialLoginGoogleModal,
 	},
 	props: {},
 	data: () => ({}),
