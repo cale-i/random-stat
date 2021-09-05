@@ -24,7 +24,7 @@
 			<b-col md="4"> </b-col>
 		</template>
 		<template #default="{}">
-			<div @click="socialLoginGoogle" class="btn btn-sm btn-success">
+			<div @click="authenticate" class="btn btn-sm btn-success">
 				Google
 			</div>
 		</template>
@@ -41,7 +41,10 @@
 <script>
 export default {
 	components: {},
-	props: {},
+	props: {
+		// provider: "",
+		// action: "",
+	},
 	data: () => ({
 		form: {
 			email: "",
@@ -51,12 +54,20 @@ export default {
 	}),
 	computed: {},
 	methods: {
-		socialLoginGoogle() {
-			this.$store.dispatch("socialAuth/googleLogin");
+		authenticate() {
+			this.$store.dispatch("socialAuth/authenticate", {
+				// provider: this.provider,
+				// action: this.action,
+				provider: "google-oauth2",
+				action: "auth",
+			});
 		},
 	},
 	watch: {},
-	mounted() {},
+	mounted() {
+		// TODO
+		// propsから渡されたproviderの値に応じて､ボタン色とアイコンを動的に変更
+	},
 };
 </script>
 <style scoped></style>

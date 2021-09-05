@@ -20,7 +20,7 @@ export default {
 	methods: {
 		register() {
 			this.$store
-				.dispatch("socialAuth/googleAuthenticate", {
+				.dispatch("socialAuth/authComplete", {
 					code: this.$route.query.code,
 					state: this.$route.query.state,
 				})
