@@ -4,16 +4,53 @@
 
 		<div>
 			<template v-if="this.providers['google-oauth2']">
-				<div @click="disconnect" class="btn btn-warning">
-					Google連携解除
+				<div class="button google" @click="disconnect('google-oauth2')">
+					<b-icon icon="google" aria-hidden="true"></b-icon>
+					<div>Google連携解除</div>
 				</div>
 				<p v-if="!this.allowedToDisconnect">
 					連携を解除をするには他のサービスと連携するか､パスワードを設定して下さい｡
 				</p>
 			</template>
 			<template v-else>
-				<div @click="connect" class="btn btn-success">
-					Google連携
+				<div
+					class="button google disconnected"
+					@click="connect('google-oauth2')"
+				>
+					<b-icon icon="google" aria-hidden="true"></b-icon>
+					<div>Google連携</div>
+				</div>
+			</template>
+
+			<template v-if="this.providers['github']">
+				<div class="button github" @click="disconnect('github')">
+					<b-icon icon="github" aria-hidden="true"></b-icon>
+					<div>Github連携解除</div>
+				</div>
+				<p v-if="!this.allowedToDisconnect">
+					連携を解除をするには他のサービスと連携するか､パスワードを設定して下さい｡
+				</p>
+			</template>
+			<template v-else>
+				<div class="button github disconnected" @click="connect('github')">
+					<b-icon icon="github" aria-hidden="true"></b-icon>
+					<div>Github連携</div>
+				</div>
+			</template>
+
+			<template v-if="this.providers['twitter']">
+				<div class="button twitter" @click="disconnect('twitter')">
+					<b-icon icon="twitter" aria-hidden="true"></b-icon>
+					<div>Twitter連携解除</div>
+				</div>
+				<p v-if="!this.allowedToDisconnect">
+					連携を解除をするには他のサービスと連携するか､パスワードを設定して下さい｡
+				</p>
+			</template>
+			<template v-else>
+				<div class="button twitter disconnected" @click="connect('twitter')">
+					<b-icon icon="twitter" aria-hidden="true"></b-icon>
+					<div>Twitter連携</div>
 				</div>
 			</template>
 		</div>
@@ -38,20 +75,20 @@ export default {
 		},
 	},
 	methods: {
-		connect() {
+		connect(provider) {
 			// アカウント連携
 			this.$store.dispatch("socialAuth/authenticate", {
-				provider: "google-oauth2",
+				provider,
 				action: "connect",
 			});
 		},
-		disconnect() {
+		disconnect(provider) {
 			// 連携解除可能か判別
 			if (!this.allowedToDisconnect) return;
 
 			this.$store
 				.dispatch("socialAuth/disconnect", {
-					provider: "google-oauth2",
+					provider,
 				})
 				.then(() => {
 					this.$store.dispatch("message/setInfoMessage", {
@@ -93,4 +130,72 @@ export default {
 	updated() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 4rem;
+	font-size: 1.2rem;
+	color: white;
+	margin: 0.7rem auto;
+	user-select: none;
+	border-style: solid;
+	width: 70%;
+}
+
+.button > svg {
+	margin-right: 0.5rem;
+}
+
+.button:hover {
+	background: white;
+	color: black;
+}
+
+.google {
+	background: #db4437;
+	border-color: #db4437;
+}
+.google.disconnected > svg {
+	color: #db4437;
+}
+
+.github {
+	background: #333;
+	border-color: #333;
+}
+.google.disconnected > svg {
+	color: #db4437;
+}
+
+.twitter {
+	background: #1da1f2;
+	border-color: #1da1f2;
+}
+.twitter.disconnected > svg {
+	color: #1da1f2;
+}
+
+.disconnected {
+	background: white;
+	color: black;
+}
+
+.google.disconnected:hover,
+.google.disconnected:hover > svg {
+	background: #db4437;
+	color: white;
+}
+
+.github.disconnected:hover,
+.github.disconnected:hover > svg {
+	background: #333;
+	color: white;
+}
+.twitter.disconnected:hover,
+.twitter.disconnected:hover > svg {
+	background: #1da1f2;
+	color: white;
+}
+</style>
