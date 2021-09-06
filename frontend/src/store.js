@@ -471,7 +471,7 @@ const socialAuthModule = {
 			let pathname;
 			let url;
 			if (payload.action === "auth") {
-				pathname = "/social/";
+				pathname = `/social/o/${payload.provider}/`;
 				url = `/auth/social/o/${payload.provider}/`;
 			} else if (payload.action === "connect") {
 				pathname = `/account/social/connect/${payload.provider}/`;
@@ -496,7 +496,7 @@ const socialAuthModule = {
 			formData.append("state", payload.state);
 
 			return socialApi
-				.post("/auth/social/o/google-oauth2/", formData)
+				.post(`/auth/social/o/${payload.provider}/`, formData)
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
