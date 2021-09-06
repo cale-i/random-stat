@@ -56,12 +56,19 @@ const authModule = {
 		username: "",
 		isLoggedIn: false,
 		validPassword: true,
+		lastLoginType: {
+			"google-oauth2": false,
+			github: false,
+			twitter: false,
+			email: false,
+		},
 	},
 	getters: {
 		email: (state) => state.email,
 		username: (state) => state.username,
 		isLoggedIn: (state) => state.isLoggedIn,
 		validPassword: (state) => state.validPassword,
+		lastLoginType: (state) => state.lastLoginType,
 	},
 	mutations: {
 		setUserData(state, payload) {
@@ -77,6 +84,18 @@ const authModule = {
 		setValidPassword(state, payload) {
 			// payload === response.data
 			state.validPassword = payload.valid_password;
+		},
+		setLastLoginType(state) {
+			const lastLoginType = localStorage.getItem("lastLoginType");
+			if (lastLoginType) state.lastLoginType[lastLoginType] = true;
+		},
+		resetLastLoginType(state) {
+			state.lastLoginType = {
+				"google-oauth2": false,
+				github: false,
+				twitter: false,
+				email: false,
+			};
 		},
 	},
 	actions: {
@@ -94,6 +113,9 @@ const authModule = {
 					context.commit("setValidPassword", response.data);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
+					// 前回のログイン情報を保存
+					context.commit("resetLastLoginType");
+					localStorage.setItem("lastLoginType", "email");
 
 					return user;
 				});
@@ -504,6 +526,9 @@ const socialAuthModule = {
 					store.commit("auth/setValidPassword", response.data);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					store.dispatch("auth/reload");
+					// 前回のログイン情報を保存
+					store.commit("auth/resetLastLoginType");
+					localStorage.setItem("lastLoginType", payload.provider);
 				});
 		},
 		connectComplete(context, payload) {
