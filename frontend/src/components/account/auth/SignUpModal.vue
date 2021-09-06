@@ -63,8 +63,7 @@
 </template>
 
 <script>
-import EmailSignUpModal from "@/components/account/auth/EmailSignUpModal";
-
+import EmailSignUpModal from "@/components/account/auth/EmailSignUpModal.vue";
 export default {
 	components: {
 		EmailSignUpModal,
@@ -74,7 +73,10 @@ export default {
 	computed: {},
 	methods: {
 		googleLogin() {
-			this.$store.dispatch("socialAuth/googleLogin");
+			this.$store.dispatch("socialAuth/authenticate", {
+				provider: "google-oauth2",
+				action: "auth",
+			});
 		},
 		guestLogin() {
 			this.$store.dispatch("auth/guestLogin").then(() => {

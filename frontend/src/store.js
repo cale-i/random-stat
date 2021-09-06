@@ -182,7 +182,6 @@ const authModule = {
 				// ユーザーアバターの読み込み
 				store.dispatch("avatar/reload");
 
-				console.log(user);
 				return user;
 			});
 		},
