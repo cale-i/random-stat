@@ -247,8 +247,6 @@ DJOSER = {
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
         'http://localhost:8000/social/o/google-oauth2/',
         'http://localhost/social/o/google-oauth2/',
-        'http://localhost:8000/account/social/connect/google-oauth2/',
-        'http://localhost/account/social/connect/google-oauth2/',
     ],
 }
 
