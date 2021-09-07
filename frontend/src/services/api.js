@@ -13,25 +13,32 @@ export const api = axios.create({
 // 共通前処理
 api.interceptors.request.use(
 	async function(config) {
-		// メッセージをクリア
-		// ログアウト時のメッセージが表示されないため
-		// エラー時にのみクリアするよう変更
-		// store.dispatch("message/clearAllMessages");
 		// 認証用トークンがあればリクエストヘッダに乗せる
 		let token = localStorage.getItem("access");
 
 		if (token === "undefined") return config;
 		if (!token) return config;
 
-		// 認証用トークンの有効期限を確認し､有効期限切れの場合はリフレッシュトークンを発行
-		if (isExpired(token)) {
-			// 認証用トークンが有効期限切れの場合の処理
-			await store.dispatch("auth/refresh");
-			token = localStorage.getItem("access");
+		// 認証用トークンの有効期限を確認し､有効期限切れの場合はリフレッシュトークンを再発行
+		if (!isExpired(token)) {
+			// 認証用トークンが有効期限内の場合の処理
+			config.headers.Authorization = `JWT ${token}`;
+			return config;
 		}
 
-		config.headers.Authorization = `JWT ${token}`;
-		return config;
+		// 認証用トークンが有効期限切れの場合の処理(リフレッシュトークン再発行)
+		await store.dispatch("auth/refresh");
+		token = localStorage.getItem("access"); // 再発行の結果(=>成功: 有効なaccess_token, =>失敗: null)
+		if (token) {
+			// リフレッシュトークンの再発行が成功した場合(リフレッシュトークンが有効期限内の場合)
+			config.headers.Authorization = `JWT ${token}`;
+			return config;
+		}
+
+		// 有効期限切れのaccess_tokenが存在 かつ 有効期限切れのrefresh_tokenが存在
+		// 現在のページが"/"でない場合"/"に移動
+		if (window.location.pathname !== "/") window.location.href = "/";
+		return Promise.reject();
 	},
 	function(error) {
 		return Promise.reject(error);

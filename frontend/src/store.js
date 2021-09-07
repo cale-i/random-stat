@@ -153,12 +153,12 @@ const authModule = {
 					localStorage.setItem("access", response.data.access);
 					// 有効なパスワードが設定されているか
 					context.commit("setValidPassword", response.data);
-
-					return true;
 				})
 				.catch(() => {
-					console.log("失敗");
-					return false;
+					// localStorageに保存されている認証用トークンを削除
+					localStorage.removeItem("access");
+					// storeのユーザー情報をクリア
+					context.commit("clearUserData");
 				});
 		},
 		setEmail(context, payload) {
