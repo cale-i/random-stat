@@ -24,29 +24,29 @@
 
 					<hr />
 
-					<div class="button google-login" @click="googleLogin">
+					<div class="button google-signup" @click="signup('google-oauth2')">
 						<b-icon icon="google" aria-hidden="true"></b-icon>
 						<div>Google</div>
 					</div>
-					<div class="button github-login">
+					<div class="button github-signup" @click="signup('github')">
 						<b-icon icon="github" aria-hidden="true"></b-icon>
 						<div>GitHub</div>
 					</div>
-					<div class="button twitter-login">
+					<div class="button twitter-signup">
 						<b-icon icon="twitter" aria-hidden="true"></b-icon>
 						<div>Twitter</div>
 					</div>
 
 					<hr />
 
-					<div v-b-modal.emailSignUpModal class="button email-login">
+					<div v-b-modal.emailSignUpModal class="button email-signup">
 						<b-icon icon="envelope-fill" aria-hidden="true"></b-icon>
 						<div>メールアドレス</div>
 					</div>
 
 					<hr />
 
-					<div v-b-modal.loginModal class="button sign-up">
+					<div v-b-modal.loginModal class="button login">
 						<b-icon icon="pencil-square" aria-hidden="true"></b-icon>
 						<div>アカウントをお持ちの方</div>
 					</div>
@@ -72,10 +72,9 @@ export default {
 	data: () => ({}),
 	computed: {},
 	methods: {
-		googleLogin() {
+		signup(provider) {
 			this.$store.dispatch("socialAuth/authenticate", {
-				provider: "google-oauth2",
-				action: "auth",
+				provider,
 			});
 		},
 		guestLogin() {
@@ -116,22 +115,22 @@ export default {
 .button > svg {
 	margin-right: 0.5rem;
 }
-.google-login {
+.google-signup {
 	background: #db4437;
 }
-.github-login {
+.github-signup {
 	background: #333;
 }
-.twitter-login {
+.twitter-signup {
 	background: #1da1f2;
 }
-.email-login {
+.email-signup {
 	background: #00a040;
 }
 .guest-login {
 	background: gray;
 }
-.sign-up {
+.login {
 	background: #bd3f4c;
 }
 </style>

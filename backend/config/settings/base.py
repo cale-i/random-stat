@@ -126,6 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.github.GithubOAuth2',
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -247,6 +248,7 @@ DJOSER = {
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
         'http://localhost:8000/social/o/google-oauth2/',
         'http://localhost/social/o/google-oauth2/',
+        'http://localhost:8000/social/o/github/',
     ],
 }
 
@@ -262,6 +264,14 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'openid',
 ]
+
+# GitHub
+SOCIAL_AUTH_GITHUB_KEY = ''
+SOCIAL_AUTH_GITHUB_SECRET = ''
+SOCIAL_AUTH_GITHUB_SCOPE = [
+    'user:email'
+]
+
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 

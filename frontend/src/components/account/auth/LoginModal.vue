@@ -177,7 +177,6 @@ export default {
 		login(provider) {
 			this.$store.dispatch("socialAuth/authenticate", {
 				provider,
-				action: "auth",
 			});
 		},
 		guestLogin() {
