@@ -16,7 +16,7 @@ samesite = settings.JWT_COOKIE.get('SAMESITE')
 secure = settings.JWT_COOKIE.get('SECURE')
 
 
-class CookieTokenObtainPairView(TokenObtainPairView):
+class RefreshTokenSetCookieMixin(views.APIView):
     def finalize_response(self, request, response, *args, **kwargs):
 
         access_token = response.data.get('access', None)
@@ -41,6 +41,10 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             del response.data['refresh']
 
         return super().finalize_response(request, response, *args, **kwargs)
+
+
+class CookieTokenObtainPairView(TokenObtainPairView, RefreshTokenSetCookieMixin):
+    pass
 
 
 class CookieTokenRefreshView(TokenRefreshView):
