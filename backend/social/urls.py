@@ -16,14 +16,10 @@ urlpatterns = [
     ),
 
     # disconnection
-    re_path(r'^disconnect/(?P<backend>[^/]+){0}$'.format(extra), views.DisconnectView.as_view(),
-            name='disconnect'),
-
-    # ログイン後､追加のアカウント連携
     re_path(
-        r"^connect/(?P<provider>\S+)/$",
-        views.ConnectView.as_view(),
-        name="provider-auth",
+        r'^disconnect/(?P<backend>[^/]+){0}$'.format(extra),
+        views.DisconnectView.as_view(),
+        name='disconnect',
     ),
 
     path('services/', views.UserSocialAuthAPIView.as_view())

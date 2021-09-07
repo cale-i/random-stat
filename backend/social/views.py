@@ -1,6 +1,7 @@
-from auth_jwt.views import CookieTokenObtainPairView
+from auth_jwt.views import RefreshTokenSetCookieMixin
 from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 from django.views.decorators.cache import never_cache
+from djoser.social.serializers import ProviderAuthSerializer
 from djoser.social.views import ProviderAuthView
 from rest_framework import status, views
 from rest_framework.permissions import IsAuthenticated
@@ -12,10 +13,6 @@ from social_django.utils import load_backend, load_strategy
 from .serializers import CustomProviderAuthSerializer, UserSocialAuthSerializer
 
 User = get_user_model()
-
-
-class CustomProviderAuthView(ProviderAuthView, CookieTokenObtainPairView):
-    pass
 
 
 class UserSocialAuthAPIView(views.APIView):
@@ -52,7 +49,11 @@ class DisconnectView(views.APIView):
         )
 
 
-class ConnectView(ProviderAuthView):
-    '''djoser.social.viewsから拝借'''
-    permission_classes = [IsAuthenticated]
-    serializer_class = CustomProviderAuthSerializer
+class CustomProviderAuthView(ProviderAuthView, RefreshTokenSetCookieMixin):
+
+    def get_serializer_class(self):
+        if self.request.user.is_authenticated:
+            # アカウント連携
+            return CustomProviderAuthSerializer
+        # アカウント登録
+        return ProviderAuthSerializer

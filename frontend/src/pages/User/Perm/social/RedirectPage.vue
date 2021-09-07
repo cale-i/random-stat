@@ -18,27 +18,24 @@ export default {
 	data: () => ({}),
 	computed: {},
 	methods: {
-		register() {
+		complete() {
 			this.$store
 				.dispatch("socialAuth/authComplete", {
 					code: this.$route.query.code,
 					state: this.$route.query.state,
 					provider: this.$route.params.provider,
 				})
-				.then(() => {
+				.then((response) => {
+					this.$router.replace(response.next);
 					this.$store.dispatch("message/setInfoMessage", {
-						message: "ログインしました｡",
+						message: response.message,
 					});
-					// 現在のページが"/"でない場合"/dashboard"に移動
-					if (window.location.pathname !== "/") {
-						this.$router.replace("/dashboard");
-					}
 				});
 		},
 	},
 	watch: {},
 	mounted() {
-		this.register();
+		this.complete();
 	},
 	updated() {},
 };

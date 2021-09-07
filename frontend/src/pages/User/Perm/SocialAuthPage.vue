@@ -96,35 +96,9 @@ export default {
 					});
 				});
 		},
-		complete() {
-			// アカウント連携
-			// 認証後のリダイレクトを処理する
-			console.log("in comp");
-			const regex = /account\/social\/connect\//;
-			const pathname = window.location.pathname;
-			if (!pathname.match(regex)) {
-				return;
-			}
-
-			this.$store
-				.dispatch("socialAuth/connectComplete", {
-					code: this.$route.query.code,
-					state: this.$route.query.state,
-					provider: this.$route.params.provider,
-				})
-				.then(() => {
-					this.$store.dispatch("message/setInfoMessage", {
-						message: "アカウント連携が完了しました｡",
-					});
-
-					// 元のページに移動
-					this.$router.replace("/account/social/");
-				});
-		},
 	},
 	watch: {},
 	async mounted() {
-		await this.complete();
 		this.$store.dispatch("socialAuth/getProviders");
 	},
 	updated() {},
