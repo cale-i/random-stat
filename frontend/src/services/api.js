@@ -117,12 +117,3 @@ const isExpired = (token) => {
 
 	return expirationTime <= nowTime;
 };
-
-export const socialApi = axios.create({
-	baseURL: process.env.VUE_APP_ROOT_API,
-	timeout: 5000,
-	withCredentials: true,
-	headers: {
-		"Content-Type": "application/x-www-form-urlencoded",
-	},
-});

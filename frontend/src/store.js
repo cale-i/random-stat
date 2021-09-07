@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { api, refreshApi, socialApi } from "@/services/api";
+import { api, refreshApi } from "@/services/api";
 
 Vue.use(Vuex);
 
@@ -486,19 +486,8 @@ const socialAuthModule = {
 	},
 	actions: {
 		authenticate(context, payload) {
-			// Login, SignUp, Connect共通
-			// example: payload = { provider: "google-oauth2", action: "connect" }
-
-			// actionに応じてurl, redirect_urlを決定する｡
-			let pathname;
-			let url;
-			if (payload.action === "auth") {
-				pathname = `/social/o/${payload.provider}/`;
-				url = `/auth/social/o/${payload.provider}/`;
-			} else if (payload.action === "connect") {
-				pathname = `/account/social/connect/${payload.provider}/`;
-				url = `/auth/social/connect/${payload.provider}/`;
-			}
+			const pathname = `/social/o/${payload.provider}/`;
+			const url = `/auth/social/o/${payload.provider}/`;
 
 			const redirect_uri = `${window.location.origin}${pathname}`;
 			return api
@@ -512,41 +501,44 @@ const socialAuthModule = {
 				});
 		},
 		authComplete(context, payload) {
-			// Login, SignUp用
-			const formData = new URLSearchParams();
-			formData.append("code", payload.code);
-			formData.append("state", payload.state);
-
-			return socialApi
-				.post(`/auth/social/o/${payload.provider}/`, formData)
-				.then((response) => {
-					// 認証用トークンをlocalStorageに保存
-					localStorage.setItem("access", response.data.access);
-					// 有効なパスワードが設定されているか
-					store.commit("auth/setValidPassword", response.data);
-					//ユーザー情報を取得してstoreのユーザー情報を更新
-					store.dispatch("auth/reload");
-					// 前回のログイン情報を保存
-					store.commit("auth/resetLastLoginType");
-					localStorage.setItem("lastLoginType", payload.provider);
-				});
-		},
-		connectComplete(context, payload) {
-			// アカウント連携用
 			const formData = new URLSearchParams();
 			formData.append("code", payload.code);
 			formData.append("state", payload.state);
 
 			return api
-				.post(`/auth/social/connect/${payload.provider}/`, formData, {
+				.post(`/auth/social/o/${payload.provider}/`, formData, {
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded",
 						"X-Requested-With": "XMLHttpRequest",
 					},
 				})
-				.then(() => {
-					context.dispatch("getProviders");
-					// store.dispatch("auth/reload");
+				.then((response) => {
+					console.log("in authComplete");
+					if (response.data.access) {
+						// アカウント登録
+						console.log("in register in authComplete");
+
+						// 認証用トークンをlocalStorageに保存
+						localStorage.setItem("access", response.data.access);
+						// 有効なパスワードが設定されているか
+						store.commit("auth/setValidPassword", response.data);
+						//ユーザー情報を取得してstoreのユーザー情報を更新
+						store.dispatch("auth/reload");
+						// 前回のログイン情報を保存
+						store.commit("auth/resetLastLoginType");
+						localStorage.setItem("lastLoginType", payload.provider);
+
+						return { next: "/dashboard", message: "ログインしました｡" };
+					} else {
+						// アカウント連携
+						console.log("in connect in authComplete");
+
+						context.dispatch("getProviders");
+						return {
+							next: "/account/social",
+							message: "アカウントを連携しました｡",
+						};
+					}
 				});
 		},
 		disconnect(context, payload) {
