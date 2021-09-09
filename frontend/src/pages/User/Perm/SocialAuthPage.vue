@@ -79,7 +79,6 @@ export default {
 			// アカウント連携
 			this.$store.dispatch("socialAuth/authenticate", {
 				provider,
-				action: "connect",
 			});
 		},
 		disconnect(provider) {
