@@ -163,7 +163,6 @@ const authModule = {
 		},
 		setEmail(context, payload) {
 			// ユーザー名変更
-			console.log(payload);
 			return api
 				.post("/auth/users/set_email/", {
 					new_email: payload.new_email,
@@ -175,11 +174,9 @@ const authModule = {
 				});
 		},
 		setUsername(context, payload) {
-			// console.log(payload)
 			const response = context.dispatch("updateField", {
 				username: payload.username,
 			});
-			// console.log(response)
 			return response;
 		},
 		setPassword(context, payload) {
@@ -232,9 +229,6 @@ const authModule = {
 				.then(() => {
 					context.dispatch("logout");
 				});
-			// .catch((response) => {
-			// console.log("response", response);
-			// });
 		},
 		updateField(context, payload) {
 			// patch操作は同一URIに対し、
@@ -513,10 +507,8 @@ const socialAuthModule = {
 					},
 				})
 				.then((response) => {
-					console.log("in authComplete");
 					if (response.data.access) {
 						// アカウント登録
-						console.log("in register in authComplete");
 
 						// 認証用トークンをlocalStorageに保存
 						localStorage.setItem("access", response.data.access);
@@ -531,8 +523,6 @@ const socialAuthModule = {
 						return { next: "/dashboard", message: "ログインしました｡" };
 					} else {
 						// アカウント連携
-						console.log("in connect in authComplete");
-
 						context.dispatch("getProviders");
 						return {
 							next: "/account/social",
@@ -542,12 +532,9 @@ const socialAuthModule = {
 				});
 		},
 		disconnect(context, payload) {
-			api
-				.post(`/auth/social/disconnect/${payload.provider}/`)
-				.then((response) => {
-					context.commit("initProviders");
-					context.commit("setProviders", response.data);
-				});
+			api.post(`/auth/social/disconnect/${payload.provider}/`).then(() => {
+				context.dispatch("getProviders");
+			});
 		},
 		getProviders(context) {
 			// 連携済みサービス一覧を取得
