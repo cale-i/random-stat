@@ -536,6 +536,7 @@ const socialAuthModule = {
 		disconnect(context, payload) {
 			api.post(`/auth/social/disconnect/${payload.provider}/`).then(() => {
 				context.dispatch("getProviders");
+				store.dispatch("avatar/reload");
 			});
 		},
 		getProviders(context) {
