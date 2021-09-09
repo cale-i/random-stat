@@ -532,12 +532,9 @@ const socialAuthModule = {
 				});
 		},
 		disconnect(context, payload) {
-			api
-				.post(`/auth/social/disconnect/${payload.provider}/`)
-				.then((response) => {
-					context.commit("initProviders");
-					context.commit("setProviders", response.data);
-				});
+			api.post(`/auth/social/disconnect/${payload.provider}/`).then(() => {
+				context.dispatch("getProviders");
+			});
 		},
 		getProviders(context) {
 			// 連携済みサービス一覧を取得
