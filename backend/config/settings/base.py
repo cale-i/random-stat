@@ -127,6 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -249,6 +250,7 @@ DJOSER = {
         'http://localhost:8000/social/o/google-oauth2/',
         'http://localhost/social/o/google-oauth2/',
         'http://localhost:8000/social/o/github/',
+        'http://localhost:8000/social/o/facebook/',
     ],
 }
 
@@ -272,6 +274,13 @@ SOCIAL_AUTH_GITHUB_SCOPE = [
     'user:email'
 ]
 
+# Facebook
+SOCIAL_AUTH_FACEBOOK_KEY = ''
+SOCIAL_AUTH_FACEBOOK_SECRET = ''
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'email'
+}
 
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 

@@ -38,19 +38,19 @@
 				</div>
 			</template>
 
-			<template v-if="this.providers['twitter']">
-				<div class="button twitter" @click="disconnect('twitter')">
-					<b-icon icon="twitter" aria-hidden="true"></b-icon>
-					<div>Twitter連携解除</div>
+			<template v-if="this.providers['facebook']">
+				<div class="button facebook" @click="disconnect('facebook')">
+					<b-icon icon="facebook" aria-hidden="true"></b-icon>
+					<div>Facebook連携解除</div>
 				</div>
 				<p v-if="!this.allowedToDisconnect">
 					連携を解除をするには他のサービスと連携するか､パスワードを設定して下さい｡
 				</p>
 			</template>
 			<template v-else>
-				<div class="button twitter disconnected" @click="connect('twitter')">
-					<b-icon icon="twitter" aria-hidden="true"></b-icon>
-					<div>Twitter連携</div>
+				<div class="button facebook disconnected" @click="connect('facebook')">
+					<b-icon icon="facebook" aria-hidden="true"></b-icon>
+					<div>Facebook連携</div>
 				</div>
 			</template>
 		</div>
@@ -147,6 +147,13 @@ export default {
 	color: #db4437;
 }
 
+.facebook {
+	background: #1877f2;
+	border-color: #1877f2;
+}
+.facebook.disconnected > svg {
+	color: #1877f2;
+}
 .twitter {
 	background: #1da1f2;
 	border-color: #1da1f2;
@@ -169,6 +176,11 @@ export default {
 .github.disconnected:hover,
 .github.disconnected:hover > svg {
 	background: #333;
+	color: white;
+}
+.facebook.disconnected:hover,
+.facebook.disconnected:hover > svg {
+	background: #1877f2;
 	color: white;
 }
 .twitter.disconnected:hover,

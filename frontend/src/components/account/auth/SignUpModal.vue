@@ -32,9 +32,9 @@
 						<b-icon icon="github" aria-hidden="true"></b-icon>
 						<div>GitHub</div>
 					</div>
-					<div class="button twitter-signup">
-						<b-icon icon="twitter" aria-hidden="true"></b-icon>
-						<div>Twitter</div>
+					<div class="button facebook-signup" @click="signup('facebook')">
+						<b-icon icon="facebook" aria-hidden="true"></b-icon>
+						<div>Facebook</div>
 					</div>
 
 					<hr />
@@ -120,6 +120,9 @@ export default {
 }
 .github-signup {
 	background: #333;
+}
+.facebook-signup {
+	background: #1877f2;
 }
 .twitter-signup {
 	background: #1da1f2;

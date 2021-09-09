@@ -79,7 +79,7 @@
 						</div>
 					</template>
 
-					<template v-if="lastLoginType['twitter']">
+					<template v-if="lastLoginType['facebook']">
 						<div class="last-login-box">
 							<b-row>
 								<p class="last-login-caption">
@@ -87,11 +87,11 @@
 								</p>
 							</b-row>
 							<b-row
-								class="last-login-button twitter-login"
-								@click="login('twitter')"
+								class="last-login-button facebook-login"
+								@click="login('facebook')"
 							>
-								<b-icon icon="twitter" aria-hidden="true"></b-icon>
-								<div>Twitter</div>
+								<b-icon icon="facebook" aria-hidden="true"></b-icon>
+								<div>Facebook</div>
 							</b-row>
 							<b-row>
 								<p class="last-login-reset" @click="resetLastLoginType">
@@ -101,9 +101,9 @@
 						</div>
 					</template>
 					<template v-else>
-						<div class="button twitter-login" @click="login('twitter')">
-							<b-icon icon="twitter" aria-hidden="true"></b-icon>
-							<div>Twitter</div>
+						<div class="button facebook-login" @click="login('facebook')">
+							<b-icon icon="facebook" aria-hidden="true"></b-icon>
+							<div>Facebook</div>
 						</div>
 					</template>
 
@@ -275,6 +275,9 @@ export default {
 }
 .github-login {
 	background: #333;
+}
+.facebook-login {
+	background: #1877f2;
 }
 .twitter-login {
 	background: #1da1f2;
