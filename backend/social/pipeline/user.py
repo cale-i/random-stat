@@ -2,6 +2,7 @@ from django.contrib.auth import user_logged_in
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from user_profile.serializers import UserProfileSerializer
+from user_profile.models import UserProfile
 from user_profile.helpers import (
     save_user_profile,
     # exist_user_image,
@@ -40,3 +41,22 @@ def create_user_profile(response, user=None, *args, **kwargs):
         raise ValidationError(str(e))
 
     return
+
+
+def delete_social_image_url(name, user, *args, **kwargs):
+    # 現状Googleからのみimageを取得しているので､それ専用
+
+    # providerがgoogleでない場合処理終了
+    if name != 'google-oauth2':
+        return
+
+    try:
+        user_profile = UserProfile.objects.get(pk=user.id)
+
+        social_image_url = user_profile.social_image_url
+        google_image_url = 'https://lh3.googleusercontent.com'
+        if social_image_url.startswith(google_image_url):
+            user_profile.social_image_url = None
+            user_profile.save()
+    except UserProfile.DoesNotExist:
+        raise UserProfile.DoesNotExist()
