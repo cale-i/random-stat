@@ -69,7 +69,12 @@ export default {
 		allowedToDisconnect() {
 			// パスワード設定済み OR 連携サービス数2以上 => true
 			const validPassword = this.$store.getters["auth/validPassword"];
-			const numAssociatedService = Object.keys(this.providers).length;
+			let numAssociatedService = 0;
+			Object.values(this.providers).map((provider) => {
+				if (provider) {
+					numAssociatedService += 1;
+				}
+			});
 
 			return validPassword || numAssociatedService > 1;
 		},
