@@ -459,6 +459,7 @@ const socialAuthModule = {
 		providers: {
 			"google-oauth2": false,
 			github: false,
+			facebook: false,
 		},
 	},
 	getters: {
@@ -476,6 +477,7 @@ const socialAuthModule = {
 		initProviders(state) {
 			state.providers["google-oauth2"] = false;
 			state.providers["github"] = false;
+			state.providers["facebook"] = false;
 		},
 	},
 	actions: {
