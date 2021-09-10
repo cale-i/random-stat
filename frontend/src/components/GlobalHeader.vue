@@ -8,57 +8,44 @@
 
 			<b-navbar-nav class="ml-auto navbar-nav">
 				<template v-if="isLoggedIn">
-					<b-nav-item @click="logout" active-class="active">
-						<b-icon icon="power" aria-hidden="true" variant="info"></b-icon>
-						Logout
-					</b-nav-item>
-				</template>
+					<b-nav-item-dropdown no-caret right>
+						<template #button-content>
+							<img :src="avatar" class="avatar-image" />
+						</template>
 
-				<template v-else>
-					<b-nav-item v-b-modal.loginModal>
-						<b-icon icon="person" aria-hidden="true" variant="success"></b-icon>
-						Login
-					</b-nav-item>
-				</template>
-
-				<b-nav-item-dropdown no-caret right>
-					<template #button-content>
-						<b-icon icon="list" aria-hidden="true"></b-icon>
-					</template>
-
-					<template v-if="isLoggedIn">
-						<b-dropdown-item to="/dashboard">
+						<b-dropdown-item to="/account/settings" class="account mb-3">
+							<b-row>
+								<b-col md="2">
+									<img :src="avatar" class="avatar-image-md" />
+								</b-col>
+								<b-col md="10" class="pl-4">
+									<div class="username  text-truncate">{{ username }}</div>
+									<div>アカウント設定</div>
+								</b-col>
+							</b-row>
+						</b-dropdown-item>
+						<hr />
+						<b-dropdown-item to="/dashboard" class="mb-2">
 							<b-icon icon="house-door" aria-hidden="true"></b-icon>
-							Dashboard
+							ダッシュボード
 						</b-dropdown-item>
-
-						<b-dropdown-item to="/account/settings">
-							<b-icon icon="gear" aria-hidden="true"></b-icon>
-							Account
-						</b-dropdown-item>
-
-						<b-dropdown-divider></b-dropdown-divider>
 
 						<b-dropdown-item-button @click="logout" variant="info">
 							<b-icon icon="power" aria-hidden="true"></b-icon>
-							Logout
+							ログアウト
 						</b-dropdown-item-button>
-					</template>
-
-					<template v-else>
-						<b-dropdown-item v-b-modal.signUpModal>
-							<b-icon icon="pen" aria-hidden="true"></b-icon>
-							アカウントを作成
-						</b-dropdown-item>
-
-						<b-dropdown-divider></b-dropdown-divider>
-
-						<b-dropdown-item v-b-modal.loginModal variant="success">
-							<b-icon icon="person" aria-hidden="true"></b-icon>
-							Login
-						</b-dropdown-item>
-					</template>
-				</b-nav-item-dropdown>
+					</b-nav-item-dropdown>
+				</template>
+				<template v-else>
+					<b-nav-item v-b-modal.signUpModal class="signup">
+						<b-icon icon="pen" aria-hidden="true"></b-icon>
+						アカウント作成
+					</b-nav-item>
+					<b-nav-item v-b-modal.loginModal class="login">
+						<b-icon icon="person" aria-hidden="true" variant="success"></b-icon>
+						ログイン
+					</b-nav-item>
+				</template>
 			</b-navbar-nav>
 		</b-navbar>
 
@@ -83,6 +70,16 @@ export default {
 	computed: {
 		isLoggedIn: function() {
 			return this.$store.getters["auth/isLoggedIn"];
+		},
+		avatar() {
+			return (
+				this.$store.getters["avatar/imageURL"] ||
+				this.$store.getters["avatar/socialImageURL"]
+			);
+		},
+		username() {
+			// 一定文字数で省略する
+			return this.$store.getters["auth/username"];
 		},
 	},
 	methods: {
@@ -112,5 +109,29 @@ export default {
 }
 .navbar-nav {
 	font-size: 1.2em;
+}
+.avatar-image {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+}
+.login,
+.signup {
+	font-weight: bold;
+	user-select: none;
+}
+.account {
+	width: 348px;
+	user-select: none;
+}
+.avatar-image-md {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	padding: 0;
+}
+.account-text {
+	padding: 0;
+	margin: 0;
 }
 </style>
