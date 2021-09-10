@@ -134,8 +134,6 @@ export default {
 					re_new_password: this.form.reNewPassword,
 				})
 				.then(() => {
-					console.log("password changed!");
-
 					// message
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "パスワードを変更しました",
@@ -151,6 +149,9 @@ export default {
 
 					// モーダルウィンドウを閉じる
 					this.$bvModal.hide(this.modalId);
+				})
+				.catch(() => {
+					this.changingPassword = false;
 				});
 			this.changingPassword = true;
 		},

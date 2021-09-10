@@ -69,6 +69,9 @@ const authModule = {
 		isLoggedIn: (state) => state.isLoggedIn,
 		validPassword: (state) => state.validPassword,
 		lastLoginType: (state) => state.lastLoginType,
+		isGuestUser(state) {
+			return state.email === "example@example.com";
+		},
 	},
 	mutations: {
 		setUserData(state, payload) {
