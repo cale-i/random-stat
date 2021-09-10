@@ -46,7 +46,7 @@ def initialize_username(user: User):
 def initialize_avatar(user: User):
     # アバターの初期化
 
-    if exist_user_profile(user):
+    if exist_user_profile(user) is False:
         # UserProfile table にレコード存在しない場合処理なし
         return
 
