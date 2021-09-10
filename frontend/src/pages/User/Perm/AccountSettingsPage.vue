@@ -111,6 +111,9 @@ export default {
 		validPassword() {
 			return this.$store.getters["auth/validPassword"];
 		},
+		isGuestUser() {
+			return this.$store.getters["auth/isGuestUser"];
+		},
 	},
 	methods: {
 		changeUsername() {
@@ -128,6 +131,11 @@ export default {
 				});
 		},
 		sendEmailChangeRequest() {
+			// ゲストユーザーの場合処理なし
+			if (this.isGuestUser) {
+				alert("ゲストユーザーのメールアドレスは変更できません｡");
+				return;
+			}
 			const confirmMsg =
 				"メールアドレス変更リクエストを送信します｡よろしいですか?";
 			if (confirm(confirmMsg) === false) {
@@ -151,6 +159,11 @@ export default {
 		},
 
 		setPassword() {
+			// ゲストユーザーの場合処理なし
+			if (this.isGuestUser) {
+				alert("ゲストユーザーのパスワードは変更できません｡");
+				return;
+			}
 			const email = this.$store.getters["auth/email"];
 			console.log(email);
 			this.$store

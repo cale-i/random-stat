@@ -78,9 +78,16 @@ export default {
 
 			return validPassword || numAssociatedService > 1;
 		},
+		isGuestUser() {
+			return this.$store.getters["auth/isGuestUser"];
+		},
 	},
 	methods: {
 		connect(provider) {
+			if (this.isGuestUser) {
+				alert("ゲストユーザーはアカウント連携できません｡");
+				return;
+			}
 			// アカウント連携
 			this.$store.dispatch("socialAuth/authenticate", {
 				provider,

@@ -99,9 +99,17 @@ export default {
 			if (!this.form.reCurrentPassword) return true;
 			return this.form.currentPassword === this.form.reCurrentPassword;
 		},
+		isGuestUser() {
+			return this.$store.getters["auth/isGuestUser"];
+		},
 	},
 	methods: {
 		deleteAccount() {
+			// ゲストユーザーの場合処理なし
+			if (this.isGuestUser) {
+				alert("ゲストユーザーのアカウントは削除できません｡");
+				return;
+			}
 			// password validation
 			if (this.form.currentPassword !== this.form.reCurrentPassword) {
 				console.log("パスワード不一致");
@@ -109,9 +117,7 @@ export default {
 			}
 
 			// 確認
-			// const res = confirm("削除します。よろしいですか");
-			// console.log(res);
-			// if (!res) return;
+			if (!confirm("アカウントを削除します。よろしいですか")) return;
 
 			// 削除実行
 			this.$store
