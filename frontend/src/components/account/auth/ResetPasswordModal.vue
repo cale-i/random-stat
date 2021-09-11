@@ -1,7 +1,6 @@
 <template>
 	<b-modal
 		:id="modalId"
-		title="パスワード再設定"
 		header-bg-variant="dark"
 		header-text-variant="light"
 		body-bg-variant="light"
@@ -13,15 +12,19 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="2"> </b-col>
-			<b-col md="">
-				<h4 class="text-center">パスワード再設定</h4>
-			</b-col>
-			<b-col md="2"></b-col>
+			<div class="header d-flex flex-grow-1">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<div>
+					<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
+				</div>
+			</div>
 		</template>
 		<b-overlay :show="sendingEmail" rounded="sm">
-			<template #default="{}">
-				<div class="card-body">
+			<template>
+				<div class="card-body p-0">
+					<h4 class="text-center my-2 font-weight-bold title">
+						パスワード再設定
+					</h4>
 					<b-form @submit.prevent="submitLogin">
 						<b-form-group
 							id="inputGroupEmail"
@@ -35,18 +38,16 @@
 								id="inputEmail"
 								v-model="form.email"
 								type="email"
-								placeholder="Registered email address"
+								placeholder="登録済みメールアドレス"
 								required
 								autofocus
 							></b-form-input>
 						</b-form-group>
 
-						<div
-							class="d-flex align-items-center justify-content-between mt-4 mb-0"
-						>
+						<div class="d-flex align-items-center justify-content-between mb-0">
 							<div></div>
-							<b-button size="md" variant="success" type="submit">
-								Send
+							<b-button size="md" class="send-button" type="submit">
+								送信
 							</b-button>
 						</div>
 					</b-form>
@@ -55,7 +56,9 @@
 		</b-overlay>
 
 		<template #modal-footer="{}">
-			<div class="text-muted small">&copy; Random Stat 2021</div>
+			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+				Random Stat 2021
+			</div>
 		</template>
 	</b-modal>
 </template>
@@ -95,4 +98,29 @@ export default {
 	mounted() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.title {
+	user-select: none;
+}
+.send-button {
+	background: #bd3f4c;
+}
+.send-button:hover {
+	opacity: 80%;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
+}
+</style>

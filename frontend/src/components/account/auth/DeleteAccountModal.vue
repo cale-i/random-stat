@@ -12,15 +12,18 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="1"> </b-col>
-			<b-col>
-				<h4 class="text-center">アカウント削除</h4>
-			</b-col>
-			<b-col md="1"></b-col>
+			<div class="header d-flex flex-grow-1">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<div>
+					<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
+				</div>
+			</div>
 		</template>
-
 		<template #default="{}">
-			<div class="card-body">
+			<div class="card-body p-0">
+				<h4 class="text-center my-2 font-weight-bold title">
+					アカウント削除
+				</h4>
 				<b-form @submit.prevent="deleteAccount">
 					<b-form-group
 						id="inputGroupPassword"
@@ -28,7 +31,7 @@
 						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputPassword"
-						class="mt-5"
+						class="my-4"
 					>
 						<b-form-input
 							id="inputPassword"
@@ -46,6 +49,7 @@
 						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputConfirmPassword"
+						class="mb-0"
 					>
 						<b-form-input
 							id="inputConfirmPassword"
@@ -66,8 +70,8 @@
 
 					<div class="d-flex align-items-center justify-content-between mb-0">
 						<div></div>
-						<b-button size="md" variant="danger" type="submit">
-							アカウント削除
+						<b-button size="md" class="delete-button" type="submit">
+							削除
 						</b-button>
 					</div>
 				</b-form>
@@ -75,7 +79,9 @@
 		</template>
 
 		<template #modal-footer="{}">
-			<div class="text-muted small">&copy; Random Stat 2021</div>
+			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+				Random Stat 2021
+			</div>
 		</template>
 	</b-modal>
 </template>
@@ -136,9 +142,31 @@ export default {
 	},
 	watch: {},
 	mounted() {},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.title {
+	user-select: none;
+}
+.delete-button {
+	background: #bd3f4c;
+}
+.delete-button:hover {
+	opacity: 80%;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
+}
+</style>

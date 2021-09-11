@@ -1,7 +1,6 @@
 <template>
 	<b-modal
 		id="emailLoginModal"
-		title="Login"
 		header-bg-variant="dark"
 		header-text-variant="light"
 		body-bg-variant="light"
@@ -13,18 +12,17 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="4">
-				<div v-b-modal.emailSignUpModal class="btn btn-sm btn-warning">
-					Sign Up
+			<div class="header d-flex flex-grow-1">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<div>
+					<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
 				</div>
-			</b-col>
-			<b-col md="4">
-				<h4 class="text-center">Login</h4>
-			</b-col>
-			<b-col md="4"> </b-col>
+			</div>
 		</template>
 		<template #default="{}">
-			<div class="card-body">
+			<div class="card-body p-0">
+				<h4 class="text-center my-2 font-weight-bold title">ログイン</h4>
+
 				<b-form @submit.prevent="submitLogin">
 					<b-form-group
 						id="inputGroupEmail"
@@ -46,7 +44,7 @@
 
 					<b-form-group
 						id="inputGroupPassword"
-						label="Password"
+						label="Password:"
 						label-cols-md="3"
 						label-align-md="right"
 						label-for="inputPassword"
@@ -62,28 +60,25 @@
 						></b-form-input>
 					</b-form-group>
 
-					<div
-						class="d-flex align-items-center justify-content-between mt-4 mb-0"
-					>
+					<div class="d-flex align-items-center justify-content-between mb-0">
 						<div
 							v-b-modal.resetPasswordModal
 							class="btn btn-sm btn-link text-black-50"
+							tabindex="-1"
 						>
 							パスワードをお忘れの場合
 						</div>
-						<b-button size="md" variant="success" type="submit">
-							Login
+						<b-button size="md" class="signup-button" type="submit">
+							ログイン
 						</b-button>
 					</div>
 				</b-form>
 			</div>
 		</template>
 		<template #modal-footer="{}">
-			<b-col md="3" v-b-modal.guestLoginModal class="btn btn-sm btn-info">
-				Guest Login
-			</b-col>
-			<b-col></b-col>
-			<b-col md="4" class="text-muted small">&copy; Random Stat 2021</b-col>
+			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+				Random Stat 2021
+			</div>
 		</template>
 	</b-modal>
 </template>
@@ -126,4 +121,29 @@ export default {
 	mounted() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.title {
+	user-select: none;
+}
+.signup-button {
+	background: #00a040;
+}
+.signup-button:hover {
+	opacity: 80%;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
+}
+</style>

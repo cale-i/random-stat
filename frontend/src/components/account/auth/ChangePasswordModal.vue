@@ -12,15 +12,19 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="1"> </b-col>
-			<b-col>
-				<h4 class="text-center">パスワード変更</h4>
-			</b-col>
-			<b-col md="1"></b-col>
+			<div class="header d-flex flex-grow-1">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<div>
+					<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
+				</div>
+			</div>
 		</template>
 		<b-overlay :show="changingPassword" rounded="sm">
 			<template #default="{}">
-				<div class="card-body">
+				<div class="card-body p-0">
+					<h4 class="text-center my-2 font-weight-bold title">
+						パスワード変更
+					</h4>
 					<b-form @submit.prevent="changePassword">
 						<b-form-group
 							id="inputGroupCurrentPassword"
@@ -28,7 +32,7 @@
 							label-cols-md="4"
 							label-align-md="right"
 							label-for="inputCurrentPassword"
-							class="my-5"
+							class="my-4"
 						>
 							<b-form-input
 								id="inputCurrentPassword"
@@ -64,6 +68,7 @@
 							label-cols-md="4"
 							label-align-md="right"
 							label-for="inputConfirmPassword"
+							class="mb-0"
 						>
 							<b-form-input
 								id="inputConfirmPassword"
@@ -82,11 +87,9 @@
 							</b-form-invalid-feedback>
 						</b-form-group>
 
-						<div
-							class="d-flex align-items-center justify-content-between mt-4 mb-0"
-						>
+						<div class="d-flex align-items-center justify-content-between mb-0">
 							<div></div>
-							<b-button size="md" variant="primary" type="submit">
+							<b-button size="md" class="change-button" type="submit">
 								変更
 							</b-button>
 						</div>
@@ -95,7 +98,9 @@
 			</template>
 		</b-overlay>
 		<template #modal-footer="{}">
-			<div class="text-muted small">&copy; Random Stat 2021</div>
+			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+				Random Stat 2021
+			</div>
 		</template>
 	</b-modal>
 </template>
@@ -163,4 +168,29 @@ export default {
 	// },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.title {
+	user-select: none;
+}
+.change-button {
+	background: #00a040;
+}
+.change-button:hover {
+	opacity: 80%;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
+}
+</style>

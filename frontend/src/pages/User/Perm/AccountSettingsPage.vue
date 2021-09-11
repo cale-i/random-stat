@@ -18,9 +18,8 @@
 			<b-col md="3">
 				<b-button
 					size="md"
-					variant="success"
 					@click="changeUsername"
-					class="w-100"
+					class="w-100 button rsbg-green"
 				>
 					ユーザー名変更
 				</b-button>
@@ -43,7 +42,10 @@
 					></b-form-input>
 				</b-col>
 				<b-col md="3">
-					<div @click="sendEmailChangeRequest" class="btn btn-success w-100">
+					<div
+						@click="sendEmailChangeRequest"
+						class="btn button rsbg-green w-100"
+					>
 						Email変更
 					</div>
 				</b-col>
@@ -54,7 +56,10 @@
 				<b-col md="3"> </b-col>
 				<b-col md="6"> </b-col>
 				<b-col md="3">
-					<div v-b-modal.changePasswordModal class="btn btn-success w-100">
+					<div
+						v-b-modal.changePasswordModal
+						class="btn button rsbg-green w-100"
+					>
 						パスワード変更
 					</div>
 				</b-col>
@@ -66,7 +71,7 @@
 					<b-col md="3"> </b-col>
 					<b-col md="6"> </b-col>
 					<b-col md="3">
-						<div @click="setPassword" class="btn btn-success w-100">
+						<div @click="setPassword" class="btn button rsbg-green w-100">
 							パスワード設定
 						</div>
 					</b-col>
@@ -78,7 +83,10 @@
 			<b-col md="3"> </b-col>
 			<b-col md="6"> </b-col>
 			<b-col md="3">
-				<div v-b-modal.deleteAccountModal class="btn btn-danger w-100 mt-5">
+				<div
+					v-b-modal.deleteAccountModal
+					class="btn rsbg-red button w-100 mt-5"
+				>
 					アカウント削除
 				</div>
 			</b-col>
@@ -184,4 +192,18 @@ export default {
 	updated() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.button {
+	color: white;
+	user-select: none;
+}
+.button:hover {
+	opacity: 80%;
+}
+.rsbg-green {
+	background: #00a040;
+}
+.rsbg-red {
+	background: #bd3f4c;
+}
+</style>

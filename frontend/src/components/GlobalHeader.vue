@@ -1,9 +1,9 @@
 <template>
 	<div id="header">
 		<b-navbar type="dark" variant="dark" fixed="top">
-			<b-navbar-brand href="/" class="navbar-brand">
-				<b-icon icon="bar-chart-line" aria-hidden="true"></b-icon>
-				Random Stat
+			<b-navbar-brand href="/" class="navbar-brand brand">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
 			</b-navbar-brand>
 
 			<b-navbar-nav class="ml-auto navbar-nav">
@@ -19,8 +19,8 @@
 									<img :src="avatar" class="avatar-image-md" />
 								</b-col>
 								<b-col md="10" class="pl-4">
-									<div class="username  text-truncate">{{ username }}</div>
-									<div>アカウント設定</div>
+									<div class="username text-truncate">{{ username }}</div>
+									<span class="rs-green">アカウント設定</span>
 								</b-col>
 							</b-row>
 						</b-dropdown-item>
@@ -30,19 +30,23 @@
 							ダッシュボード
 						</b-dropdown-item>
 
-						<b-dropdown-item-button @click="logout" variant="info">
-							<b-icon icon="power" aria-hidden="true"></b-icon>
-							ログアウト
+						<b-dropdown-item-button @click="logout">
+							<b-icon
+								icon="power"
+								aria-hidden="true"
+								class="rs-red mr-1"
+							></b-icon>
+							<span class="rs-red">ログアウト</span>
 						</b-dropdown-item-button>
 					</b-nav-item-dropdown>
 				</template>
 				<template v-else>
 					<b-nav-item v-b-modal.signUpModal class="signup">
-						<b-icon icon="pen" aria-hidden="true"></b-icon>
+						<b-icon icon="pen" aria-hidden="true" class="rs-red"></b-icon>
 						アカウント作成
 					</b-nav-item>
 					<b-nav-item v-b-modal.loginModal class="login">
-						<b-icon icon="person" aria-hidden="true" variant="success"></b-icon>
+						<b-icon icon="person" aria-hidden="true" class="rs-green"></b-icon>
 						ログイン
 					</b-nav-item>
 				</template>
@@ -123,6 +127,7 @@ export default {
 .account {
 	width: 348px;
 	user-select: none;
+	font-size: 1.2rem;
 }
 .avatar-image-md {
 	width: 50px;
@@ -133,5 +138,11 @@ export default {
 .account-text {
 	padding: 0;
 	margin: 0;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
 }
 </style>
