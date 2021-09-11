@@ -14,8 +14,15 @@
 		>
 			<template #modal-header="{}">
 				<div class="header d-flex flex-grow-1">
-					<b-icon icon="bar-chart-line" aria-hidden="true"></b-icon>
-					<div class="ml-2">Random Stat</div>
+					<b-icon
+						icon="bar-chart-line"
+						aria-hidden="true"
+						class="mr-2"
+					></b-icon>
+					<div>
+						<span class="rs-green">R</span>andom
+						<span class="rs-red">S</span>tat
+					</div>
 				</div>
 			</template>
 			<template #default="{}">
@@ -290,5 +297,11 @@ export default {
 }
 .sign-up {
 	background: #bd3f4c;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
 }
 </style>
