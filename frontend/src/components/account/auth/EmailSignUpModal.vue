@@ -208,7 +208,7 @@ export default {
 	background: #bd3f4c;
 }
 .login-button:hover {
-	opacity: 80%;
+	opacity: 0.8;
 }
 
 .rs-green {
