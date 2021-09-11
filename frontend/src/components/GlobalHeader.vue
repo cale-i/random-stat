@@ -56,6 +56,7 @@
 		<LoginModal />
 		<SignUpModal />
 		<ResetPasswordModal />
+		<ResendActivationEmailModal />
 	</div>
 </template>
 
@@ -63,11 +64,13 @@
 import SignUpModal from "@/components/account/auth/SignUpModal";
 import LoginModal from "@/components/account/auth/LoginModal.vue";
 import ResetPasswordModal from "@/components/account/auth/ResetPasswordModal.vue";
+import ResendActivationEmailModal from "@/components/account/auth/ResendActivationEmailModal.vue";
 export default {
 	components: {
 		SignUpModal,
 		LoginModal,
 		ResetPasswordModal,
+		ResendActivationEmailModal,
 	},
 	props: {},
 	data: () => ({}),

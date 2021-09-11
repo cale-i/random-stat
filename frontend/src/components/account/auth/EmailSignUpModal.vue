@@ -104,7 +104,7 @@
 						</b-form-group>
 						<div class="d-flex align-items-center justify-content-between mb-0">
 							<div
-								v-b-modal.resetPasswordModal
+								v-b-modal.resendActivationEmailModal
 								class="btn btn-sm btn-link text-black-50"
 								tabindex="-1"
 							>
