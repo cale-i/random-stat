@@ -151,7 +151,7 @@ export default {
 	background: #bd3f4c;
 }
 .change-button:hover {
-	opacity: 80%;
+	opacity: 0.8;
 }
 .rs-green {
 	color: #00a040;

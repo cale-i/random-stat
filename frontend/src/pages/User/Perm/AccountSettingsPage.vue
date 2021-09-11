@@ -16,13 +16,13 @@
 				></b-form-input>
 			</b-col>
 			<b-col md="3">
-				<b-button
+				<div
 					size="md"
 					@click="changeUsername"
-					class="w-100 button rsbg-green"
+					class="btn w-100 button rsbg-green"
 				>
 					ユーザー名変更
-				</b-button>
+				</div>
 			</b-col>
 		</b-form-row>
 
@@ -198,7 +198,7 @@ export default {
 	user-select: none;
 }
 .button:hover {
-	opacity: 80%;
+	opacity: 0.8;
 }
 .rsbg-green {
 	background: #00a040;
