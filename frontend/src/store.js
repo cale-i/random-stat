@@ -252,7 +252,7 @@ const messageModule = {
 		error: "",
 		warnings: [],
 		info: "",
-		dismissSecs: 5,
+		dismissSecs: 3,
 		dismissCountDown: 0,
 	},
 
@@ -401,6 +401,21 @@ const activationModule = {
 			return api.post("/auth/users/activation/", {
 				uid: payload.uid,
 				token: payload.token,
+			});
+		},
+	},
+};
+// アクティベーションメール再送信
+const resendActivationEmailModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail(context, payload) {
+			return api.post("/auth/users/resend_activation/", {
+				email: payload.email,
 			});
 		},
 	},
@@ -566,6 +581,7 @@ const store = new Vuex.Store({
 		avatar: avatarModule,
 		loginRecord: loginRecordModule,
 		activation: activationModule,
+		resendActivationEmail: resendActivationEmailModule,
 		resetPassword: resetPasswordModule,
 		resetEmail: resetEmailModule,
 		socialAuth: socialAuthModule,

@@ -12,22 +12,26 @@
 		size="md"
 	>
 		<template #modal-header="{}">
-			<b-col md="1"> </b-col>
-			<b-col>
-				<h4 class="text-center">新しいメールアドレスの入力</h4>
-			</b-col>
-			<b-col md="1"></b-col>
+			<div class="header d-flex flex-grow-1">
+				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
+				<div>
+					<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
+				</div>
+			</div>
 		</template>
 		<template #default="{}">
-			<div class="card-body">
+			<div class="card-body p-0">
+				<h4 class="text-center my-2 font-weight-bold title">
+					新しいメールアドレスの入力
+				</h4>
 				<b-form @submit.prevent="submitConfirmation">
 					<b-form-group
 						id="inputGroupNewEmail"
 						label="New Email:"
-						label-cols-md="3"
+						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputNewEmail"
-						class="mt-5"
+						class="my-4"
 					>
 						<b-form-input
 							id="inputNewEmail"
@@ -43,10 +47,10 @@
 					<b-form-group
 						id="inputGroupReNewEmail"
 						label="Confirm:"
-						label-cols-md="3"
+						label-cols-md="4"
 						label-align-md="right"
 						label-for="inputReNewEmail"
-						class="mb-2"
+						class="mb-0"
 					>
 						<b-form-input
 							id="inputReNewEmail"
@@ -64,11 +68,9 @@
 						</b-form-invalid-feedback>
 					</b-form-group>
 
-					<div
-						class="d-flex align-items-center justify-content-between mt-2 mb-0"
-					>
+					<div class="d-flex align-items-center justify-content-between mb-0">
 						<div></div>
-						<b-button size="md" variant="success" type="submit">
+						<b-button size="md" class="change-button" type="submit">
 							変更
 						</b-button>
 					</div>
@@ -76,7 +78,9 @@
 			</div>
 		</template>
 		<template #modal-footer="{}">
-			<div class="text-muted small">&copy; Random Stat 2021</div>
+			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
+				Random Stat 2021
+			</div>
 		</template>
 	</b-modal>
 </template>
@@ -130,4 +134,29 @@ export default {
 	mounted() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.header {
+	align-items: center;
+	height: 1.6rem;
+	font-size: 1.6rem;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+}
+.title {
+	user-select: none;
+}
+.change-button {
+	background: #bd3f4c;
+}
+.change-button:hover {
+	opacity: 80%;
+}
+.rs-green {
+	color: #00a040;
+}
+.rs-red {
+	color: #bd3f4c;
+}
+</style>
