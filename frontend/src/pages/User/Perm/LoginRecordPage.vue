@@ -49,8 +49,26 @@ export default {
 <style scoped>
 .record-title {
 	font-size: 1.6em;
+	font-weight: bold;
 }
 .record-item {
 	font-size: 1.4em;
+}
+
+@media screen and (max-width: 640px) {
+	.record-title {
+		font-size: 0.7em;
+	}
+	.record-item {
+		font-size: 0.7em;
+	}
+}
+@media screen and (max-width: 340px) {
+	.record-title {
+		font-size: 0.6em;
+	}
+	.record-item {
+		font-size: 0.6em;
+	}
 }
 </style>
