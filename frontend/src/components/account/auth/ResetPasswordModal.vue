@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</template>
-		<b-overlay :show="sendingEmail" rounded="sm">
+		<b-overlay spinner-variant="success" :show="sendingEmail" rounded="sm">
 			<template>
 				<div class="card-body p-0">
 					<h4 class="text-center my-2 font-weight-bold title">

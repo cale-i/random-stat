@@ -19,65 +19,66 @@
 				</div>
 			</div>
 		</template>
-		<template #default="{}">
-			<div class="card-body p-0">
-				<h4 class="text-center my-2 font-weight-bold title">
-					アカウント削除
-				</h4>
-				<b-form @submit.prevent="deleteAccount">
-					<b-form-group
-						id="inputGroupPassword"
-						label="Password:"
-						label-cols-md="4"
-						label-align-md="right"
-						label-for="inputPassword"
-						class="my-4"
-					>
-						<b-form-input
-							id="inputPassword"
-							v-model="form.currentPassword"
-							type="password"
-							placeholder="パスワード"
-							required
-							autocomplete="true"
-						></b-form-input>
-					</b-form-group>
+		<b-overlay spinner-variant="danger" :show="deletingAccount" rounded="sm">
+			<template #default="{}">
+				<div class="card-body p-0">
+					<h4 class="text-center my-2 font-weight-bold title">
+						アカウント削除
+					</h4>
+					<b-form @submit.prevent="deleteAccount">
+						<b-form-group
+							id="inputGroupPassword"
+							label="Password:"
+							label-cols-md="4"
+							label-align-md="right"
+							label-for="inputPassword"
+							class="my-4"
+						>
+							<b-form-input
+								id="inputPassword"
+								v-model="form.currentPassword"
+								type="password"
+								placeholder="パスワード"
+								required
+								autocomplete="true"
+							></b-form-input>
+						</b-form-group>
 
-					<b-form-group
-						id="inputGroupConfirmPassword"
-						label="Confirm:"
-						label-cols-md="4"
-						label-align-md="right"
-						label-for="inputConfirmPassword"
-						class="mb-0"
-					>
-						<b-form-input
-							id="inputConfirmPassword"
-							v-model="form.reCurrentPassword"
-							type="password"
-							placeholder="確認"
-							required
-							autocomplete="true"
-						></b-form-input>
+						<b-form-group
+							id="inputGroupConfirmPassword"
+							label="Confirm:"
+							label-cols-md="4"
+							label-align-md="right"
+							label-for="inputConfirmPassword"
+							class="mb-0"
+						>
+							<b-form-input
+								id="inputConfirmPassword"
+								v-model="form.reCurrentPassword"
+								type="password"
+								placeholder="確認"
+								required
+								autocomplete="true"
+							></b-form-input>
 
-						<b-form-valid-feedback :state="validation">
-							<br />
-						</b-form-valid-feedback>
-						<b-form-invalid-feedback :state="validation">
-							パスワードが一致しません｡
-						</b-form-invalid-feedback>
-					</b-form-group>
+							<b-form-valid-feedback :state="validation">
+								<br />
+							</b-form-valid-feedback>
+							<b-form-invalid-feedback :state="validation">
+								パスワードが一致しません｡
+							</b-form-invalid-feedback>
+						</b-form-group>
 
-					<div class="d-flex align-items-center justify-content-between mb-0">
-						<div></div>
-						<b-button size="md" class="delete-button" type="submit">
-							削除
-						</b-button>
-					</div>
-				</b-form>
-			</div>
-		</template>
-
+						<div class="d-flex align-items-center justify-content-between mb-0">
+							<div></div>
+							<b-button size="md" class="delete-button" type="submit">
+								削除
+							</b-button>
+						</div>
+					</b-form>
+				</div>
+			</template>
+		</b-overlay>
 		<template #modal-footer="{}">
 			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
 				Random Stat 2021
@@ -98,6 +99,7 @@ export default {
 			currentPassword: "",
 			reCurrentPassword: "",
 		},
+		deletingAccount: false,
 	}),
 	computed: {
 		validation() {
@@ -110,7 +112,7 @@ export default {
 		},
 	},
 	methods: {
-		deleteAccount() {
+		async deleteAccount() {
 			// ゲストユーザーの場合処理なし
 			if (this.isGuestUser) {
 				alert("ゲストユーザーのアカウントは削除できません｡");
@@ -125,8 +127,11 @@ export default {
 			// 確認
 			if (!confirm("アカウントを削除します。よろしいですか")) return;
 
+			// 削除中Spinner動かす
+			this.deletingAccount = true;
+
 			// 削除実行
-			this.$store
+			await this.$store
 				.dispatch("auth/deleteAccount", {
 					current_password: this.form.currentPassword,
 				})
@@ -137,6 +142,10 @@ export default {
 					});
 					// ホーム画面へ
 					this.$router.replace("/");
+				})
+				.finally(() => {
+					// Spinner停止
+					this.deletingAccount = false;
 				});
 		},
 	},
