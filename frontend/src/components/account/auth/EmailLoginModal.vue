@@ -19,62 +19,64 @@
 				</div>
 			</div>
 		</template>
-		<template #default="{}">
-			<div class="card-body p-0">
-				<h4 class="text-center my-2 font-weight-bold title">ログイン</h4>
+		<b-overlay spinner-variant="success" :show="loginAttempting" rounded="sm">
+			<template #default="{}">
+				<div class="card-body p-0">
+					<h4 class="text-center my-2 font-weight-bold title">ログイン</h4>
 
-				<b-form @submit.prevent="submitLogin">
-					<b-form-group
-						id="inputGroupEmail"
-						label="Email:"
-						label-cols-md="3"
-						label-align-md="right"
-						label-for="inputEmail"
-						class="my-4"
-					>
-						<b-form-input
-							id="inputEmail"
-							v-model="form.email"
-							type="email"
-							placeholder="example@example.com"
-							required
-							autofocus
-						></b-form-input>
-					</b-form-group>
-
-					<b-form-group
-						id="inputGroupPassword"
-						label="Password:"
-						label-cols-md="3"
-						label-align-md="right"
-						label-for="inputPassword"
-						class="my-4"
-					>
-						<b-form-input
-							id="inputPassword"
-							v-model="form.password"
-							type="password"
-							placeholder="password"
-							required
-							autocomplete="true"
-						></b-form-input>
-					</b-form-group>
-
-					<div class="d-flex align-items-center justify-content-between mb-0">
-						<div
-							v-b-modal.resetPasswordModal
-							class="btn btn-sm btn-link text-black-50"
-							tabindex="-1"
+					<b-form @submit.prevent="submitLogin">
+						<b-form-group
+							id="inputGroupEmail"
+							label="Email:"
+							label-cols-md="3"
+							label-align-md="right"
+							label-for="inputEmail"
+							class="my-4"
 						>
-							パスワードをお忘れの場合
+							<b-form-input
+								id="inputEmail"
+								v-model="form.email"
+								type="email"
+								placeholder="example@example.com"
+								required
+								autofocus
+							></b-form-input>
+						</b-form-group>
+
+						<b-form-group
+							id="inputGroupPassword"
+							label="Password:"
+							label-cols-md="3"
+							label-align-md="right"
+							label-for="inputPassword"
+							class="my-4"
+						>
+							<b-form-input
+								id="inputPassword"
+								v-model="form.password"
+								type="password"
+								placeholder="password"
+								required
+								autocomplete="true"
+							></b-form-input>
+						</b-form-group>
+
+						<div class="d-flex align-items-center justify-content-between mb-0">
+							<div
+								v-b-modal.resetPasswordModal
+								class="btn btn-sm btn-link text-black-50"
+								tabindex="-1"
+							>
+								パスワードをお忘れの場合
+							</div>
+							<b-button size="md" class="signup-button" type="submit">
+								ログイン
+							</b-button>
 						</div>
-						<b-button size="md" class="signup-button" type="submit">
-							ログイン
-						</b-button>
-					</div>
-				</b-form>
-			</div>
-		</template>
+					</b-form>
+				</div>
+			</template>
+		</b-overlay>
 		<template #modal-footer="{}">
 			<div class="d-flex justify-content-center flex-grow-1 text-muted small">
 				Random Stat 2021
@@ -92,11 +94,16 @@ export default {
 			email: "",
 			password: "",
 		},
+		loginAttempting: false,
 	}),
 	computed: {},
 	methods: {
-		submitLogin() {
+		async submitLogin() {
 			// ログイン
+
+			// ログイン試行中Spinner動かす
+			this.loginAttempting = true;
+
 			this.$store
 				.dispatch("auth/login", {
 					email: this.form.email,
@@ -109,11 +116,11 @@ export default {
 					});
 					// クエリ文字列に「next」がなければダッシュボード画面へ
 					const next = this.$route.query.next || "/dashboard";
-					console.log("next:", next);
 					this.$router.replace(next);
 				})
-				.catch(() => {
-					// ログイン失敗
+				.finally(() => {
+					// Spinner停止
+					this.loginAttempting = false;
 				});
 		},
 	},

@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</template>
-		<b-overlay :show="sendingEmail" rounded="sm">
+		<b-overlay spinner-variant="success" :show="sendingEmail" rounded="sm">
 			<template>
 				<div class="card-body p-0">
 					<h4 class="text-center my-2 font-weight-bold title">
@@ -76,27 +76,22 @@ export default {
 	}),
 	computed: {},
 	methods: {
-		submitLogin() {
+		async submitLogin() {
+			// 確認メール送信完了までSpinner動かす
+			this.sendingEmail = true;
+
 			// アクティベーションメール再送信
-			this.$store
+			await this.$store
 				.dispatch("resendActivationEmail/sendEmail", {
 					email: this.form.email,
 				})
-				.then(() => {
+				.finally(() => {
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "アクティベーションメールを送信しました｡",
 					});
-					this.sendingEmail = false;
-					// this.$bvModal.hide("resendActivationEmailModal");
-				})
-				.catch(() => {
-					this.$store.dispatch("message/setInfoMessage", {
-						message: "アクティベーションメールを送信しました｡",
-					});
+					// Spinner停止
 					this.sendingEmail = false;
 				});
-			// 確認メール送信完了までSpinner動かす
-			this.sendingEmail = true;
 		},
 	},
 	watch: {},

@@ -2,31 +2,36 @@
 	<div>
 		<h1 class="my-5">アカウント管理</h1>
 		<AvatarUpload />
-		<b-form-row class="my-3">
-			<b-col md="3">
-				<label class="m-2" for="inputUsername">Username:</label>
-			</b-col>
-			<b-col md="6">
-				<b-form-input
-					id="inputUsername"
-					v-model="user.username"
-					type="text"
-					required
-					class=""
-				></b-form-input>
-			</b-col>
-			<b-col md="3">
-				<div
-					size="md"
-					@click="changeUsername"
-					class="btn w-100 button rsbg-green"
-				>
-					ユーザー名変更
-				</div>
-			</b-col>
-		</b-form-row>
-
-		<b-overlay :show="sendingConfirmationEmail" rounded="sm">
+		<b-overlay spinner-variant="success" :show="changingUsername" rounded="sm">
+			<b-form-row class="my-3">
+				<b-col md="3">
+					<label class="m-2" for="inputUsername">Username:</label>
+				</b-col>
+				<b-col md="6">
+					<b-form-input
+						id="inputUsername"
+						v-model="user.username"
+						type="text"
+						required
+						class=""
+					></b-form-input>
+				</b-col>
+				<b-col md="3">
+					<div
+						size="md"
+						@click="changeUsername"
+						class="btn w-100 button rsbg-green"
+					>
+						ユーザー名変更
+					</div>
+				</b-col>
+			</b-form-row>
+		</b-overlay>
+		<b-overlay
+			spinner-variant="success"
+			:show="sendingConfirmationEmail"
+			rounded="sm"
+		>
 			<b-form-row class="my-3">
 				<b-col md="3">
 					<label class="m-2" for="inputEmail">Email:</label>
@@ -66,7 +71,7 @@
 			</b-form-row>
 		</template>
 		<template v-else>
-			<b-overlay :show="sendingEmail" rounded="sm">
+			<b-overlay spinner-variant="success" :show="sendingEmail" rounded="sm">
 				<b-form-row class="my-3">
 					<b-col md="3"> </b-col>
 					<b-col md="6"> </b-col>
@@ -109,6 +114,7 @@ export default {
 	},
 	props: {},
 	data: () => ({
+		changingUsername: false,
 		sendingConfirmationEmail: false,
 		sendingEmail: false,
 	}),
@@ -124,10 +130,11 @@ export default {
 		},
 	},
 	methods: {
-		changeUsername() {
-			console.log(this.user.username);
+		async changeUsername() {
+			// ユーザー名変更結果が返るまでSpinner動かす
+			this.changingUsername = true;
 
-			this.$store
+			await this.$store
 				.dispatch("auth/setUsername", {
 					username: this.user.username,
 				})
@@ -136,9 +143,13 @@ export default {
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "ユーザー名を変更しました",
 					});
+				})
+				.finally(() => {
+					// Spinner停止
+					this.changingUsername = false;
 				});
 		},
-		sendEmailChangeRequest() {
+		async sendEmailChangeRequest() {
 			// ゲストユーザーの場合処理なし
 			if (this.isGuestUser) {
 				alert("ゲストユーザーのメールアドレスは変更できません｡");
@@ -150,9 +161,12 @@ export default {
 				return;
 			}
 
+			// 確認メール送信完了までSpinner動かす
+			this.sendingConfirmationEmail = true;
+
 			// 変更リクエスト送信
 			// 送信先メールアドレスは登録済みメールアドレスに限定する
-			this.$store
+			await this.$store
 				.dispatch("resetEmail/sendEmail")
 				.then(() => {
 					this.isResettingEmail = true;
@@ -160,31 +174,36 @@ export default {
 						message:
 							"メールアドレス変更リクエストを送信しました｡届いたメールから変更手続きを行って下さい｡",
 					});
-					this.sendingConfirmationEmail = false;
 				})
-				.catch();
-			this.sendingConfirmationEmail = true;
+				.finally(() => {
+					// Spinner停止
+					this.sendingConfirmationEmail = false;
+				});
 		},
 
-		setPassword() {
+		async setPassword() {
 			// ゲストユーザーの場合処理なし
 			if (this.isGuestUser) {
 				alert("ゲストユーザーのパスワードは変更できません｡");
 				return;
 			}
+
+			// 確認メール送信完了までSpinner動かす
+			this.sendingEmail = true;
+
 			const email = this.$store.getters["auth/email"];
-			console.log(email);
-			this.$store
+			await this.$store
 				.dispatch("socialAuth/setPasswordSendEmail", { email })
 				.then(() => {
 					console.log("success");
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "確認メールを送信しました｡",
 					});
+				})
+				.finally(() => {
+					// Spinner停止
 					this.sendingEmail = false;
 				});
-			// 確認メール送信完了までSpinner動かす
-			this.sendingEmail = true;
 		},
 	},
 	watch: {},

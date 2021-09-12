@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</template>
-		<b-overlay :show="changingPassword" rounded="sm">
+		<b-overlay spinner-variant="success" :show="changingPassword" rounded="sm">
 			<template #default="{}">
 				<div class="card-body p-0">
 					<h4 class="text-center my-2 font-weight-bold title">
@@ -125,14 +125,16 @@ export default {
 		},
 	},
 	methods: {
-		changePassword() {
+		async changePassword() {
 			// confirm password
 			if (this.form.newPassword !== this.form.reNewPassword) {
-				console.log("パスワードが一致しません");
 				return;
 			}
 
-			this.$store
+			// パスワード設定完了までSpinner動かす
+			this.changingPassword = true;
+
+			await this.$store
 				.dispatch("auth/setPassword", {
 					current_password: this.form.currentPassword,
 					new_password: this.form.newPassword,
@@ -144,28 +146,28 @@ export default {
 						message: "パスワードを変更しました",
 					});
 
-					// Clear input data
-					this.form = {
-						currentPassword: "",
-						newPassword: "",
-						reNewPassword: "",
-					};
-					this.changingPassword = false;
+					// フォーム上の入力値を消去
+					this.clearForm();
 
 					// モーダルウィンドウを閉じる
 					this.$bvModal.hide(this.modalId);
 				})
-				.catch(() => {
+				.finally(() => {
+					// Spinner停止
 					this.changingPassword = false;
 				});
-			this.changingPassword = true;
+		},
+		clearForm() {
+			// Clear input data
+			this.form = {
+				currentPassword: "",
+				newPassword: "",
+				reNewPassword: "",
+			};
 		},
 	},
 	watch: {},
 	mounted() {},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
 <style scoped>

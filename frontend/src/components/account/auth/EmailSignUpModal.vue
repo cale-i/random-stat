@@ -19,7 +19,11 @@
 				</div>
 			</div>
 		</template>
-		<b-overlay :show="sendingActivationEmail" rounded="sm">
+		<b-overlay
+			spinner-variant="success"
+			:show="sendingActivationEmail"
+			rounded="sm"
+		>
 			<template>
 				<div class="card-body p-0">
 					<h4 class="text-center my-2 font-weight-bold title">
@@ -148,17 +152,20 @@ export default {
 		},
 	},
 	methods: {
-		submitSignUp() {
+		async submitSignUp() {
 			// confirm password
 			if (this.form.password !== this.form.rePassword) {
 				console.log("パスワードが一致しません");
 				return;
 			}
 
+			// 認証メール送信完了までSpinner動かす
+			this.sendingActivationEmail = true;
+
 			// Sign Up
 			// メール送信完了まで処理が止まるため､非常に時間がかかる
 			// 失敗時は高速
-			this.$store
+			await this.$store
 				.dispatch("auth/createAccount", {
 					username: this.form.username,
 					email: this.form.email,
@@ -170,20 +177,13 @@ export default {
 						message: "認証メールを送信しました｡",
 					});
 
-					// 	// ログインモーダルを表示
-					// 	this.$bvModal.show("emailLoginModal");
-
 					// SignUpModalを閉じる
-					this.sendingActivationEmail = false;
 					this.$bvModal.hide("emailSignUpModal");
 				})
-				.catch(() => {
+				.finally(() => {
+					// Spinner停止
 					this.sendingActivationEmail = false;
-					return;
 				});
-
-			// 認証メール送信完了までSpinner動かす
-			this.sendingActivationEmail = true;
 		},
 	},
 	watch: {},
