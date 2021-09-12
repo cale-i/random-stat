@@ -80,6 +80,18 @@ JWT_COOKIE = {
     'SECURE': False,
 }
 
+#######################
+#        djoser       #
+#######################
+DJOSER['SOCIAL_AUTH_ALLOWED_REDIRECT_URIS'] = [
+    'https://random-stat.work/social/o/google-oauth2/',
+    'https://random-stat.work/social/o/github/',
+    'https://random-stat.work/social/o/facebook/',
+    'http://localhost/social/o/google-oauth2/',
+    'http://localhost/social/o/github/',
+    'http://localhost/social/o/facebook/',
+]
+
 ##################
 #   Social Auth  #
 ##################
