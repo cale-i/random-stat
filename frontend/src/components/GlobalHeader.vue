@@ -1,7 +1,7 @@
 <template>
 	<div id="header">
 		<b-navbar type="dark" variant="dark" fixed="top">
-			<b-navbar-brand href="/" class="navbar-brand brand">
+			<b-navbar-brand href="/" class="navbar-brand">
 				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
 				<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
 			</b-navbar-brand>
@@ -147,5 +147,23 @@ export default {
 }
 .rs-red {
 	color: #bd3f4c;
+}
+@media screen and (max-width: 640px) {
+	.navbar-brand {
+		font-size: 1rem;
+	}
+	.signup,
+	.login {
+		font-size: 0.5rem;
+	}
+}
+@media screen and (max-width: 340px) {
+	.navbar-brand {
+		font-size: 0.9rem;
+	}
+	.signup,
+	.login {
+		font-size: 0.45rem;
+	}
 }
 </style>
