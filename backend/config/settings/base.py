@@ -246,12 +246,7 @@ DJOSER = {
     "LOGIN_FIELD": "email",  # Field we use to login on extended User model
     'SERIALIZERS': {},
     # Redirected URL we listen on google console
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [
-        'http://localhost:8000/social/o/google-oauth2/',
-        'http://localhost/social/o/google-oauth2/',
-        'http://localhost:8000/social/o/github/',
-        'http://localhost:8000/social/o/facebook/',
-    ],
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': [],
 }
 
 ##################

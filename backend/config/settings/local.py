@@ -168,9 +168,18 @@ JWT_COOKIE = {
     'SECURE': False,
 }
 
-##################
-#   Social Auth  #
-##################
+#######################
+#        djoser       #
+#######################
+DJOSER['SOCIAL_AUTH_ALLOWED_REDIRECT_URIS'] = [
+    'http://localhost:8000/social/o/google-oauth2/',
+    'http://localhost:8000/social/o/github/',
+    'http://localhost:8000/social/o/facebook/',
+]
+
+#######################
+#     Social Auth     #
+#######################
 
 # Google
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
