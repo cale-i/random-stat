@@ -22,10 +22,6 @@ DOMAIN = 'random-stat.work'
 DEBUG = False
 SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-CSRF_COOKIE_SAMESITE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-SESSION_COOKIE_SECURE = True
 
 ######################
 #   CORS settings    #
@@ -77,8 +73,8 @@ GUEST_PASSWORD = env('GUEST_PASSWORD')
 
 JWT_COOKIE = {
     'SAMESITE': 'Strict',
-    'SECURE': True,  # 本番時 True
-    # 'SECURE': False,
+    # 'SECURE': True, 本番時 True
+    'SECURE': False,
 }
 
 #######################
