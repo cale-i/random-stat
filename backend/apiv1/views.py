@@ -1,36 +1,19 @@
-from django_filters import rest_framework as filters
-from rest_framework.response import Response
-from rest_framework import (
-    generics,
-    views,
-    status
-)
-
 import datetime
 import random
 
-from estat.models import (
-    StatName,
-    GovOrg,
-    Title,
-    StatsCode,
-    Category,
-    SubCategory,
-    Area,
-    Time,
-    StatsData,
-)
+from django_filters import rest_framework as filters
+from estat.models import (Area, Category, GovOrg, StatName, StatsCode,
+                          StatsData, SubCategory, Time, Title)
+from rest_framework import generics, serializers, status, views
+from rest_framework.response import Response
 
-from apiv1.serializers import (
-    StatNameSerializer,
-    GovOrgSerializer,
-    TitleSerializer,
-    StatsCodeSerializer,
-    CategorySerializer,
-    SubCategorySerializer,
-    AreaSerializer,
-    TimeSerializer,
-    StatsDataSerializer,
+from apiv1.serializers import (AreaSerializer, CategorySerializer,
+                               GovOrgSerializer, StatNameSerializer,
+                               StatsCodeSerializer, StatsDataSerializer,
+                               SubCategorySerializer, TimeSerializer,
+                               TitleSerializer)
+from apiv1.stat_hist import (
+    persist_stat_history,
 )
 
 
@@ -153,6 +136,7 @@ class TimeSeriesAPIView(views.APIView):
         }
 
         end = datetime.datetime.now()
+        persist_stat_history(user=request.user, params=params)
         print(f'end: {end}')
         print(f'time: {end-start}')
 
@@ -181,6 +165,7 @@ class TimeSeriesAPIView(views.APIView):
                 category=serializer.data[0]['category']),
             'stats_code_list': self.get_stats_id_list(),
         }
+        persist_stat_history(user=request.user, params=request.data)
 
         return Response(data, status.HTTP_200_OK)
 
@@ -304,6 +289,7 @@ class StatsCodeAPIView(TimeSeriesAPIView):
             'stats_code_list': self.get_stats_id_list(),
         }
 
+        persist_stat_history(user=request.user, params=params)
         return Response(data, status.HTTP_200_OK)
 
     def get_random_data(self, stats_code_id=''):
