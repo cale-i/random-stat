@@ -1,3 +1,4 @@
+import datetime
 from estat.models import (
     StatName,
     GovOrg,
@@ -8,6 +9,7 @@ from estat.models import (
     Area,
     Time,
     StatsData,
+    StatHistory,
 )
 from rest_framework import serializers
 
@@ -84,3 +86,9 @@ class StatsDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = StatsData
         fields = '__all__'
+
+class StatHistorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StatHistory
+        fields = ['area', 'sub_category', 'user']
