@@ -90,9 +90,8 @@ class TimeSeriesAPIView(views.APIView):
         print(f'start: {start}')
 
         # 存在しないパターンの組み合わせの場合、もう一度取得する
-        queryset_length = 0
         time_out = 0
-        while not queryset_length:
+        while True:
 
             params = self.get_random_data()
             # params = {
@@ -108,8 +107,8 @@ class TimeSeriesAPIView(views.APIView):
                 queryset=self.queryset
             )
 
-            queryset_length = len(filterset.qs)
-            print(queryset_length)
+            if filterset.qs:
+                break
 
             time_out += 1
 
