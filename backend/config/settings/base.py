@@ -25,6 +25,20 @@ DEBUG = False
 ALLOWED_HOSTS = []
 
 #######################
+#         CSP         #
+#######################
+
+CSP_DEFAULT_SRC = ("'self'", )
+CSP_IMG_SRC = ("'self'",
+               'https://random-stat.s3.amazonaws.com',
+               'https://lh3.googleusercontent.com'
+               )
+CSP_STYLE_SRC = (
+    "'self'",
+    "'sha256-kwpt3lQZ21rs4cld7/uEm9qI5yAbjYzx+9FGm/XmwNU='",
+)
+
+#######################
 #  Database settings  #
 #######################
 
@@ -77,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
