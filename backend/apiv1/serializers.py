@@ -36,21 +36,17 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class StatsCodeSerializer(serializers.ModelSerializer):
-    stat_name = StatNameSerializer()
-    gov_org = GovOrgSerializer()
-    title = TitleSerializer()
 
     class Meta:
         model = StatsCode
-        fields = '__all__'
+        fields = ['id', 'table_name']
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    stats_code = StatsCodeSerializer()
 
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['id', 'name']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -85,7 +81,8 @@ class StatsDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StatsData
-        fields = '__all__'
+        fields = ['category', 'sub_category',
+                  'area', 'time', 'stats_code', 'unit', 'value']
 
 class StatHistorySerializer(serializers.ModelSerializer):
 

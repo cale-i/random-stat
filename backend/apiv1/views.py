@@ -1,20 +1,35 @@
 import datetime
-import random
+
 
 from django_filters import rest_framework as filters
-from estat.models import (Area, Category, GovOrg, StatName, StatsCode,
-                          StatsData, SubCategory, Time, Title)
-from rest_framework import generics, serializers, status, views
+from estat.models import StatsData
+from rest_framework import generics, status, views
 from rest_framework.response import Response
 
-from apiv1.serializers import (AreaSerializer, CategorySerializer,
-                               GovOrgSerializer, StatNameSerializer,
-                               StatsCodeSerializer, StatsDataSerializer,
-                               SubCategorySerializer, TimeSerializer,
-                               TitleSerializer)
+from apiv1.serializers import StatsDataSerializer
 from apiv1.stat_hist import (
     persist_stat_history,
 )
+from .helpers import (
+    get_random_data,
+    get_area_list,
+    make_category_list,
+    get_stats_id_list,
+)
+
+stats_data_queryset = StatsData.objects.all() \
+    .select_related('area') \
+    .select_related('time') \
+    .select_related('stats_code') \
+    .select_related('stats_code__stat_name') \
+    .select_related('stats_code__gov_org') \
+    .select_related('stats_code__title') \
+    .prefetch_related('category') \
+    .prefetch_related('category__stats_code') \
+    .prefetch_related('sub_category') \
+    .prefetch_related('sub_category__category') \
+    .prefetch_related('area__stats_code') \
+    .order_by('time')
 
 
 class TimeSeriesFilter(filters.FilterSet):
@@ -56,34 +71,13 @@ class TimeSeriesFilter(filters.FilterSet):
         if type(value) is str:
             table = str.maketrans('', '', '[] \'')
             value = value.translate(table).split(',')
-            # print(name)
-            # print(value)
-            # print({name: value})
             qs = queryset
             for val in value:
                 qs = qs.filter(**{name: val})
-                # print(qs.query)
-                print(len(qs))
-                # print(qs)
-            # print(qs)
             return qs
 
 
 class TimeSeriesAPIView(views.APIView):
-    def __init__(self):
-        self.queryset = StatsData.objects.all() \
-            .select_related('area') \
-            .select_related('time') \
-            .select_related('stats_code') \
-            .select_related('stats_code__stat_name') \
-            .select_related('stats_code__gov_org') \
-            .select_related('stats_code__title') \
-            .prefetch_related('category') \
-            .prefetch_related('category__stats_code') \
-            .prefetch_related('sub_category') \
-            .prefetch_related('sub_category__category') \
-            .prefetch_related('area__stats_code') \
-            .order_by('time')
 
     def get(self, request, *args, **kwargs):
         start = datetime.datetime.now()
@@ -93,7 +87,7 @@ class TimeSeriesAPIView(views.APIView):
         time_out = 0
         while True:
 
-            params = self.get_random_data()
+            params = get_random_data()
             # params = {
             #     'sub_category': [
             #         '00200521_00200_001_tab_020',
@@ -104,7 +98,7 @@ class TimeSeriesAPIView(views.APIView):
 
             filterset = TimeSeriesFilter(
                 params,
-                queryset=self.queryset
+                queryset=stats_data_queryset
             )
 
             if filterset.qs:
@@ -128,10 +122,10 @@ class TimeSeriesAPIView(views.APIView):
             'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
-            'area_list': self.get_area_list(table['id']),
-            'category_list': self.make_category_list(
+            'area_list': get_area_list(table['id']),
+            'category_list': make_category_list(
                 category=serializer.data[0]['category']),
-            'stats_code_list': self.get_stats_id_list(),
+            'stats_code_list': get_stats_id_list(),
         }
 
         end = datetime.datetime.now()
@@ -145,7 +139,8 @@ class TimeSeriesAPIView(views.APIView):
         # 検索用
         print(request.data)
 
-        filterset = TimeSeriesFilter(request.data, queryset=self.queryset)
+        filterset = TimeSeriesFilter(
+            request.data, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
         table = {
@@ -159,10 +154,10 @@ class TimeSeriesAPIView(views.APIView):
             'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
-            'area_list': self.get_area_list(table['id']),
-            'category_list': self.make_category_list(
+            'area_list': get_area_list(table['id']),
+            'category_list': make_category_list(
                 category=serializer.data[0]['category']),
-            'stats_code_list': self.get_stats_id_list(),
+            'stats_code_list': get_stats_id_list(),
         }
         persist_stat_history(user=request.user, params=request.data)
 
@@ -266,9 +261,9 @@ class StatsCodeAPIView(TimeSeriesAPIView):
 
         # 検索用
         print(request.data)
-        params = self.get_random_data(request.data['stats_code_id'])
+        params = get_random_data(request.data['stats_code_id'])
 
-        filterset = TimeSeriesFilter(params, queryset=self.queryset)
+        filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
         table = {
@@ -282,10 +277,10 @@ class StatsCodeAPIView(TimeSeriesAPIView):
             'table': table,
             'area': serializer.data[0]['area'],
             'sub_category': serializer.data[0]['sub_category'],
-            'area_list': self.get_area_list(table['id']),
-            'category_list': self.make_category_list(
+            'area_list': get_area_list(table['id']),
+            'category_list': make_category_list(
                 category=serializer.data[0]['category']),
-            'stats_code_list': self.get_stats_id_list(),
+            'stats_code_list': get_stats_id_list(),
         }
 
         persist_stat_history(user=request.user, params=params)
