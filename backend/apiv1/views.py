@@ -1,17 +1,12 @@
 import datetime
-import random
+
 
 from django_filters import rest_framework as filters
-from estat.models import (Area, Category, GovOrg, StatName, StatsCode,
-                          StatsData, SubCategory, Time, Title)
-from rest_framework import generics, serializers, status, views
+from estat.models import StatsData
+from rest_framework import generics, status, views
 from rest_framework.response import Response
 
-from apiv1.serializers import (AreaSerializer, CategorySerializer,
-                               GovOrgSerializer, StatNameSerializer,
-                               StatsCodeSerializer, StatsDataSerializer,
-                               SubCategorySerializer, TimeSerializer,
-                               TitleSerializer)
+from apiv1.serializers import StatsDataSerializer
 from apiv1.stat_hist import (
     persist_stat_history,
 )
