@@ -83,20 +83,6 @@ class TimeSeriesFilter(filters.FilterSet):
 
 
 class TimeSeriesAPIView(views.APIView):
-    def __init__(self):
-        self.queryset = StatsData.objects.all() \
-            .select_related('area') \
-            .select_related('time') \
-            .select_related('stats_code') \
-            .select_related('stats_code__stat_name') \
-            .select_related('stats_code__gov_org') \
-            .select_related('stats_code__title') \
-            .prefetch_related('category') \
-            .prefetch_related('category__stats_code') \
-            .prefetch_related('sub_category') \
-            .prefetch_related('sub_category__category') \
-            .prefetch_related('area__stats_code') \
-            .order_by('time')
 
     def get(self, request, *args, **kwargs):
         start = datetime.datetime.now()
@@ -117,7 +103,7 @@ class TimeSeriesAPIView(views.APIView):
 
             filterset = TimeSeriesFilter(
                 params,
-                queryset=self.queryset
+                queryset=stats_data_queryset
             )
 
             if filterset.qs:
