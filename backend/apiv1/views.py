@@ -76,16 +76,9 @@ class TimeSeriesFilter(filters.FilterSet):
         if type(value) is str:
             table = str.maketrans('', '', '[] \'')
             value = value.translate(table).split(',')
-            # print(name)
-            # print(value)
-            # print({name: value})
             qs = queryset
             for val in value:
                 qs = qs.filter(**{name: val})
-                # print(qs.query)
-                print(len(qs))
-                # print(qs)
-            # print(qs)
             return qs
 
 
