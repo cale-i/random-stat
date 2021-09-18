@@ -44,6 +44,9 @@ const chartModule = {
 				return response.data;
 			});
 		},
+		getStatHistory(context, payload) {
+			return api.get("timeseries/history/", { params: payload });
+		},
 	},
 };
 
