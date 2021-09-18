@@ -88,4 +88,4 @@ class StatHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StatHistory
-        fields = ['area', 'sub_category', 'user']
+        fields = ['stats_code', 'area', 'sub_category', 'user']
