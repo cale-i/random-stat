@@ -287,6 +287,11 @@ class StatHistory(models.Model):
     class Meta:
         db_table = 'stat_history'
 
+    stats_code = models.ForeignKey(
+        StatsCode,
+        verbose_name='統計表 表ID',
+        on_delete=models.PROTECT,
+    )
     area = models.ForeignKey(
         Area,
         verbose_name='地域コード',
