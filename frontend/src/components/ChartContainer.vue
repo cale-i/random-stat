@@ -390,9 +390,27 @@ export default {
 		},
 	},
 	methods: {
-		async getStatData(target) {
+		getRandomStats() {
+			// 2つのランダムな統計表を取得
+			const first = this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData["first"] = response.data;
+			});
+			const second = this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData["second"] = response.data;
+			});
+
+			Promise.all([first, second]).then(() => {
+				this.setTimeSeriesData();
+				this.loaded.first = true;
+				this.loaded.second = true;
+				this.loaded.mixChart = true;
+			});
+		},
+		getStatData(target) {
 			// ランダムデータを取得
-			this.statData[target] = await this.$store.dispatch("chart/getChart");
+			this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData[target] = response.data;
+			});
 			this.setTimeSeriesData();
 		},
 		async searchStatData(target, selected) {
@@ -488,12 +506,7 @@ export default {
 	async mounted() {
 		// this.loaded = false
 		try {
-			await this.getStatData("first");
-			await this.getStatData("second");
-			// console.log(this.statData);
-			this.loaded.first = true;
-			this.loaded.second = true;
-			this.loaded.mixChart = true;
+			await this.getRandomStats();
 		} catch (e) {
 			console.error(e);
 		}
