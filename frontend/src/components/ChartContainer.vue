@@ -503,13 +503,8 @@ export default {
 			// );
 		},
 	},
-	async mounted() {
-		// this.loaded = false
-		try {
-			await this.getRandomStats();
-		} catch (e) {
-			console.error(e);
-		}
+	created() {
+		this.getRandomStats();
 	},
 };
 </script>
