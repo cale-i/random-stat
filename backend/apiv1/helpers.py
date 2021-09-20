@@ -84,7 +84,7 @@ def get_category_list(stats_code):
     for category in category_queryset:
         data = {
             **category,
-            'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name')}
+            'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name').order_by('id')}
         category_list.append(data)
     return category_list
 
