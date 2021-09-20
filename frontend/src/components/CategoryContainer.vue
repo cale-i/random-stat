@@ -39,6 +39,10 @@
 <script>
 export default {
 	props: {
+		statsCodeID: {
+			type: String,
+			default: null,
+		},
 		areaId: {
 			type: String,
 			default: null,
@@ -58,6 +62,7 @@ export default {
 	},
 	data: () => ({
 		selected: {
+			statsCodeID: null,
 			area: null,
 			subCategory: {},
 		},
@@ -65,6 +70,8 @@ export default {
 	computed: {},
 	methods: {
 		makeSelected() {
+			// stats code
+			this.selected.statsCodeID = this.statsCodeID;
 			// area
 			// 初期 area IDを格納
 			this.selected.area = this.areaId;
@@ -86,6 +93,11 @@ export default {
 		},
 	},
 	watch: {
+		statsCodeID: {
+			handler: function(newValue) {
+				this.selected.statsCodeID = newValue;
+			},
+		},
 		areaId: {
 			handler: function(newValue) {
 				this.selected.area = newValue;

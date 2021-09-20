@@ -32,6 +32,7 @@
 						></chart>
 						<CategoryContainer
 							v-if="loaded.first"
+							:statsCodeID="statData.first.table.id"
 							:area-list="statData.first.area_list"
 							:area-id="statData.first.area.id"
 							:category-list="statData.first.category_list"
@@ -56,6 +57,7 @@
 						></chart>
 						<CategoryContainer
 							v-if="loaded.second"
+							:statsCodeID="statData.second.table.id"
 							:area-list="statData.second.area_list"
 							:area-id="statData.second.area.id"
 							:category-list="statData.second.category_list"
@@ -410,13 +412,14 @@ export default {
 			// ランダムデータを取得
 			this.$store.dispatch("chart/getChart").then((response) => {
 				this.statData[target] = response.data;
-			this.setTimeSeriesData();
+				this.setTimeSeriesData();
 			});
 		},
 		async searchStatData(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
 
 			const params = {
+				stats_code: selected.statsCodeID,
 				area: selected.area,
 				sub_category: Object.values(selected.subCategory),
 			};
