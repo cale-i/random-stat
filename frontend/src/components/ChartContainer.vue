@@ -410,8 +410,8 @@ export default {
 			// ランダムデータを取得
 			this.$store.dispatch("chart/getChart").then((response) => {
 				this.statData[target] = response.data;
-			});
 			this.setTimeSeriesData();
+			});
 		},
 		async searchStatData(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
