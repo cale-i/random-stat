@@ -162,7 +162,7 @@ class StatsCodeAPIView(views.APIView):
 
         # 検索用
         print(request.data)
-        params = get_random_data(request.data['stats_code_id'])
+        params = get_random_data(request.data['stats_code'])
 
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
 
