@@ -13,23 +13,16 @@ from apiv1.stat_hist import (
 )
 from .helpers import (
     get_random_data,
-    get_area_list,
-    make_category_list,
-    get_stats_id_list,
+    get_response_data,
 )
 
 stats_data_queryset = StatsData.objects.all() \
     .select_related('area') \
     .select_related('time') \
     .select_related('stats_code') \
-    .select_related('stats_code__stat_name') \
-    .select_related('stats_code__gov_org') \
-    .select_related('stats_code__title') \
     .prefetch_related('category') \
-    .prefetch_related('category__stats_code') \
     .prefetch_related('sub_category') \
     .prefetch_related('sub_category__category') \
-    .prefetch_related('area__stats_code') \
     .order_by('time')
 
 
@@ -77,50 +70,40 @@ class TimeSeriesAPIView(views.APIView):
         print(f'start: {start}')
 
         # 存在しないパターンの組み合わせの場合、もう一度取得する
-        time_out = 0
-        while True:
+        # time_out = 0
+        # while True:
+        grd_start = datetime.datetime.now()
+        print(f'get_random_data starts: {grd_start}',)
+        params = get_random_data()
 
-            params = get_random_data()
-            # params = {
-            #     'sub_category': [
-            #         '00200521_00200_001_tab_020',
-            #         '00200521_00200_001_cat01_100'
-            #     ],
-            #     'area': '00000'
-            # }
+        grd_end = datetime.datetime.now()
+        print(f'get_random_data ends: {grd_end}')
+        print(f'time: {grd_end-grd_start}')
 
-            filterset = TimeSeriesFilter(
-                params,
-                queryset=stats_data_queryset
-            )
+        # params = {
+        #     'sub_category': [
+        #         '00200521_00200_001_tab_020',
+        #         '00200521_00200_001_cat01_100'
+        #     ],
+        #     'area': '00000'
+        # }
 
-            if filterset.qs:
-                break
+        filterset = TimeSeriesFilter(
+            params,
+            queryset=stats_data_queryset
+        )
 
-            time_out += 1
+        # if filterset.qs:
+        #     break
 
-            if time_out > 5:
-                break
+        # time_out += 1
+
+        # if time_out > 5:
+        #     break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        table = {
-            'id': serializer.data[0]['stats_code']['id'],
-            'name': serializer.data[0]['stats_code']['table_name']
-        }
 
-        data = {
-            'results': serializer.data,
-            'unit': serializer.data[0]['unit'],
-            # 'table_name': serializer.data[0]['stats_code']['table_name'],
-            'table': table,
-            'area': serializer.data[0]['area'],
-            'sub_category': serializer.data[0]['sub_category'],
-            'area_list': get_area_list(table['id']),
-            'category_list': make_category_list(
-                category=serializer.data[0]['category']),
-            'stats_code_list': get_stats_id_list(),
-        }
-
+        data = get_response_data(params, serializer)
         end = datetime.datetime.now()
         persist_stat_history(user=request.user, params=params)
         print(f'end: {end}')
@@ -136,22 +119,7 @@ class TimeSeriesAPIView(views.APIView):
             request.data, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        table = {
-            'id': serializer.data[0]['stats_code']['id'],
-            'name': serializer.data[0]['stats_code']['table_name']
-        }
-        data = {
-            'results': serializer.data,
-            'unit': serializer.data[0]['unit'],
-            # 'table_name': serializer.data[0]['stats_code']['table_name'],
-            'table': table,
-            'area': serializer.data[0]['area'],
-            'sub_category': serializer.data[0]['sub_category'],
-            'area_list': get_area_list(table['id']),
-            'category_list': make_category_list(
-                category=serializer.data[0]['category']),
-            'stats_code_list': get_stats_id_list(),
-        }
+        data = get_response_data(request.data, serializer)
         persist_stat_history(user=request.user, params=request.data)
 
         return Response(data, status.HTTP_200_OK)
@@ -167,22 +135,7 @@ class StatsCodeAPIView(views.APIView):
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        table = {
-            'id': serializer.data[0]['stats_code']['id'],
-            'name': serializer.data[0]['stats_code']['table_name']
-        }
-        data = {
-            'results': serializer.data,
-            'unit': serializer.data[0]['unit'],
-            # 'table_name': serializer.data[0]['stats_code']['table_name'],
-            'table': table,
-            'area': serializer.data[0]['area'],
-            'sub_category': serializer.data[0]['sub_category'],
-            'area_list': get_area_list(table['id']),
-            'category_list': make_category_list(
-                category=serializer.data[0]['category']),
-            'stats_code_list': get_stats_id_list(),
-        }
+        data = get_response_data(params, serializer)
 
         persist_stat_history(user=request.user, params=params)
         return Response(data, status.HTTP_200_OK)
@@ -201,22 +154,6 @@ class StatHistoryView(generics.GenericAPIView):
         # 履歴から統計表を作成
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        table = {
-            'id': serializer.data[0]['stats_code']['id'],
-            'name': serializer.data[0]['stats_code']['table_name']
-        }
-        data = {
-            'results': serializer.data,
-            'unit': serializer.data[0]['unit'],
-            # 'table_name': serializer.data[0]['stats_code']['table_name'],
-            'table': table,
-            'area': serializer.data[0]['area'],
-            'sub_category': serializer.data[0]['sub_category'],
-            'area_list': get_area_list(table['id']),
-            'category_list': make_category_list(
-                category=serializer.data[0]['category']),
-            'stats_code_list': get_stats_id_list(),
-            **page_data,
-        }
+        data = get_response_data(params, serializer)
 
         return Response(data, status.HTTP_200_OK)

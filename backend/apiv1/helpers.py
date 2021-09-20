@@ -3,102 +3,96 @@ from estat.models import (
     Category,
     StatsCode,
     SubCategory,
+    Area
 )
 import random
 
-from apiv1.serializers import AreaSerializer
+from apiv1.serializers import (
+    AreaSerializer,
+    StatsCodeSerializer,
+)
 
 
-def get_random_data(stats_code_id=''):
-    params = {
+def get_random_data(stats_code_id=None):
+
+    stats_code_id = get_stats_code(stats_code_id)
+
+    # stats_codeに紐付いたcategory内のsub_categoryからランダムで1つずつ取得
+    sub_category = get_sub_category(stats_code_id)
+
+    # stats_codeに紐付いたareaの中からランダムで1つ取得
+    area = get_area(stats_code_id)
+
+    return {
         'stats_code': stats_code_id,
-        'sub_category': [],
-        'area': '',
+        'sub_category': sub_category,
+        'area': area,
     }
 
-    #  get random prefix(stat_name_id + gov_org_id + title_id)
-    if stats_code_id:
-        stats_code_queryset = StatsCode.objects.get(
-            id=stats_code_id)
-    else:
-        stats_code_queryset = random.choice(StatsCode.objects.all())
-        stats_code_id = stats_code_queryset.id
-        params['stats_code'] = stats_code_id
 
-    # get category allay
-    category_queryset = Category.objects.filter(
-        stats_code_id__id__icontains=stats_code_id)
-    # category_queryset = stats_code_queryset.category_set.all()
+def get_stats_code(stats_code_id=None):
+    return random.choice(StatsCode.objects.all()).id
 
-    for cat_id in category_queryset:
-        sub_category_queryset = random.choice(SubCategory.objects.filter(
-            category_id__id__icontains=cat_id.id))
-        params['sub_category'].append(sub_category_queryset.id)
 
-    # for category in category_queryset:
-    #     sub_category_queryset = random.choice(
-    #         category.subcategory_set.all())
-    #     params['sub_category'].append(sub_category_queryset.id)
+def get_area(stats_code_id):
+    return random.choice(Area.objects.filter(stats_code=stats_code_id)).id
 
-    # get random area
-    area_queryset = random.choice(
-        stats_code_queryset.area_set.all())
-    # area_queryset = random.choice(
-    #     Area.objects.all())
 
-    params['area'] = area_queryset.id
-    print('\n\n\n\n\n\n')
-    print(params)
-    print('\n\n\n\n\n\n')
-    return params
+def get_sub_category(stats_code_id):
+    # stats_codeに紐付いたcategoryを取得
+    category_queryset = Category.objects.filter(stats_code=stats_code_id)
+
+    sub_category = []
+    # categoryに紐付いたsub_categoryからランダムで1つ取得
+    for category in category_queryset:
+        sub_category.append(random.choice(SubCategory.objects.filter(
+            category_id=category)).id)
+    return sub_category
+
+
+def get_response_data(params, serializer):
+    serialized_data = serializer.data[0]
+
+    return {
+        'results': serializer.data,
+        'unit': serialized_data['unit'],
+        'table': {
+            'id': serialized_data['stats_code']['id'],
+            'name': serialized_data['stats_code']['table_name']
+        },
+        'area': serialized_data['area'],
+        'sub_category': serialized_data['sub_category'],
+        'area_list': get_area_list(params['stats_code']),
+        'category_list': get_category_list(params['stats_code']),
+        'stats_code_list': get_stats_code_list(),
+    }
 
 
 def get_area_list(stats_code):
     # areaデータのリスト
-    stats_code_queryset = StatsCode.objects.get(id=stats_code)
-    area_queryset = stats_code_queryset.area_set.all()
-
     serializer = AreaSerializer(
-        instance=area_queryset,
+        instance=Area.objects.filter(stats_code=stats_code),
         many=True
     )
     return serializer.data
 
 
-def make_category_list(category):
-    # category-sub_category のリスト
-    # 抽出したcategoryを受け取り、サブカテゴリと結合して出力
-    # 引数categoryはOrdered Dictでの入力を想定
-
-    ret = []
-    for cat in category:
-        queryset = SubCategory.objects.filter(
-            category_id__id__icontains=cat['id']
-        )
-
-        sub_category_list = [
-            {
-                'id': q.id,
-                'name': q.name,
-            }
-            for q in queryset
-        ]
-        ret.append({
-            'id': cat['id'],
-            'name': cat['name'],
-            'sub_category_list': sub_category_list,
-        })
-    return ret
+def get_category_list(stats_code):
+    category_queryset = Category.objects.filter(
+        stats_code=stats_code).values('id', 'name')
+    category_list = []
+    for category in category_queryset:
+        data = {
+            **category,
+            'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name')}
+        category_list.append(data)
+    return category_list
 
 
-def get_stats_id_list():
+def get_stats_code_list():
     # 登録されているすべてのstats codeを返す
-    queryset = StatsCode.objects.all()
-
-    res = [
-        {
-            'id': q.id,
-            'name': q.table_name,
-        } for q in queryset]
-
-    return res
+    serializer = StatsCodeSerializer(
+        instance=StatsCode.objects.all(),
+        many=True,
+    )
+    return serializer.data
