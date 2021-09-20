@@ -22,8 +22,6 @@ const chartModule = {
 			return api({
 				method: "get",
 				url: context.getters.chartURL,
-			}).then((response) => {
-				return response.data;
 			});
 		},
 		searchChart(context, data) {
