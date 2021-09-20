@@ -432,7 +432,7 @@ export default {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
 
 			const params = {
-				stats_code_id: selected.statsCodeID,
+				stats_code: selected.statsCodeID,
 			};
 			// console.log(this.statData);
 			// console.log(await this.$store.dispatch("chart/searchChart", params));
