@@ -12,9 +12,9 @@
 				></b-form-select>
 			</b-col>
 			<b-col md="4">
-				<b-button @click="searchStatData" class="btn"
-					>左記統計表で検索</b-button
-				>
+				<div @click="searchStatData" class="btn btn btn-secondary">
+					統計表を指定して検索
+				</div>
 			</b-col>
 		</b-row>
 	</div>
