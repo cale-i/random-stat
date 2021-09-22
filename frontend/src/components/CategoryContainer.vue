@@ -30,7 +30,9 @@
 		</b-row>
 		<b-row>
 			<b-col>
-				<b-button @click="searchStatData">上記条件でデータを取得</b-button>
+				<div class="btn btn-secondary" @click="searchStatData">
+					カテゴリーを指定して検索
+				</div>
 			</b-col>
 		</b-row>
 	</div>
@@ -114,12 +116,9 @@ export default {
 			});
 		},
 	},
-	mounted() {
+	created() {
 		this.makeSelected();
 	},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
 <style scoped>
