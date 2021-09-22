@@ -114,12 +114,9 @@ export default {
 			});
 		},
 	},
-	mounted() {
+	created() {
 		this.makeSelected();
 	},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
 <style scoped>
