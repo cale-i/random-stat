@@ -9,7 +9,6 @@
 					:options="displayOptionMix"
 				></chart>
 			</b-card>
-		</b-overlay>
 
 		<b-row>
 			<b-col md="6">
@@ -51,7 +50,10 @@
 								@catchSelected="searchStatData('first', $event)"
 							/>
 						</b-tab>
-						<b-tab title="統計表詳細" :title-link-class="linkClass(2, 'first')">
+							<b-tab
+								title="統計表詳細"
+								:title-link-class="linkClass(2, 'first')"
+							>
 						</b-tab>
 					</b-tabs>
 				</b-card>
@@ -103,6 +105,7 @@
 				</b-card>
 			</b-col>
 		</b-row>
+		</b-overlay>
 	</b-container>
 </template>
 
