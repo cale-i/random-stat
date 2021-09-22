@@ -24,7 +24,7 @@ python3 manage.py migrate
 python3 manage.py collectstatic --noinput
 
 # load stat data
-python3 manage.py loaddata ./startup/data.json &
+python3 manage.py loaddata ./estat/fixtures/estat.json &
 
 
 # nginx settings
