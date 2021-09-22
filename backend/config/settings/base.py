@@ -41,6 +41,7 @@ CSP_STYLE_SRC = (
 CSP_OBJECT_SRC = ("'none'",)
 CSP_PREFETCH_SRC = ("'self'",)
 CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_ANCESTORS = ("'self'",)
 
 #######################
 #  Database settings  #
