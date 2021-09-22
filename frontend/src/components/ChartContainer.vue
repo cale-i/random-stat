@@ -1,18 +1,15 @@
 <template>
-	<div id="chart">
-		<b-container>
-			<b-card>
-				<template v-if="loaded.mixChart">
+	<b-container id="chart">
+		<br />
+		<b-overlay spinner-variant="success" :show="!loaded.mixChart" rounded="sm">
+			<b-card class="mb-4">
 					<chart
 						v-if="loaded.mixChart"
 						:chart-data="displayDataMix"
 						:options="displayOptionMix"
 					></chart>
-				</template>
-				<template v-if="!loaded.mixChart">
-					<b-spinner variant="success" label="Text Centered"></b-spinner>
-				</template>
 			</b-card>
+		</b-overlay>
 
 			<b-row>
 				<b-col md="6">
