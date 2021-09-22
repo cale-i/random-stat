@@ -154,6 +154,9 @@ class StatHistoryView(generics.GenericAPIView):
         # 履歴から統計表を作成
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        data = get_response_data(params, serializer)
+        data = {
+            **get_response_data(params, serializer),
+            **page_data
+        }
 
         return Response(data, status.HTTP_200_OK)
