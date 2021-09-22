@@ -11,6 +11,7 @@
 					class="mb-3"
 					value-field="id"
 					text-field="name"
+					:disabled="!hasChoice(areaList)"
 				></b-form-select>
 			</b-col>
 
@@ -25,6 +26,7 @@
 					class="mb-3"
 					value-field="id"
 					text-field="name"
+					:disabled="!hasChoice(item.sub_category_list)"
 				></b-form-select>
 			</b-col>
 		</b-row>
@@ -92,6 +94,9 @@ export default {
 		},
 		searchStatData() {
 			this.$emit("catchSelected", this.selected);
+		},
+		hasChoice(list) {
+			return list.length > 1;
 		},
 	},
 	watch: {
