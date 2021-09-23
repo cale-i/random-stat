@@ -6,10 +6,21 @@ from estat.models import StatsData
 from rest_framework import generics, status, views
 from rest_framework.response import Response
 
-from apiv1.serializers import StatsDataSerializer
+from apiv1.serializers import (
+    StatsDataSerializer,
+    StatsCodeSerializer,
+    AreaSerializer,
+)
+from estat.models import (
+    StatsCode,
+    Area,
+    Category,
+    SubCategory,
+)
 from apiv1.stat_hist import (
     persist_stat_history,
     get_stat_history,
+
 )
 from .helpers import (
     get_random_data,
@@ -17,14 +28,10 @@ from .helpers import (
     get_meta_data,
 )
 
+
 stats_data_queryset = StatsData.objects.all() \
-    .select_related('area') \
     .select_related('time') \
-    .select_related('stats_code') \
-    .prefetch_related('category') \
-    .prefetch_related('sub_category') \
-    .prefetch_related('sub_category__category') \
-    .order_by('time')
+
 
 
 class TimeSeriesFilter(filters.FilterSet):
@@ -70,9 +77,6 @@ class TimeSeriesAPIView(views.APIView):
         start = datetime.datetime.now()
         print(f'start: {start}')
 
-        # 存在しないパターンの組み合わせの場合、もう一度取得する
-        # time_out = 0
-        # while True:
         grd_start = datetime.datetime.now()
         print(f'get_random_data starts: {grd_start}',)
         params, meta = get_random_data()
@@ -93,14 +97,6 @@ class TimeSeriesAPIView(views.APIView):
             params,
             queryset=stats_data_queryset
         )
-
-        # if filterset.qs:
-        #     break
-
-        # time_out += 1
-
-        # if time_out > 5:
-        #     break
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 
@@ -167,3 +163,40 @@ class StatHistoryView(generics.GenericAPIView):
         }
 
         return Response(data, status.HTTP_200_OK)
+
+
+class StatsCodeListView(generics.ListAPIView):
+    serializer_class = StatsCodeSerializer
+    queryset = StatsCode.objects.all()
+    pagination_class = None
+
+
+class AreaListView(generics.ListAPIView):
+    serializer_class = AreaSerializer
+    pagination_class = None
+
+    def get_queryset(self, **kwargs):
+        stats_code = self.request.GET.get('stats_code', None)
+
+        if stats_code:
+            return Area.objects.filter(stats_code=stats_code)
+
+
+class CategoryListView(generics.GenericAPIView):
+    pagination_class = None
+
+    def get(self, request, *args, **kwargs):
+        stats_code = self.request.GET.get('stats_code', None)
+
+        if not stats_code:
+            return
+
+        queryset = Category.objects.filter(
+            stats_code=stats_code).values('id', 'name')
+        category_list = []
+        for category in queryset:
+            data = {
+                **category,
+                'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name').order_by('id')}
+            category_list.append(data)
+        return Response(category_list, status=status.HTTP_200_OK)
