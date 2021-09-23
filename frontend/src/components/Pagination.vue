@@ -43,6 +43,7 @@ export default {
 				this.page.count
 			);
 		},
+	},
 	watch: {
 		currentPage: {
 			handler: function(newValue) {
