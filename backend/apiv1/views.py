@@ -14,6 +14,7 @@ from apiv1.stat_hist import (
 from .helpers import (
     get_random_data,
     get_response_data,
+    get_meta_data,
 )
 
 stats_data_queryset = StatsData.objects.all() \
@@ -74,7 +75,7 @@ class TimeSeriesAPIView(views.APIView):
         # while True:
         grd_start = datetime.datetime.now()
         print(f'get_random_data starts: {grd_start}',)
-        params = get_random_data()
+        params, meta = get_random_data()
 
         grd_end = datetime.datetime.now()
         print(f'get_random_data ends: {grd_end}')
@@ -103,7 +104,7 @@ class TimeSeriesAPIView(views.APIView):
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
 
-        data = get_response_data(params, serializer)
+        data = get_response_data(meta, serializer)
         end = datetime.datetime.now()
         persist_stat_history(user=request.user, params=params)
         print(f'end: {end}')
@@ -115,11 +116,12 @@ class TimeSeriesAPIView(views.APIView):
         # 検索用
         print(request.data)
 
+        meta = get_meta_data(request.data)
         filterset = TimeSeriesFilter(
             request.data, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        data = get_response_data(request.data, serializer)
+        data = get_response_data(meta, serializer)
         persist_stat_history(user=request.user, params=request.data)
 
         return Response(data, status.HTTP_200_OK)
@@ -130,12 +132,12 @@ class StatsCodeAPIView(views.APIView):
 
         # 検索用
         print(request.data)
-        params = get_random_data(request.data['stats_code'])
+        params, meta = get_random_data(request.data['stats_code'])
 
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
 
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
-        data = get_response_data(params, serializer)
+        data = get_response_data(meta, serializer)
 
         persist_stat_history(user=request.user, params=params)
         return Response(data, status.HTTP_200_OK)
@@ -151,11 +153,16 @@ class StatHistoryView(generics.GenericAPIView):
             page_size=page_size,
         )
 
+        # 登録直後等､履歴が存在しない場合終了
+        if not params:
+            return Response(status.HTTP_204_NO_CONTENT)
+
+        meta = get_meta_data(params)
         # 履歴から統計表を作成
         filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
         serializer = StatsDataSerializer(instance=filterset.qs, many=True)
         data = {
-            **get_response_data(params, serializer),
+            **get_response_data(meta, serializer),
             **page_data
         }
 
