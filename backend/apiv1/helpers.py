@@ -33,6 +33,12 @@ def get_random_data(stats_code_id=None):
     return params, meta
 
 
+def get_meta_data(data):
+
+    return {
+        'stats_code': get_stats_code(data['stats_code']),
+        'sub_category': get_sub_category_by_ids(data['sub_category']),
+        'area': get_area_by_id(data['area']),
     }
 
 
@@ -63,49 +69,25 @@ def get_sub_category(stats_code_id):
     return sub_category
 
 
-def get_response_data(params, serializer):
-    serialized_data = serializer.data[0]
+def get_sub_category_by_ids(sub_category_ids):
+    sub_category = []
+    for sub_category_id in sub_category_ids:
+        queryset = SubCategory.objects.all().values(
+            'id', 'name', 'category').get(pk=sub_category_id)
+        sub_category.append(queryset)
+    return sub_category
+
+
+def get_area_by_id(area_id):
+    return Area.objects.all().values('id', 'name').get(pk=area_id)
+
+
+def get_response_data(meta, serializer):
+    # unit = serializer.data[0]
+    unit = '人'
 
     return {
         'results': serializer.data,
-        'unit': serialized_data['unit'],
-        'table': {
-            'id': serialized_data['stats_code']['id'],
-            'name': serialized_data['stats_code']['table_name']
-        },
-        'area': serialized_data['area'],
-        'sub_category': serialized_data['sub_category'],
-        'area_list': get_area_list(params['stats_code']),
-        'category_list': get_category_list(params['stats_code']),
-        'stats_code_list': get_stats_code_list(),
+        'unit': unit,
+        **meta,
     }
-
-
-def get_area_list(stats_code):
-    # areaデータのリスト
-    serializer = AreaSerializer(
-        instance=Area.objects.filter(stats_code=stats_code),
-        many=True
-    )
-    return serializer.data
-
-
-def get_category_list(stats_code):
-    category_queryset = Category.objects.filter(
-        stats_code=stats_code).values('id', 'name')
-    category_list = []
-    for category in category_queryset:
-        data = {
-            **category,
-            'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name').order_by('id')}
-        category_list.append(data)
-    return category_list
-
-
-def get_stats_code_list():
-    # 登録されているすべてのstats codeを返す
-    serializer = StatsCodeSerializer(
-        instance=StatsCode.objects.all(),
-        many=True,
-    )
-    return serializer.data
