@@ -7,15 +7,11 @@ from estat.models import (
 )
 import random
 
-from apiv1.serializers import (
-    AreaSerializer,
-    StatsCodeSerializer,
-)
-
 
 def get_random_data(stats_code_id=None):
 
-    stats_code_id = get_stats_code(stats_code_id)
+    stats_code = get_stats_code(stats_code_id)
+    stats_code_id = stats_code['id']
 
     # stats_codeに紐付いたcategory内のsub_categoryからランダムで1つずつ取得
     sub_category = get_sub_category(stats_code_id)
@@ -23,30 +19,47 @@ def get_random_data(stats_code_id=None):
     # stats_codeに紐付いたareaの中からランダムで1つ取得
     area = get_area(stats_code_id)
 
-    return {
+    params = {
         'stats_code': stats_code_id,
+        'sub_category': [e['id'] for e in sub_category],
+        'area': area['id'],
+    }
+    meta = {
+        'stats_code': stats_code,
         'sub_category': sub_category,
-        'area': area,
+        'area': area
+    }
+
+    return params, meta
+
+
     }
 
 
 def get_stats_code(stats_code_id=None):
-    return random.choice(StatsCode.objects.all()).id
+    if not stats_code_id:
+        return random.choice(StatsCode.objects.all().values('id', 'table_name'))
+
+    try:
+        return StatsCode.objects.all().values('id', 'table_name').get(id=stats_code_id)
+    except StatsCode.DoesNotExist:
+        raise StatsCode.DoesNotExist
 
 
 def get_area(stats_code_id):
-    return random.choice(Area.objects.filter(stats_code=stats_code_id)).id
+    return random.choice(Area.objects.filter(stats_code=stats_code_id).values('id', 'name'))
 
 
 def get_sub_category(stats_code_id):
     # stats_codeに紐付いたcategoryを取得
     category_queryset = Category.objects.filter(stats_code=stats_code_id)
-
     sub_category = []
     # categoryに紐付いたsub_categoryからランダムで1つ取得
     for category in category_queryset:
-        sub_category.append(random.choice(SubCategory.objects.filter(
-            category_id=category)).id)
+        queryset = random.choice(SubCategory.objects.filter(
+            category_id=category).values('id', 'name', 'category'))
+        sub_category.append(queryset)
+
     return sub_category
 
 
