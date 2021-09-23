@@ -277,6 +277,7 @@ export default {
 								// suggestedMax: 60,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.first.unit}`;
 								},
 							},
@@ -337,6 +338,7 @@ export default {
 								// suggestedMax: 60,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.second.unit}`;
 								},
 							},
@@ -402,6 +404,7 @@ export default {
 								suggestedMax,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.first.unit}`;
 								},
 							},
@@ -415,6 +418,7 @@ export default {
 								suggestedMax,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.second.unit}`;
 								},
 							},
