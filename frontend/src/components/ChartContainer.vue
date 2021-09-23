@@ -10,125 +10,119 @@
 				></chart>
 			</b-card>
 
-		<b-row>
-			<b-col md="6">
-				<b-card>
-					<chart
-						v-if="loaded.first"
-						:chart-data="displayDataFirst"
-						:options="displayOptionFirst"
-					></chart>
-					<hr />
-					<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.first">
-						<b-tab
-							title="統計表取得"
-							:title-link-class="linkClass(0, 'first')"
-							active
-						>
-							<div class="btn btn-secondary" @click="getStatData('first')">
-								ランダムな統計表を取得
-							</div>
-							<StatsCodeContainer
-								v-if="loaded.first"
-								:stats-code-list="statData.first.stats_code_list"
-								:statsCodeID="statData.first.table.id"
-								@catchSelected="searchStatsCode('first', $event)"
-							/>
-						</b-tab>
+			<b-row>
+				<b-col md="6">
+					<b-card>
+						<chart
+							v-if="loaded.first"
+							:chart-data="displayDataFirst"
+							:options="displayOptionFirst"
+						></chart>
+						<hr />
+						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.first">
+							<b-tab
+								title="統計表取得"
+								:title-link-class="linkClass(0, 'first')"
+								active
+							>
+								<div class="btn btn-secondary" @click="getStatData('first')">
+									ランダムな統計表を取得
+								</div>
+								<StatsCodeContainer
+									v-if="loaded.first"
+									:statsCodeList="statsCodeList"
+									:statsCodeID="statData.first.stats_code.id"
+									@catchSelected="searchStatsCode('first', $event)"
+								/>
+							</b-tab>
 
-						<b-tab
-							title="カテゴリー検索"
-							:title-link-class="linkClass(1, 'first')"
-						>
-							<CategoryContainer
-								v-if="loaded.first"
-								:statsCodeID="statData.first.table.id"
-								:area-list="statData.first.area_list"
-								:area-id="statData.first.area.id"
-								:category-list="statData.first.category_list"
-								:sub-category="statData.first.sub_category"
-								@catchSelected="searchStatData('first', $event)"
-							/>
-						</b-tab>
+							<b-tab
+								title="カテゴリー検索"
+								:title-link-class="linkClass(1, 'first')"
+							>
+								<CategoryContainer
+									v-if="loaded.first"
+									:statsCodeID="statData.first.stats_code.id"
+									:area-id="statData.first.area.id"
+									:sub-category="statData.first.sub_category"
+									@catchSelected="searchStatData('first', $event)"
+								/>
+							</b-tab>
 							<b-tab
 								title="統計表詳細"
 								:title-link-class="linkClass(2, 'first')"
 							>
-						</b-tab>
-					</b-tabs>
-				</b-card>
-			</b-col>
-			<b-col md="6">
-				<b-card>
-					<chart
-						v-if="loaded.second"
-						:chart-data="displayDataSecond"
-						:options="displayOptionSecond"
-					></chart>
-					<hr />
-					<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.second">
-						<b-tab
-							title="統計表取得"
-							:title-link-class="linkClass(0, 'second')"
-							active
-						>
-							<div class="btn btn-secondary" @click="getStatData('second')">
-								ランダムな統計表を取得
-							</div>
-							<StatsCodeContainer
-								v-if="loaded.second"
-								:stats-code-list="statData.second.stats_code_list"
-								:statsCodeID="statData.second.table.id"
-								@catchSelected="searchStatsCode('second', $event)"
-							/>
-						</b-tab>
-						<b-tab
-							title="カテゴリーを指定"
-							:title-link-class="linkClass(1, 'second')"
-						>
-							<CategoryContainer
-								v-if="loaded.second"
-								:statsCodeID="statData.second.table.id"
-								:area-list="statData.second.area_list"
-								:area-id="statData.second.area.id"
-								:category-list="statData.second.category_list"
-								:sub-category="statData.second.sub_category"
-								@catchSelected="searchStatData('second', $event)"
-							/>
-						</b-tab>
-						<b-tab
-							title="統計表詳細"
-							:title-link-class="linkClass(2, 'second')"
-						>
-						</b-tab>
-					</b-tabs>
-				</b-card>
-			</b-col>
-		</b-row>
+							</b-tab>
+						</b-tabs>
+					</b-card>
+				</b-col>
+				<b-col md="6">
+					<b-card>
+						<chart
+							v-if="loaded.second"
+							:chart-data="displayDataSecond"
+							:options="displayOptionSecond"
+						></chart>
+						<hr />
+						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.second">
+							<b-tab
+								title="統計表取得"
+								:title-link-class="linkClass(0, 'second')"
+								active
+							>
+								<div class="btn btn-secondary" @click="getStatData('second')">
+									ランダムな統計表を取得
+								</div>
+								<StatsCodeContainer
+									v-if="loaded.second"
+									:statsCodeList="statsCodeList"
+									:statsCodeID="statData.second.stats_code.id"
+									@catchSelected="searchStatsCode('second', $event)"
+								/>
+							</b-tab>
+							<b-tab
+								title="カテゴリーを指定"
+								:title-link-class="linkClass(1, 'second')"
+							>
+								<CategoryContainer
+									v-if="loaded.second"
+									:statsCodeID="statData.second.stats_code.id"
+									:area-id="statData.second.area.id"
+									:sub-category="statData.second.sub_category"
+									@catchSelected="searchStatData('second', $event)"
+								/>
+							</b-tab>
+							<b-tab
+								title="統計表詳細"
+								:title-link-class="linkClass(2, 'second')"
+							>
+							</b-tab>
+						</b-tabs>
+					</b-card>
+				</b-col>
+			</b-row>
 		</b-overlay>
 	</b-container>
 </template>
 
 <script>
-// import dayjs from 'dayjs'
 import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 
-// import BarChart from "./chart/BarChart.vue"
 export default {
 	name: "ChartContainer",
 	components: {
 		chart,
 		CategoryContainer,
 		StatsCodeContainer,
-		// BarChart
 	},
 	data: () => ({
 		statData: {
 			first: null,
 			second: null,
 		},
+		statsCodeList: [],
 		loaded: {
 			mixChart: false,
 			firstChart: false,
@@ -239,7 +233,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.table.name,
+					text: self.statData.first.stats_code.table_name,
 				},
 				hover: {
 					intersect: false,
@@ -300,7 +294,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.second.table.name,
+					text: self.statData.second.stats_code.table_name,
 				},
 				hover: {
 					intersect: false,
@@ -365,7 +359,7 @@ export default {
 				title: {
 					display: true,
 					// text: "",
-					text: `${self.statData.first.table.name}   /   ${self.statData.second.table.name}`,
+					text: `${self.statData.first.stats_code.table_name}   /   ${self.statData.second.stats_code.table_name}`,
 				},
 				hover: {
 					intersect: false,
@@ -443,7 +437,13 @@ export default {
 				this.statData["second"] = response.data;
 			});
 
-			Promise.all([first, second]).then(() => {
+			const statsCodeList = this.$store
+				.dispatch("chart/getStatsCodeList")
+				.then((response) => {
+					this.statsCodeList = response.data;
+				});
+
+			Promise.all([first, second, statsCodeList]).then(() => {
 				this.setTimeSeriesData();
 				this.loaded.first = true;
 				this.loaded.second = true;
@@ -465,8 +465,6 @@ export default {
 				area: selected.area,
 				sub_category: Object.values(selected.subCategory),
 			};
-			// console.log(this.statData);
-			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchChart",
 				params
@@ -479,8 +477,6 @@ export default {
 			const params = {
 				stats_code: selected.statsCodeID,
 			};
-			// console.log(this.statData);
-			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchStatsCodeChart",
 				params

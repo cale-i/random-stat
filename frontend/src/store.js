@@ -45,6 +45,17 @@ const chartModule = {
 		getStatHistory(context, payload) {
 			return api.get("timeseries/history/", { params: payload });
 		},
+		getStatsCodeList() {
+			return api.get("timeseries/statscode/");
+		},
+		getAreaList(context, payload) {
+			return api.get("timeseries/area/", { params: { stats_code: payload } });
+		},
+		getCategoryList(context, payload) {
+			return api.get("timeseries/category/", {
+				params: { stats_code: payload },
+			});
+		},
 	},
 };
 
