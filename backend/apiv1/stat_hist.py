@@ -70,6 +70,7 @@ def get_page_data(queryset, page_obj):
 
 
 def get_params(page_obj):
+    params = {}
     for query in page_obj.object_list:
         params = {
             'stats_code': query.stats_code.id,

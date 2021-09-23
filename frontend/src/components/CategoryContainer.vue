@@ -11,22 +11,25 @@
 					class="mb-3"
 					value-field="id"
 					text-field="name"
+					:disabled="!hasChoice(areaList)"
 				></b-form-select>
 			</b-col>
-
-			<b-col md="4" v-for="item in categoryList" :key="item.id">
-				<span class="category-name">
-					{{ item.name }}
-				</span>
-				<b-form-select
-					@change="changeSubCategory(item.id, $event)"
-					:value="selected.subCategory[item.id]"
-					:options="item.sub_category_list"
-					class="mb-3"
-					value-field="id"
-					text-field="name"
-				></b-form-select>
-			</b-col>
+			<template v-if="hasCategoryList">
+				<b-col md="4" v-for="item in categoryList" :key="item.id">
+					<span class="category-name">
+						{{ item.name }}
+					</span>
+					<b-form-select
+						@change="changeSubCategory(item.id, $event)"
+						:value="selected.subCategory[item.id]"
+						:options="item.sub_category_list"
+						class="mb-3"
+						value-field="id"
+						text-field="name"
+						:disabled="!hasChoice(item.sub_category_list)"
+					></b-form-select>
+				</b-col>
+			</template>
 		</b-row>
 		<b-row>
 			<b-col>
@@ -49,14 +52,6 @@ export default {
 			type: String,
 			default: null,
 		},
-		areaList: {
-			type: Array,
-			default: null,
-		},
-		categoryList: {
-			type: Array,
-			default: null,
-		},
 		subCategory: {
 			type: Array,
 			default: null,
@@ -68,6 +63,9 @@ export default {
 			area: null,
 			subCategory: {},
 		},
+		areaList: [],
+		categoryList: [],
+		hasCategoryList: false,
 	}),
 	computed: {},
 	methods: {
@@ -84,8 +82,25 @@ export default {
 			//    category2: "sub_category2",
 			// }
 			this.subCategory.map((e) => {
-				this.selected.subCategory[e.category.id] = e.id;
+				this.selected.subCategory[e.category] = e.id;
 			});
+			this.hasCategoryList = true;
+		},
+		getAreaList(statsCodeID) {
+			this.$store
+				.dispatch("chart/getAreaList", statsCodeID)
+				.then((response) => {
+					this.areaList = response.data;
+				});
+		},
+		getCategoryList(statsCodeID) {
+			this.hasCategoryList = false;
+			this.$store
+				.dispatch("chart/getCategoryList", statsCodeID)
+				.then((response) => {
+					this.categoryList = response.data;
+					this.makeSelected();
+				});
 		},
 		changeSubCategory(target, event) {
 			this.selected.subCategory[target] = event;
@@ -93,11 +108,16 @@ export default {
 		searchStatData() {
 			this.$emit("catchSelected", this.selected);
 		},
+		hasChoice(list) {
+			return list.length > 1;
+		},
 	},
 	watch: {
 		statsCodeID: {
 			handler: function(newValue) {
 				this.selected.statsCodeID = newValue;
+				this.getAreaList(newValue);
+				this.getCategoryList(this.statsCodeID);
 			},
 		},
 		areaId: {
@@ -112,12 +132,13 @@ export default {
 			// 必ず初期化
 			this.selected.subCategory = {};
 			newValue.map((e) => {
-				this.selected.subCategory[e.category.id] = e.id;
+				this.selected.subCategory[e.category] = e.id;
 			});
 		},
 	},
 	created() {
-		this.makeSelected();
+		this.getAreaList(this.statsCodeID);
+		this.getCategoryList(this.statsCodeID);
 	},
 };
 </script>

@@ -26,7 +26,9 @@ export default {
 			default: null,
 		},
 	},
-	data: () => ({}),
+	data: () => ({
+		currentPage: null,
+	}),
 	computed: {
 		firstPage: function() {
 			let ret = 0;
@@ -41,20 +43,23 @@ export default {
 				this.page.count
 			);
 		},
+	},
+	watch: {
 		currentPage: {
-			get() {
-				// thisが示すものが異なるため､直接returnするとエラー
-				// x return this.searchQuery.page
-				const page = this.page.current;
-				return page;
-			},
-			set(page) {
-				this.$emit("movePage", { page });
+			handler: function(newValue) {
+				this.currentPage = newValue;
+				this.$emit("movePage", { page: newValue });
 			},
 		},
 	},
-	methods: {},
-	mounted() {},
+	methods: {
+		setCurrentPage() {
+			this.currentPage = this.page.current;
+		},
+	},
+	mounted() {
+		this.setCurrentPage();
+	},
 };
 </script>
 
