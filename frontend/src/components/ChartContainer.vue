@@ -136,6 +136,22 @@ export default {
 			first: 0,
 			second: 0,
 		},
+		tooltipModel: {
+			title: () => {
+				return "";
+			},
+			label: (tooltipItem, data) => {
+				const index = tooltipItem.datasetIndex;
+				const label = data.datasets[index].label;
+				return label;
+			},
+			afterLabel: (tooltipItem) => {
+				const csv = parseInt(tooltipItem.value).toLocaleString();
+				const title = `  ${tooltipItem.label}年`;
+				const body = `${csv} 人`;
+				return `${title} : ${body}`;
+			},
+		},
 	}),
 	computed: {
 		displayDataFirst() {
@@ -284,6 +300,9 @@ export default {
 						},
 					],
 				},
+				tooltips: {
+					callbacks: this.tooltipModel,
+				},
 				responsive: true,
 				maintainAspectRatio: false,
 			};
@@ -345,6 +364,9 @@ export default {
 						},
 					],
 				},
+				tooltips: {
+					callbacks: this.tooltipModel,
+				},
 				responsive: true,
 				maintainAspectRatio: false,
 			};
@@ -374,24 +396,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// グリッドラインを消す
-							// type: "time",
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
@@ -424,6 +431,10 @@ export default {
 							},
 						},
 					],
+				},
+				tooltips: {
+					mode: "index",
+					callbacks: this.tooltipModel,
 				},
 				responsive: true,
 				maintainAspectRatio: false,
