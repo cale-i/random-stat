@@ -61,6 +61,7 @@
 									:statsCodeList="statsCodeList"
 									:areaName="statData.first.area.name"
 									:subCategory="statData.first.sub_category"
+									target="first"
 								/>
 							</b-tab>
 						</b-tabs>
@@ -112,6 +113,7 @@
 									:statsCodeList="statsCodeList"
 									:areaName="statData.second.area.name"
 									:subCategory="statData.second.sub_category"
+									target="second"
 								/>
 							</b-tab>
 						</b-tabs>

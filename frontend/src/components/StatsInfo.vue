@@ -11,9 +11,8 @@
 		<b-row>
 			<b-col><span class="text-justify">データセットの概要</span></b-col>
 			<b-col>
-				<b-icon id="explanation" icon="info-circle-fill"></b-icon>
-				<b-popover target="explanation" triggers="hover">
-					{{ getExplanation(statsCodeID) }}
+				<b-icon :id="target" icon="info-circle-fill"></b-icon>
+				<b-popover :target="target" triggers="hover">
 				</b-popover>
 			</b-col>
 		</b-row>
@@ -69,6 +68,10 @@ export default {
 		},
 		subCategory: {
 			type: Array,
+			default: null,
+		},
+		target: {
+			type: String,
 			default: null,
 		},
 	},
