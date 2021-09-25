@@ -13,6 +13,9 @@
 			<b-col>
 				<b-icon :id="target" icon="info-circle-fill"></b-icon>
 				<b-popover :target="target" triggers="hover">
+					<div v-for="item in getExplanation(statsCodeID)" :key="item.key">
+						{{ item }}
+					</div>
 				</b-popover>
 			</b-col>
 		</b-row>
@@ -116,7 +119,7 @@ export default {
 			const statsCodeList = this.statsCodeList;
 			for (const el of statsCodeList) {
 				if (el.id === statsCodeID) {
-					let explanation = el.explanation.replaceAll("<br>", "\n");
+					let explanation = el.explanation.split("<br>");
 					return explanation;
 				}
 			}
