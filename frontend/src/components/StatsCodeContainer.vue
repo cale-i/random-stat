@@ -13,7 +13,7 @@
 			</b-col>
 			<b-col md="4">
 				<div @click="searchStatData" class="btn btn btn-secondary">
-					統計表を指定して検索
+					統計表を指定して取得
 				</div>
 			</b-col>
 		</b-row>
