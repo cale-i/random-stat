@@ -8,6 +8,9 @@
 					:chart-data="displayDataMix"
 					:options="displayOptionMix"
 				></chart>
+				<div class="btn btn-secondary mt-3" @click="getRandomStats">
+					ランダムな統計表セットを再取得
+				</div>
 			</b-card>
 
 			<b-row>
@@ -52,6 +55,13 @@
 								title="統計表詳細"
 								:title-link-class="linkClass(2, 'first')"
 							>
+								<StatsInfo
+									v-if="loaded.first"
+									:statsCodeID="statData.first.stats_code.id"
+									:statsCodeList="statsCodeList"
+									:areaName="statData.first.area.name"
+									:subCategory="statData.first.sub_category"
+								/>
 							</b-tab>
 						</b-tabs>
 					</b-card>
@@ -96,6 +106,13 @@
 								title="統計表詳細"
 								:title-link-class="linkClass(2, 'second')"
 							>
+								<StatsInfo
+									v-if="loaded.second"
+									:statsCodeID="statData.second.stats_code.id"
+									:statsCodeList="statsCodeList"
+									:areaName="statData.second.area.name"
+									:subCategory="statData.second.sub_category"
+								/>
 							</b-tab>
 						</b-tabs>
 					</b-card>
@@ -109,6 +126,7 @@
 import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
+import StatsInfo from "./StatsInfo";
 
 export default {
 	name: "ChartContainer",
@@ -116,6 +134,7 @@ export default {
 		chart,
 		CategoryContainer,
 		StatsCodeContainer,
+		StatsInfo,
 	},
 	data: () => ({
 		statData: {
