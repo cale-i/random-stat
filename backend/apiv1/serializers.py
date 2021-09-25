@@ -12,7 +12,7 @@ class StatsCodeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StatsCode
-        fields = ['id', 'table_name']
+        fields = ['id', 'table_name', 'explanation']
 
 
 class AreaSerializer(serializers.ModelSerializer):
