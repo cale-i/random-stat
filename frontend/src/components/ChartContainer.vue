@@ -1,5 +1,5 @@
 <template>
-	<b-container id="chart">
+	<b-container id="chart" class="pb-5">
 		<br />
 		<b-overlay spinner-variant="success" :show="!loaded.mixChart" rounded="sm">
 			<b-card class="mb-4">

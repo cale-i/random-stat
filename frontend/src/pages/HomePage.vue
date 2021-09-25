@@ -5,6 +5,8 @@
 		<GlobalMessage />
 
 		<ChartContainer />
+
+		<GlobalFooter />
 	</div>
 </template>
 
@@ -12,6 +14,7 @@
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import GlobalMessage from "@/components/GlobalMessage.vue";
 import ChartContainer from "@/components/ChartContainer.vue";
+import GlobalFooter from "@/components/GlobalFooter.vue";
 
 // import { mapGetters } from 'vuex'
 
@@ -20,6 +23,7 @@ export default {
 		GlobalHeader,
 		GlobalMessage,
 		ChartContainer,
+		GlobalFooter,
 	},
 	data: function() {
 		return {
