@@ -105,7 +105,6 @@ export default {
 				.dispatch("chart/getCategoryList", statsCodeID)
 				.then((response) => {
 					this.categoryList = response.data;
-					console.log(this.categoryList);
 
 					this.subCategory.map((e) => {
 						this.statsInfo.subCategory[e.category] = e.name;
