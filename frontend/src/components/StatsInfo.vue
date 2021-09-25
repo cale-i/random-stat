@@ -6,7 +6,7 @@
 		</b-row>
 		<b-row>
 			<b-col><span class="text-justify">担当機関</span></b-col>
-			<b-col><span class="text-justify">内閣府</span></b-col>
+			<b-col><span class="text-justify">総務省</span></b-col>
 		</b-row>
 		<b-row>
 			<b-col><span class="text-justify">データセットの概要</span></b-col>
