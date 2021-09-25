@@ -6,14 +6,16 @@
 		</b-row>
 		<b-row>
 			<b-col><span class="text-justify">担当機関</span></b-col>
-			<b-col><span class="text-justify">内閣府</span></b-col>
+			<b-col><span class="text-justify">総務省</span></b-col>
 		</b-row>
 		<b-row>
 			<b-col><span class="text-justify">データセットの概要</span></b-col>
 			<b-col>
-				<b-icon id="explanation" icon="info-circle-fill"></b-icon>
-				<b-popover target="explanation" triggers="hover">
-					{{ getExplanation(statsCodeID) }}
+				<b-icon :id="target" icon="info-circle-fill"></b-icon>
+				<b-popover :target="target" triggers="hover">
+					<div v-for="item in getExplanation(statsCodeID)" :key="item.key">
+						{{ item }}
+					</div>
 				</b-popover>
 			</b-col>
 		</b-row>
@@ -71,6 +73,10 @@ export default {
 			type: Array,
 			default: null,
 		},
+		target: {
+			type: String,
+			default: null,
+		},
 	},
 	data: () => ({
 		statsInfo: {
@@ -102,7 +108,6 @@ export default {
 				.dispatch("chart/getCategoryList", statsCodeID)
 				.then((response) => {
 					this.categoryList = response.data;
-					console.log(this.categoryList);
 
 					this.subCategory.map((e) => {
 						this.statsInfo.subCategory[e.category] = e.name;
@@ -114,7 +119,7 @@ export default {
 			const statsCodeList = this.statsCodeList;
 			for (const el of statsCodeList) {
 				if (el.id === statsCodeID) {
-					let explanation = el.explanation.replaceAll("<br>", "\n");
+					let explanation = el.explanation.split("<br>");
 					return explanation;
 				}
 			}
