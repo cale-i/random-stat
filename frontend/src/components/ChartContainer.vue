@@ -8,6 +8,9 @@
 					:chart-data="displayDataMix"
 					:options="displayOptionMix"
 				></chart>
+				<div class="btn btn-secondary mt-3" @click="getRandomStats">
+					ランダムな統計表セットを再取得
+				</div>
 			</b-card>
 
 			<b-row>
