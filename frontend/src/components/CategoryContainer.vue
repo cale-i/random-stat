@@ -117,7 +117,7 @@ export default {
 			handler: function(newValue) {
 				this.selected.statsCodeID = newValue;
 				this.getAreaList(newValue);
-				this.getCategoryList(this.statsCodeID);
+				this.getCategoryList(newValue);
 			},
 		},
 		areaId: {
