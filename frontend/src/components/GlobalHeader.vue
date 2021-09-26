@@ -25,11 +25,6 @@
 							</b-row>
 						</b-dropdown-item>
 						<hr />
-						<b-dropdown-item to="/dashboard" class="mb-2">
-							<b-icon icon="house-door" aria-hidden="true"></b-icon>
-							ダッシュボード
-						</b-dropdown-item>
-
 						<b-dropdown-item-button @click="logout">
 							<b-icon
 								icon="power"

@@ -552,7 +552,7 @@ const socialAuthModule = {
 						store.commit("auth/resetLastLoginType");
 						localStorage.setItem("lastLoginType", payload.provider);
 
-						return { next: "/dashboard", message: "ログインしました｡" };
+						return { next: "/", message: "ログインしました｡" };
 					} else {
 						// アカウント連携
 						context.dispatch("getProviders");

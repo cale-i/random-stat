@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<b-modal
-			id="loginModal"
+			:id="modalId"
 			header-bg-variant="dark"
 			header-text-variant="light"
 			body-bg-variant="light"
@@ -174,7 +174,9 @@ export default {
 		EmailLoginModal,
 	},
 	props: {},
-	data: () => ({}),
+	data: () => ({
+		modalId: "loginModal",
+	}),
 	computed: {
 		lastLoginType() {
 			return this.$store.getters["auth/lastLoginType"];
@@ -188,9 +190,15 @@ export default {
 		},
 		guestLogin() {
 			this.$store.dispatch("auth/guestLogin").then(() => {
-				// クエリ文字列に「next」がなければダッシュボード画面へ
-				const next = this.$route.query.next || "/dashboard";
-				this.$router.replace(next);
+				// クエリ文字列に「next」がなければホーム画面へ
+				const next = this.$route.query.next || "/";
+				if (next === "/") {
+					// モーダルウィンドウを閉じる
+					this.$bvModal.hide(this.modalId);
+				} else {
+					// window.location.href = next;
+					this.$router.replace(next);
+				}
 			});
 		},
 		resetLastLoginType() {

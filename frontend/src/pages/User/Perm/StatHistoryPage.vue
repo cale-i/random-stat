@@ -1,15 +1,12 @@
 <template>
-	<b-container>
-		<h1>統計表示履歴</h1>
-		<b-card>
-			<chart
-				v-if="loaded"
-				:chart-data="displayData"
-				:options="displayOption"
-			></chart>
-		</b-card>
+	<b-card>
+		<chart
+			v-if="loaded"
+			:chart-data="displayData"
+			:options="displayOption"
+		></chart>
 		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
-	</b-container>
+	</b-card>
 </template>
 
 <script>
@@ -26,6 +23,22 @@ export default {
 		statData: null,
 		timeSeriesData: null,
 		page: null,
+		tooltipModel: {
+			title: () => {
+				return "";
+			},
+			label: (tooltipItem, data) => {
+				const index = tooltipItem.datasetIndex;
+				const label = data.datasets[index].label;
+				return label;
+			},
+			afterLabel: (tooltipItem) => {
+				const csv = parseInt(tooltipItem.value).toLocaleString();
+				const title = `  ${tooltipItem.label}年`;
+				const body = `${csv} 人`;
+				return `${title} : ${body}`;
+			},
+		},
 	}),
 	computed: {
 		displayData() {
@@ -88,11 +101,15 @@ export default {
 							ticks: {
 								suggestedMin: 0,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.unit}`;
 								},
 							},
 						},
 					],
+				},
+				tooltips: {
+					callbacks: this.tooltipModel,
 				},
 				responsive: true,
 				maintainAspectRatio: false,
@@ -131,8 +148,6 @@ export default {
 				firstArrObj.push({ time: key, value: value });
 			}
 
-			// TODO ソート
-
 			this.timeSeriesData = firstArrObj;
 			this.loaded = true;
 		},
@@ -144,7 +159,6 @@ export default {
 			};
 		},
 	},
-	watch: {},
 	mounted() {
 		this.getStatHistory();
 	},

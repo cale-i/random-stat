@@ -1,6 +1,6 @@
 <template>
 	<b-modal
-		id="emailLoginModal"
+		:id="mordalId"
 		header-bg-variant="dark"
 		header-text-variant="light"
 		body-bg-variant="light"
@@ -95,6 +95,7 @@ export default {
 			password: "",
 		},
 		loginAttempting: false,
+		mordalId: "emailLoginModal",
 	}),
 	computed: {},
 	methods: {
@@ -114,9 +115,15 @@ export default {
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "ログインしました。",
 					});
-					// クエリ文字列に「next」がなければダッシュボード画面へ
-					const next = this.$route.query.next || "/dashboard";
-					this.$router.replace(next);
+					// クエリ文字列に「next」がなければホーム画面へ
+					const next = this.$route.query.next || "/";
+					if (next === "/") {
+						// モーダルウィンドウを閉じる
+						this.$bvModal.hide(this.modalId);
+					} else {
+						// window.location.href = next;
+						this.$router.replace(next);
+					}
 				})
 				.finally(() => {
 					// Spinner停止

@@ -2,16 +2,27 @@
 	<b-container id="chart" class="pb-5">
 		<br />
 		<b-overlay spinner-variant="success" :show="!loaded.mixChart" rounded="sm">
-			<b-card class="mb-4">
-				<chart
-					v-if="loaded.mixChart"
-					:chart-data="displayDataMix"
-					:options="displayOptionMix"
-				></chart>
-				<div class="btn btn-secondary mt-3" @click="getRandomStats">
-					ランダムな統計表セットを再取得
-				</div>
-			</b-card>
+			<b-tabs content-class="" v-model="tabIndex.mix" class="">
+				<b-tab title="統計表" :title-link-class="linkClass(0, 'mix')" active>
+					<b-card class="mb-4">
+						<chart
+							v-if="loaded.mixChart"
+							:chart-data="displayDataMix"
+							:options="displayOptionMix"
+						></chart>
+						<div class="btn btn-secondary mt-3" @click="getRandomStats">
+							ランダムな統計表セットを再取得
+						</div>
+					</b-card>
+				</b-tab>
+				<b-tab
+					v-if="isLoggedIn && loaded.mixChart"
+					title="履歴"
+					:title-link-class="linkClass(1, 'mix')"
+				>
+					<StatHistoryPage v-if="enableStatHistory" />
+				</b-tab>
+			</b-tabs>
 
 			<b-row>
 				<b-col md="6">
@@ -129,6 +140,7 @@ import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 import StatsInfo from "./StatsInfo";
+import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
 
 export default {
 	name: "ChartContainer",
@@ -137,6 +149,7 @@ export default {
 		CategoryContainer,
 		StatsCodeContainer,
 		StatsInfo,
+		StatHistoryPage,
 	},
 	data: () => ({
 		statData: {
@@ -156,6 +169,7 @@ export default {
 		tabIndex: {
 			first: 0,
 			second: 0,
+			mix: 0,
 		},
 		tooltipModel: {
 			title: () => {
@@ -462,6 +476,12 @@ export default {
 			};
 			return options;
 		},
+		isLoggedIn: function() {
+			return this.$store.getters["auth/isLoggedIn"];
+		},
+		enableStatHistory() {
+			return this.isLoggedIn && this.loaded.mixChart && this.tabIndex.mix === 1;
+		},
 	},
 	methods: {
 		getRandomStats() {
@@ -566,7 +586,11 @@ export default {
 			if (this.tabIndex[target] === idx) {
 				if (target === "first") return ["text-success", "font-weight-bold"];
 				if (target === "second") return ["text-danger", "font-weight-bold"];
+				if (target === "mix")
+					return ["bg-success", "text-white", "font-weight-bold"];
 			} else {
+				if (target === "mix")
+					return ["text-dark", "bg-white", "font-weight-bold", "border"];
 				return ["text-dark"];
 			}
 		},

@@ -5,7 +5,8 @@
 			<span>{{ firstPage }}~{{ lastPage }}件目</span>
 		</div>
 		<b-pagination
-			v-model="currentPage"
+			@input="getStatHistory"
+			:value="currentPage"
 			:total-rows="page.count"
 			:per-page="page.perPage"
 			first-text="最初"
@@ -27,7 +28,7 @@ export default {
 		},
 	},
 	data: () => ({
-		currentPage: null,
+		currentPage: 1,
 	}),
 	computed: {
 		firstPage: function() {
@@ -44,21 +45,11 @@ export default {
 			);
 		},
 	},
-	watch: {
-		currentPage: {
-			handler: function(newValue) {
-				this.currentPage = newValue;
-				this.$emit("movePage", { page: newValue });
-			},
-		},
-	},
 	methods: {
-		setCurrentPage() {
-			this.currentPage = this.page.current;
+		getStatHistory(currentPage) {
+			this.currentPage = currentPage;
+			this.$emit("movePage", { page: currentPage });
 		},
-	},
-	mounted() {
-		this.setCurrentPage();
 	},
 };
 </script>
