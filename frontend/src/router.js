@@ -14,25 +14,6 @@ const router = new VueRouter({
 			name: "home",
 		},
 		{
-			path: "/dashboard",
-			component: () =>
-				import(
-					"@/pages/User/Perm/DashboardBasePage" /* webpackChunkName: "DashboardBase" */
-				),
-			meta: { requiresAuth: true },
-			children: [
-				{
-					path: "",
-					component: () =>
-						import(
-							"@/pages/User/Perm/DashboardHomePage" /* webpackChunkName: "DashboardHome" */
-						),
-					name: "dashboard",
-				},
-			],
-		},
-
-		{
 			path: "/account",
 			component: () =>
 				import(

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<b-modal
-			id="signUpModal"
+			:id="mordalId"
 			header-bg-variant="dark"
 			header-text-variant="light"
 			body-bg-variant="light"
@@ -76,7 +76,9 @@ export default {
 		EmailSignUpModal,
 	},
 	props: {},
-	data: () => ({}),
+	data: () => ({
+		mordalId: "signUpModal",
+	}),
 	computed: {},
 	methods: {
 		signup(provider) {
@@ -86,9 +88,15 @@ export default {
 		},
 		guestLogin() {
 			this.$store.dispatch("auth/guestLogin").then(() => {
-				// クエリ文字列に「next」がなければダッシュボード画面へ
-				const next = this.$route.query.next || "/dashboard";
-				this.$router.replace(next);
+				// クエリ文字列に「next」がなければホーム画面へ
+				const next = this.$route.query.next || "/";
+				if (next === "/") {
+					// モーダルウィンドウを閉じる
+					this.$bvModal.hide(this.modalId);
+				} else {
+					// window.location.href = next;
+					this.$router.replace(next);
+				}
 			});
 		},
 	},
