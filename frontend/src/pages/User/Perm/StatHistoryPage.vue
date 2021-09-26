@@ -1,15 +1,12 @@
 <template>
-	<b-container>
-		<h1>統計表示履歴</h1>
-		<b-card>
-			<chart
-				v-if="loaded"
-				:chart-data="displayData"
-				:options="displayOption"
-			></chart>
-		</b-card>
+	<b-card>
+		<chart
+			v-if="loaded"
+			:chart-data="displayData"
+			:options="displayOption"
+		></chart>
 		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
-	</b-container>
+	</b-card>
 </template>
 
 <script>
