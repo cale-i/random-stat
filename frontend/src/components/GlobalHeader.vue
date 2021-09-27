@@ -10,7 +10,12 @@
 				<template v-if="isLoggedIn">
 					<b-nav-item-dropdown no-caret right>
 						<template #button-content>
-							<img :src="avatar" class="avatar-image" alt="アバターイメージ" />
+							<img
+								v-show="avatar"
+								:src="avatar"
+								class="avatar-image"
+								alt="アバターイメージ"
+							/>
 						</template>
 
 						<b-dropdown-item to="/account/settings" class="account mb-3">
