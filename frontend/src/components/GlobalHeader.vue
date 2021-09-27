@@ -10,13 +10,17 @@
 				<template v-if="isLoggedIn">
 					<b-nav-item-dropdown no-caret right>
 						<template #button-content>
-							<img :src="avatar" class="avatar-image" />
+							<img :src="avatar" class="avatar-image" alt="アバターイメージ" />
 						</template>
 
 						<b-dropdown-item to="/account/settings" class="account mb-3">
 							<b-row>
 								<b-col md="2">
-									<img :src="avatar" class="avatar-image-md" />
+									<img
+										:src="avatar"
+										class="avatar-image-md"
+										alt="アバターイメージ"
+									/>
 								</b-col>
 								<b-col md="10" class="pl-4">
 									<div class="username text-truncate">{{ username }}</div>

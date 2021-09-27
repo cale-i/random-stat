@@ -5,6 +5,7 @@
 				<img
 					:src="previewSrc || avatar.imageURL || avatar.socialImageURL"
 					class="avatar-image"
+					alt="アバターイメージ"
 				/>
 			</div>
 			<b-form-file
