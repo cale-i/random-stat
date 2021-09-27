@@ -4,6 +4,7 @@
 			<div>
 				<img
 					v-show="avatarImage"
+					:src="avatarImage"
 					class="avatar-image"
 					alt="アバターイメージ"
 				/>
@@ -64,6 +65,11 @@ export default {
 	computed: {
 		avatar: function() {
 			return this.$store.state.avatar;
+		},
+		avatarImage() {
+			return (
+				this.previewSrc || this.avatar.imageURL || this.avatar.socialImageURL
+			);
 		},
 	},
 	methods: {
