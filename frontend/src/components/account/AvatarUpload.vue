@@ -3,7 +3,7 @@
 		<b-form @submit.prevent="uploadImage">
 			<div>
 				<img
-					:src="previewSrc || avatar.imageURL || avatar.socialImageURL"
+					v-show="avatarImage"
 					class="avatar-image"
 					alt="アバターイメージ"
 				/>
