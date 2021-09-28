@@ -4,7 +4,7 @@
 
 		<GlobalMessage />
 
-		<ChartContainer />
+		<router-view />
 
 		<GlobalFooter />
 	</div>
@@ -13,7 +13,6 @@
 <script>
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import GlobalMessage from "@/components/GlobalMessage.vue";
-import ChartContainer from "@/components/ChartContainer.vue";
 import GlobalFooter from "@/components/GlobalFooter.vue";
 
 // import { mapGetters } from 'vuex'
@@ -22,13 +21,7 @@ export default {
 	components: {
 		GlobalHeader,
 		GlobalMessage,
-		ChartContainer,
 		GlobalFooter,
-	},
-	data: function() {
-		return {
-			today: "",
-		};
 	},
 	methods: {
 		async authReload() {
@@ -43,9 +36,5 @@ export default {
 	mounted() {
 		this.authReload();
 	},
-	created() {},
-	computed: {},
 };
 </script>
-
-<style scoped></style>

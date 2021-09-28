@@ -11,7 +11,22 @@ const router = new VueRouter({
 			path: "/",
 			component: () =>
 				import("@/pages/HomePage" /* webpackChunkName: "Home" */),
-			name: "home",
+			children: [
+				{
+					path: "",
+					component: () =>
+						import(
+							"@/components/ChartContainer.vue" /* webpackChunkName: "ChartContainer" */
+						),
+					name: "chartContainer",
+				},
+				{
+					path: "about",
+					component: () =>
+						import("@/pages/AboutPage" /* webpackChunkName: "About" */),
+					name: "about",
+				},
+			],
 		},
 		{
 			path: "/account",
