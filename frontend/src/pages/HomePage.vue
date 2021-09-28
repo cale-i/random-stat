@@ -22,13 +22,7 @@ export default {
 	components: {
 		GlobalHeader,
 		GlobalMessage,
-		ChartContainer,
 		GlobalFooter,
-	},
-	data: function() {
-		return {
-			today: "",
-		};
 	},
 	methods: {
 		async authReload() {
@@ -43,9 +37,5 @@ export default {
 	mounted() {
 		this.authReload();
 	},
-	created() {},
-	computed: {},
 };
 </script>
-
-<style scoped></style>
