@@ -1,7 +1,7 @@
 <template>
 	<b-container id="chart" class="pb-5">
 		<br />
-		<b-overlay spinner-variant="success" :show="!loaded.mixChart" rounded="sm">
+		<b-overlay spinner-variant="success" :show="showOverlay" rounded="sm">
 			<b-tabs content-class="" v-model="tabIndex.mix" class="">
 				<b-tab title="統計表" :title-link-class="linkClass(0, 'mix')" active>
 					<b-card class="mb-4">
@@ -481,6 +481,9 @@ export default {
 		},
 		enableStatHistory() {
 			return this.isLoggedIn && this.loaded.mixChart && this.tabIndex.mix === 1;
+		},
+		showOverlay() {
+			return !this.loaded.mixChart;
 		},
 	},
 	methods: {
