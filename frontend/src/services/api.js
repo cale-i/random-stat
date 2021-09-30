@@ -38,7 +38,7 @@ api.interceptors.request.use(
 		// 有効期限切れのaccess_tokenが存在 かつ 有効期限切れのrefresh_tokenが存在
 		// 現在のページが"/"でない場合"/"に移動
 		if (window.location.pathname !== "/") window.location.href = "/";
-		return Promise.reject();
+		return Promise.reject(config);
 	},
 	function(error) {
 		return Promise.reject(error);
