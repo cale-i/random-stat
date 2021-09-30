@@ -106,10 +106,27 @@ export default {
 			this.selected.subCategory[target] = event;
 		},
 		searchStatData() {
-			this.$emit("catchSelected", this.selected);
+			if (this.isValueChaged()) {
+				this.$emit("catchSelected", this.selected);
+			} else {
+				// メッセージ表示
+				this.$store.dispatch("message/setWarningMessage", {
+					message: ["カテゴリが変更されていません"],
+				});
+			}
 		},
 		hasChoice(list) {
 			return list.length > 1;
+		},
+		isValueChaged() {
+			if (this.areaId !== this.selected.area) return true;
+
+			// 配列内の要素を比較
+			const isChangedSubCategory = this.subCategory.some((e) => {
+				// 一つでも異なる値があればtrueを返す
+				return this.selected.subCategory[e.category] !== e.id;
+			});
+			return isChangedSubCategory;
 		},
 	},
 	watch: {
