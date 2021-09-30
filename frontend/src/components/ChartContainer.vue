@@ -499,12 +499,16 @@ export default {
 					this.statsCodeList = response.data;
 				});
 
-			Promise.all([first, second, statsCodeList]).then(() => {
-				this.setTimeSeriesData();
-				this.loaded.first = true;
-				this.loaded.second = true;
-				this.loaded.mixChart = true;
-			});
+			Promise.all([first, second, statsCodeList])
+				.then(() => {
+					this.setTimeSeriesData();
+					this.loaded.first = true;
+					this.loaded.second = true;
+					this.loaded.mixChart = true;
+				})
+				.catch(() => {
+					window.location.href = "/";
+				});
 		},
 		getStatData(target) {
 			// ランダムデータを取得
