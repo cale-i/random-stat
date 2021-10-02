@@ -1,94 +1,162 @@
 <template>
-	<div id="chart">
-		<b-container>
-			<b-card>
-				<template v-if="loaded.mixChart">
-					<chart
-						v-if="loaded.mixChart"
-						:chart-data="displayDataMix"
-						:options="displayOptionMix"
-					></chart>
-				</template>
-				<template v-if="!loaded.mixChart">
-					<b-spinner variant="success" label="Text Centered"></b-spinner>
-				</template>
-			</b-card>
+	<b-container id="chart" class="pb-5">
+		<br />
+		<b-overlay spinner-variant="success" :show="showOverlay" rounded="sm">
+			<b-tabs content-class="" v-model="tabIndex.mix" class="">
+				<b-tab title="統計表" :title-link-class="linkClass(0, 'mix')" active>
+					<b-card class="mb-4">
+						<chart
+							v-if="loaded.mixChart"
+							:chart-data="displayDataMix"
+							:options="displayOptionMix"
+						></chart>
+						<div class="btn btn-secondary mt-3" @click="getRandomStats">
+							ランダムな統計表セットを再取得
+						</div>
+					</b-card>
+				</b-tab>
+				<b-tab
+					v-if="isLoggedIn && loaded.mixChart"
+					title="履歴"
+					:title-link-class="linkClass(1, 'mix')"
+				>
+					<StatHistoryPage v-if="enableStatHistory" />
+				</b-tab>
+			</b-tabs>
 
 			<b-row>
 				<b-col md="6">
 					<b-card>
-						<b-button @click="getStatData('first')">別データを取得</b-button>
-						<StatsCodeContainer
-							v-if="loaded.first"
-							:stats-code-list="statData.first.stats_code_list"
-							:statsCodeID="statData.first.table.id"
-							@catchSelected="searchStatsCode('first', $event)"
-						/>
-
 						<chart
 							v-if="loaded.first"
 							:chart-data="displayDataFirst"
 							:options="displayOptionFirst"
 						></chart>
-						<CategoryContainer
-							v-if="loaded.first"
-							:area-list="statData.first.area_list"
-							:area-id="statData.first.area.id"
-							:category-list="statData.first.category_list"
-							:sub-category="statData.first.sub_category"
-							@catchSelected="searchStatData('first', $event)"
-						/>
+						<hr />
+						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.first">
+							<b-tab
+								title="統計表取得"
+								:title-link-class="linkClass(0, 'first')"
+								active
+							>
+								<div class="btn btn-secondary" @click="getStatData('first')">
+									ランダムな統計表を取得
+								</div>
+								<StatsCodeContainer
+									v-if="loaded.first"
+									:statsCodeList="statsCodeList"
+									:statsCodeID="statData.first.stats_code.id"
+									@catchSelected="searchStatsCode('first', $event)"
+								/>
+							</b-tab>
+
+							<b-tab
+								title="カテゴリー検索"
+								:title-link-class="linkClass(1, 'first')"
+							>
+								<CategoryContainer
+									v-if="loaded.first"
+									:statsCodeID="statData.first.stats_code.id"
+									:area-id="statData.first.area.id"
+									:sub-category="statData.first.sub_category"
+									@catchSelected="searchStatData('first', $event)"
+								/>
+							</b-tab>
+							<b-tab
+								title="統計表詳細"
+								:title-link-class="linkClass(2, 'first')"
+							>
+								<StatsInfo
+									v-if="loaded.first"
+									:statsCodeID="statData.first.stats_code.id"
+									:statsCodeList="statsCodeList"
+									:areaName="statData.first.area.name"
+									:subCategory="statData.first.sub_category"
+									target="first"
+								/>
+							</b-tab>
+						</b-tabs>
 					</b-card>
 				</b-col>
 				<b-col md="6">
 					<b-card>
-						<b-button @click="getStatData('second')">別データを取得</b-button>
-						<StatsCodeContainer
-							v-if="loaded.second"
-							:stats-code-list="statData.second.stats_code_list"
-							:statsCodeID="statData.second.table.id"
-							@catchSelected="searchStatsCode('second', $event)"
-						/>
 						<chart
 							v-if="loaded.second"
 							:chart-data="displayDataSecond"
 							:options="displayOptionSecond"
 						></chart>
-						<CategoryContainer
-							v-if="loaded.second"
-							:area-list="statData.second.area_list"
-							:area-id="statData.second.area.id"
-							:category-list="statData.second.category_list"
-							:sub-category="statData.second.sub_category"
-							@catchSelected="searchStatData('second', $event)"
-						/>
+						<hr />
+						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.second">
+							<b-tab
+								title="統計表取得"
+								:title-link-class="linkClass(0, 'second')"
+								active
+							>
+								<div class="btn btn-secondary" @click="getStatData('second')">
+									ランダムな統計表を取得
+								</div>
+								<StatsCodeContainer
+									v-if="loaded.second"
+									:statsCodeList="statsCodeList"
+									:statsCodeID="statData.second.stats_code.id"
+									@catchSelected="searchStatsCode('second', $event)"
+								/>
+							</b-tab>
+							<b-tab
+								title="カテゴリーを指定"
+								:title-link-class="linkClass(1, 'second')"
+							>
+								<CategoryContainer
+									v-if="loaded.second"
+									:statsCodeID="statData.second.stats_code.id"
+									:area-id="statData.second.area.id"
+									:sub-category="statData.second.sub_category"
+									@catchSelected="searchStatData('second', $event)"
+								/>
+							</b-tab>
+							<b-tab
+								title="統計表詳細"
+								:title-link-class="linkClass(2, 'second')"
+							>
+								<StatsInfo
+									v-if="loaded.second"
+									:statsCodeID="statData.second.stats_code.id"
+									:statsCodeList="statsCodeList"
+									:areaName="statData.second.area.name"
+									:subCategory="statData.second.sub_category"
+									target="second"
+								/>
+							</b-tab>
+						</b-tabs>
 					</b-card>
 				</b-col>
 			</b-row>
-		</b-container>
-	</div>
+		</b-overlay>
+	</b-container>
 </template>
 
 <script>
-// import dayjs from 'dayjs'
 import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
+import StatsInfo from "./StatsInfo";
+import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
 
-// import BarChart from "./chart/BarChart.vue"
 export default {
 	name: "ChartContainer",
 	components: {
 		chart,
 		CategoryContainer,
 		StatsCodeContainer,
-		// BarChart
+		StatsInfo,
+		StatHistoryPage,
 	},
 	data: () => ({
 		statData: {
 			first: null,
 			second: null,
 		},
+		statsCodeList: [],
 		loaded: {
 			mixChart: false,
 			firstChart: false,
@@ -97,6 +165,27 @@ export default {
 		timeSeriesData: {
 			first: null,
 			second: null,
+		},
+		tabIndex: {
+			first: 0,
+			second: 0,
+			mix: 0,
+		},
+		tooltipModel: {
+			title: () => {
+				return "";
+			},
+			label: (tooltipItem, data) => {
+				const index = tooltipItem.datasetIndex;
+				const label = data.datasets[index].label;
+				return label;
+			},
+			afterLabel: (tooltipItem) => {
+				const csv = parseInt(tooltipItem.value).toLocaleString();
+				const title = `  ${tooltipItem.label}年`;
+				const body = `${csv} 人`;
+				return `${title} : ${body}`;
+			},
 		},
 	}),
 	computed: {
@@ -195,7 +284,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.table.name,
+					text: self.statData.first.stats_code.table_name,
 				},
 				hover: {
 					intersect: false,
@@ -239,11 +328,15 @@ export default {
 								// suggestedMax: 60,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.first.unit}`;
 								},
 							},
 						},
 					],
+				},
+				tooltips: {
+					callbacks: this.tooltipModel,
 				},
 				responsive: true,
 				maintainAspectRatio: false,
@@ -256,7 +349,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.second.table.name,
+					text: self.statData.second.stats_code.table_name,
 				},
 				hover: {
 					intersect: false,
@@ -299,11 +392,15 @@ export default {
 								// suggestedMax: 60,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.second.unit}`;
 								},
 							},
 						},
 					],
+				},
+				tooltips: {
+					callbacks: this.tooltipModel,
 				},
 				responsive: true,
 				maintainAspectRatio: false,
@@ -321,7 +418,7 @@ export default {
 				title: {
 					display: true,
 					// text: "",
-					text: `${self.statData.first.table.name}   /   ${self.statData.second.table.name}`,
+					text: `${self.statData.first.stats_code.table_name}   /   ${self.statData.second.stats_code.table_name}`,
 				},
 				hover: {
 					intersect: false,
@@ -334,24 +431,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// グリッドラインを消す
-							// type: "time",
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
@@ -364,6 +446,7 @@ export default {
 								suggestedMax,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.first.unit}`;
 								},
 							},
@@ -377,33 +460,74 @@ export default {
 								suggestedMax,
 								// stepSize: 10,
 								callback: (value) => {
+									value = parseInt(value).toLocaleString();
 									return `${value}${self.statData.second.unit}`;
 								},
 							},
 						},
 					],
 				},
+				tooltips: {
+					mode: "index",
+					callbacks: this.tooltipModel,
+				},
 				responsive: true,
 				maintainAspectRatio: false,
 			};
 			return options;
 		},
+		isLoggedIn: function() {
+			return this.$store.getters["auth/isLoggedIn"];
+		},
+		enableStatHistory() {
+			return this.isLoggedIn && this.loaded.mixChart && this.tabIndex.mix === 1;
+		},
+		showOverlay() {
+			return !this.loaded.mixChart;
+		},
 	},
 	methods: {
-		async getStatData(target) {
+		getRandomStats() {
+			// 2つのランダムな統計表を取得
+			const first = this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData["first"] = response.data;
+			});
+			const second = this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData["second"] = response.data;
+			});
+
+			const statsCodeList = this.$store
+				.dispatch("chart/getStatsCodeList")
+				.then((response) => {
+					this.statsCodeList = response.data;
+				});
+
+			Promise.all([first, second, statsCodeList])
+				.then(() => {
+					this.setTimeSeriesData();
+					this.loaded.first = true;
+					this.loaded.second = true;
+					this.loaded.mixChart = true;
+				})
+				.catch(() => {
+					window.location.href = "/";
+				});
+		},
+		getStatData(target) {
 			// ランダムデータを取得
-			this.statData[target] = await this.$store.dispatch("chart/getChart");
-			this.setTimeSeriesData();
+			this.$store.dispatch("chart/getChart").then((response) => {
+				this.statData[target] = response.data;
+				this.setTimeSeriesData();
+			});
 		},
 		async searchStatData(target, selected) {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
 
 			const params = {
+				stats_code: selected.statsCodeID,
 				area: selected.area,
 				sub_category: Object.values(selected.subCategory),
 			};
-			// console.log(this.statData);
-			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchChart",
 				params
@@ -414,10 +538,8 @@ export default {
 			// CategoryContainerコンポーネントにて指定した条件のデータを取得
 
 			const params = {
-				stats_code_id: selected.statsCodeID,
+				stats_code: selected.statsCodeID,
 			};
-			// console.log(this.statData);
-			// console.log(await this.$store.dispatch("chart/searchChart", params));
 			this.statData[target] = await this.$store.dispatch(
 				"chart/searchStatsCodeChart",
 				params
@@ -464,45 +586,26 @@ export default {
 				secondArrObj.push({ time: key, value: value });
 			}
 
-			// TODO ソート
-
 			this.timeSeriesData["first"] = firstArrObj;
 			this.timeSeriesData["second"] = secondArrObj;
-
-			// this.statData.first.results.map((e) =>
-			// 	timeSet.add(e.time.date.slice(0, 4))
-			// );
-			// this.statData.second.results.map((e) =>
-			// 	timeSet.add(e.time.date.slice(0, 4))
-			// );
-
-			// console.log(timeSet);
-
-			// 欠損値を0で埋める
-			// let firstData = {};
-			// timeSet.map((e) =>
-
-			// );
+		},
+		linkClass(idx, target) {
+			if (this.tabIndex[target] === idx) {
+				if (target === "first") return ["text-success", "font-weight-bold"];
+				if (target === "second") return ["text-danger", "font-weight-bold"];
+				if (target === "mix")
+					return ["bg-success", "text-white", "font-weight-bold"];
+			} else {
+				if (target === "mix")
+					return ["text-dark", "bg-white", "font-weight-bold", "border"];
+				return ["text-dark"];
+			}
 		},
 	},
-	async mounted() {
-		// this.loaded = false
-		try {
-			await this.getStatData("first");
-			await this.getStatData("second");
-			// console.log(this.statData);
-			this.loaded.first = true;
-			this.loaded.second = true;
-			this.loaded.mixChart = true;
-		} catch (e) {
-			console.error(e);
-		}
+	created() {
+		this.getRandomStats();
 	},
 };
 </script>
 
-<style scoped>
-#chart {
-	background-color: #f8f8f8;
-}
-</style>
+<style scoped></style>

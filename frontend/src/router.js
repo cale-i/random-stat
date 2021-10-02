@@ -1,17 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
 import store from "@/store";
-
-// import HomePage from "@/pages/HomePage";
-
-// import LoginPage from "@/pages/User/LoginPage";
-// import CreateAccountPage from "@/pages/User/CreateAccountPage";
-
-import DashboardBasePage from "@/pages/User/Perm/DashboardBasePage";
-import DashboardHomePage from "@/pages/User/Perm/DashboardHomePage";
-
-import AccountPage from "@/pages/User/Perm/AccountPage";
 
 Vue.use(VueRouter);
 
@@ -22,20 +11,103 @@ const router = new VueRouter({
 			path: "/",
 			component: () =>
 				import("@/pages/HomePage" /* webpackChunkName: "Home" */),
-			name: "home",
-		},
-		// { path: "/login", component: LoginPage, name: "login" },
-		// {path: "/create-account",component: CreateAccountPage,name: "create-account",},
-
-		{
-			path: "/dashboard",
-			component: DashboardBasePage,
-			meta: { requiresAuth: true },
 			children: [
-				{ path: "", component: DashboardHomePage },
-				{ path: "account", component: AccountPage },
+				{
+					path: "",
+					component: () =>
+						import(
+							"@/components/ChartContainer.vue" /* webpackChunkName: "ChartContainer" */
+						),
+					name: "chartContainer",
+				},
+				{
+					path: "about",
+					component: () =>
+						import("@/pages/AboutPage" /* webpackChunkName: "About" */),
+					name: "about",
+				},
 			],
 		},
+		{
+			path: "/account",
+			component: () =>
+				import(
+					"@/pages/User/Perm/AccountPage" /* webpackChunkName: "Account" */
+				),
+			meta: { requiresAuth: true },
+			children: [
+				{
+					path: "",
+					redirect: "settings",
+				},
+				{
+					path: "settings",
+					component: () =>
+						import(
+							"@/pages/User/Perm/AccountSettingsPage" /* webpackChunkName: "Settings" */
+						),
+					name: "settings",
+				},
+				{
+					path: "login-record",
+					component: () =>
+						import(
+							"@/pages/User/Perm/LoginRecordPage" /* webpackChunkName: "LoginRecord" */
+						),
+					name: "loginRecord",
+				},
+				{
+					path: "social",
+					name: "socialAuth",
+					component: () =>
+						import(
+							"@/pages/User/Perm/SocialAuthPage" /* webpackChunkName: "SocialAuth" */
+						),
+					children: [
+						{
+							path: "connect/:provider",
+							component: () =>
+								import(
+									"@/pages/User/Perm/SocialAuthPage" /* webpackChunkName: "SocialAuth" */
+								),
+						},
+					],
+				},
+			],
+		},
+		{
+			path: "/activate/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "userActivate" */
+				),
+			name: "userActivate",
+		},
+		{
+			path: "/password/reset/confirm/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "passwordConfirmation" */
+				),
+			name: "passwordConfirmation",
+		},
+		{
+			path: "/email/reset/confirm/:uid/:token",
+			component: () =>
+				import(
+					"@/pages/User/Perm/EmailConfirmationPage" /* webpackChunkName: "emailConfirmation" */
+				),
+			name: "emailConfirmation",
+		},
+		{
+			path: "/social/o/:provider",
+			component: () =>
+				import(
+					"@/pages/User/Perm/social/RedirectPage" /* webpackChunkName: "social" */
+				),
+			name: "social",
+		},
+
 		{ path: "*", redirect: "/" },
 	],
 });
@@ -44,27 +116,27 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 	const isLoggedIn = store.getters["auth/isLoggedIn"];
 	const token = localStorage.getItem("access");
-	console.log("to.path=", to.path);
-	console.log("isLoggedIn=", isLoggedIn);
+	// console.log("to.path=", to.path);
+	// console.log("isLoggedIn=", isLoggedIn);
 
 	// ログインが必要な画面に遷移しようとした場合
 	if (to.matched.some((record) => record.meta.requiresAuth)) {
 		if (isLoggedIn) {
 			// ログインしている場合
-			console.log("already logged in");
+			// console.log("already logged in");
 			next();
 		} else {
 			// ログインしていない場合
 
 			// 認証用トークンが残っていれば、ユーザー情報を再取得
 			if (token != null) {
-				console.log("not logged in, now trying to reload again");
+				// console.log("not logged in, now trying to reload again");
 
 				store
 					.dispatch("auth/reload")
 					.then(() => {
 						// 再取得できた場合そのまま画面遷移
-						console.log("success!");
+						// console.log("success!");
 						next();
 					})
 					.catch(() => {
@@ -84,7 +156,7 @@ router.beforeEach((to, from, next) => {
 
 // ホーム画面へ強制移動
 function forceToHome(to, from, next) {
-	console.log("force user to login page");
+	// console.log("force user to login page");
 	next({
 		path: "/",
 		// 遷移先のURLはクエリ文字列として付加

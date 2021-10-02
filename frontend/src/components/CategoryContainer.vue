@@ -11,26 +11,31 @@
 					class="mb-3"
 					value-field="id"
 					text-field="name"
+					:disabled="!hasChoice(areaList)"
 				></b-form-select>
 			</b-col>
-
-			<b-col md="4" v-for="item in categoryList" :key="item.id">
-				<span class="category-name">
-					{{ item.name }}
-				</span>
-				<b-form-select
-					@change="changeSubCategory(item.id, $event)"
-					:value="selected.subCategory[item.id]"
-					:options="item.sub_category_list"
-					class="mb-3"
-					value-field="id"
-					text-field="name"
-				></b-form-select>
-			</b-col>
+			<template v-if="hasCategoryList">
+				<b-col md="4" v-for="item in categoryList" :key="item.id">
+					<span class="category-name">
+						{{ item.name }}
+					</span>
+					<b-form-select
+						@change="changeSubCategory(item.id, $event)"
+						:value="selected.subCategory[item.id]"
+						:options="item.sub_category_list"
+						class="mb-3"
+						value-field="id"
+						text-field="name"
+						:disabled="!hasChoice(item.sub_category_list)"
+					></b-form-select>
+				</b-col>
+			</template>
 		</b-row>
 		<b-row>
 			<b-col>
-				<b-button @click="searchStatData">上記条件でデータを取得</b-button>
+				<div class="btn btn-secondary" @click="searchStatData">
+					カテゴリーを指定して検索
+				</div>
 			</b-col>
 		</b-row>
 	</div>
@@ -39,16 +44,12 @@
 <script>
 export default {
 	props: {
-		areaId: {
+		statsCodeID: {
 			type: String,
 			default: null,
 		},
-		areaList: {
-			type: Array,
-			default: null,
-		},
-		categoryList: {
-			type: Array,
+		areaId: {
+			type: String,
 			default: null,
 		},
 		subCategory: {
@@ -58,13 +59,19 @@ export default {
 	},
 	data: () => ({
 		selected: {
+			statsCodeID: null,
 			area: null,
 			subCategory: {},
 		},
+		areaList: [],
+		categoryList: [],
+		hasCategoryList: false,
 	}),
 	computed: {},
 	methods: {
 		makeSelected() {
+			// stats code
+			this.selected.statsCodeID = this.statsCodeID;
 			// area
 			// 初期 area IDを格納
 			this.selected.area = this.areaId;
@@ -75,17 +82,61 @@ export default {
 			//    category2: "sub_category2",
 			// }
 			this.subCategory.map((e) => {
-				this.selected.subCategory[e.category.id] = e.id;
+				this.selected.subCategory[e.category] = e.id;
 			});
+			this.hasCategoryList = true;
+		},
+		getAreaList(statsCodeID) {
+			this.$store
+				.dispatch("chart/getAreaList", statsCodeID)
+				.then((response) => {
+					this.areaList = response.data;
+				});
+		},
+		getCategoryList(statsCodeID) {
+			this.hasCategoryList = false;
+			this.$store
+				.dispatch("chart/getCategoryList", statsCodeID)
+				.then((response) => {
+					this.categoryList = response.data;
+					this.makeSelected();
+				});
 		},
 		changeSubCategory(target, event) {
 			this.selected.subCategory[target] = event;
 		},
 		searchStatData() {
-			this.$emit("catchSelected", this.selected);
+			if (this.isValueChaged()) {
+				this.$emit("catchSelected", this.selected);
+			} else {
+				// メッセージ表示
+				this.$store.dispatch("message/setWarningMessage", {
+					message: ["カテゴリが変更されていません"],
+				});
+			}
+		},
+		hasChoice(list) {
+			return list.length > 1;
+		},
+		isValueChaged() {
+			if (this.areaId !== this.selected.area) return true;
+
+			// 配列内の要素を比較
+			const isChangedSubCategory = this.subCategory.some((e) => {
+				// 一つでも異なる値があればtrueを返す
+				return this.selected.subCategory[e.category] !== e.id;
+			});
+			return isChangedSubCategory;
 		},
 	},
 	watch: {
+		statsCodeID: {
+			handler: function(newValue) {
+				this.selected.statsCodeID = newValue;
+				this.getAreaList(newValue);
+				this.getCategoryList(newValue);
+			},
+		},
 		areaId: {
 			handler: function(newValue) {
 				this.selected.area = newValue;
@@ -98,16 +149,14 @@ export default {
 			// 必ず初期化
 			this.selected.subCategory = {};
 			newValue.map((e) => {
-				this.selected.subCategory[e.category.id] = e.id;
+				this.selected.subCategory[e.category] = e.id;
 			});
 		},
 	},
-	mounted() {
-		this.makeSelected();
+	created() {
+		this.getAreaList(this.statsCodeID);
+		this.getCategoryList(this.statsCodeID);
 	},
-	// updated() {
-	//   this.makeSelected();
-	// },
 };
 </script>
 <style scoped>

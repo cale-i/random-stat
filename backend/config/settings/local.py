@@ -14,29 +14,71 @@ from .base import (
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
+#####################
+# Site Map settings #
+#####################
+
+SITE_EMAIL = env('SITE_EMAIL')
+SITE_NAME = 'http://localhost:8000'
+DOMAIN = 'localhost:8000'  # Used for email confirmation URL
 
 #####################
 # Security settings #
 #####################
 
 DEBUG = True
-
 SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+######################
+#   CORS settings    #
+######################
 
-############
-# Database #
-############
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+)
+
+#######################
+#  Database settings  #
+#######################
 
 DATABASES = {
     'default': env.db()
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES['default']['ATOMIC_REQUESTS'] = False
 
-###########
-# Logging #
-###########
+#######################
+#     Static files    #
+#######################
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
+
+################################
+#      S3 Bucket settings      #
+################################
+
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+#######################
+#    Email Backend    #
+#######################
+
+EMAIL_HOST_USER = env('SITE_EMAIL')
+DEFAULT_FROM_EMAIL = env('SITE_EMAIL')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
+
+#######################
+#       Logging       #
+#######################
 
 LOGGING = {
     # バージョンは「1」固定
@@ -83,30 +125,12 @@ LOGGING = {
     },
 }
 
-
-################
-# Static files #
-################
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
-
-################################
-#      S3 Bucket settings      #
-################################
-
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-
-#################
-# debug toolbar #
-#################
+#######################
+#    debug toolbar    #
+#######################
 
 if DEBUG:
+
     def show_toolbar(request):
         return True
 
@@ -121,28 +145,46 @@ if DEBUG:
     }
 
 
-########
-# CORS #
-########
-
-INSTALLED_APPS += [
-    'corsheaders',
-]
-
-MIDDLEWARE += [
-    'corsheaders.middleware.CorsMiddleware',
-]
-
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-)
-
-
-##################
-# REST Framework #
-##################
+#################################
+#     Django REST framework     #
+#################################
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += [
     'rest_framework.renderers.BrowsableAPIRenderer']
+
+#######################
+#     Guest Login     #
+#######################
+
+GUEST_EMAIL = env('GUEST_EMAIL')
+GUEST_PASSWORD = env('GUEST_PASSWORD')
+
+#######################
+#   Cookie Settings   #
+#######################
+
+JWT_COOKIE = {
+    'SAMESITE': 'Lax',
+    'SECURE': False,
+}
+
+#######################
+#        djoser       #
+#######################
+DJOSER['SOCIAL_AUTH_ALLOWED_REDIRECT_URIS'] = [
+    'http://localhost:8000/social/o/google-oauth2/',
+    'http://localhost:8000/social/o/github/',
+    'http://localhost:8000/social/o/facebook/',
+]
+
+#######################
+#     Social Auth     #
+#######################
+
+# Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GITHUB_KEY = env('SOCIAL_AUTH_GITHUB_KEY_LOCAL')
+SOCIAL_AUTH_GITHUB_SECRET = env('SOCIAL_AUTH_GITHUB_SECRET_LOCAL')
+SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY_LOCAL')
+SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET_LOCAL')

@@ -1,130 +1,69 @@
 <template>
-	<div class="container">
-		<b-row>
-			<b-col md="4">
-				<aside style="background-color:gray;">
-					<h2>アカウント</h2>
-					<h2>ログイン履歴</h2>
-				</aside>
-			</b-col>
-			<b-col md="8">
-				<h1 class="mb-5">アカウント管理</h1>
-				<AvatarUpload />
-				<b-form-row class="my-3">
-					<b-col md="3">
-						<label class="m-2" for="inputUsername">Username:</label>
-					</b-col>
-					<b-col md="6">
-						<b-form-input
-							id="inputUsername"
-							v-model="user.username"
-							type="text"
-							required
-							class=""
-						></b-form-input>
-					</b-col>
-					<b-col md="3">
-						<b-button
-							size="md"
-							variant="success"
-							@click="changeUsername"
-							class="w-100"
-						>
-							ユーザー名変更
-						</b-button>
-					</b-col>
-				</b-form-row>
+	<div>
+		<b-container>
+			<GlobalHeader />
+			<GlobalMessage />
+			<div class="container">
+				<b-row align-v="baseline">
+					<b-col md="3" class="bg-white mt-5">
+						<aside class="mt-5 mb-3 sidebar">
+							<b-row>
+								<router-link to="settings" class="sidebar-item">
+									アカウント管理
+								</router-link>
+							</b-row>
 
-				<b-form-row class="my-3">
-					<b-col md="3">
-						<label class="m-2" for="inputEmail">Email:</label>
-					</b-col>
-					<b-col md="6">
-						<b-form-input
-							id="inputEmail"
-							:placeholder="user.email"
-							type="email"
-							required
-							class=""
-							disabled
-						></b-form-input>
-					</b-col>
-					<b-col md="3">
-						<div v-b-modal.changeEmailModal class="btn btn-success w-100">
-							Email変更
-						</div>
-					</b-col>
-				</b-form-row>
+							<hr />
 
-				<b-form-row class="my-3">
-					<b-col md="3"> </b-col>
-					<b-col md="6"> </b-col>
-					<b-col md="3">
-						<div v-b-modal.changePasswordModal class="btn btn-success w-100">
-							パスワード変更
-						</div>
-					</b-col>
-				</b-form-row>
+							<b-row>
+								<router-link to="login-record" class="sidebar-item">
+									ログイン履歴
+								</router-link>
+							</b-row>
 
-				<b-form-row class="my-3">
-					<b-col md="3"> </b-col>
-					<b-col md="6"> </b-col>
-					<b-col md="3">
-						<div v-b-modal.deleteAccountModal class="btn btn-danger w-100 mt-5">
-							アカウント削除
-						</div>
+							<hr />
+
+							<b-row>
+								<router-link to="social" class="sidebar-item">
+									アカウント連携
+								</router-link>
+							</b-row>
+						</aside>
 					</b-col>
-				</b-form-row>
-			</b-col>
-		</b-row>
-		<ChangeEmailModal />
-		<ChangePasswordModal />
-		<DeleteAccountModal />
+					<b-col></b-col>
+					<b-col md="8" class="bg-white">
+						<router-view />
+					</b-col>
+				</b-row>
+			</div>
+		</b-container>
+		<GlobalFooter />
 	</div>
 </template>
 
 <script>
-import ChangeEmailModal from "@/components/account/auth/ChangeEmailModal.vue";
-import ChangePasswordModal from "@/components/account/auth/ChangePasswordModal.vue";
-import DeleteAccountModal from "@/components/account/auth/DeleteAccountModal.vue";
-
-import AvatarUpload from "@/components/account/AvatarUpload.vue";
-
-// import { mapGetters } from "vuex";
-
+import GlobalMessage from "@/components/GlobalMessage.vue";
+import GlobalHeader from "@/components/GlobalHeader.vue";
+import GlobalFooter from "@/components/GlobalFooter.vue";
 export default {
 	components: {
-		ChangeEmailModal,
-		ChangePasswordModal,
-		DeleteAccountModal,
-		AvatarUpload,
+		GlobalMessage,
+		GlobalHeader,
+		GlobalFooter,
 	},
 	props: {},
 	data: () => ({}),
-	computed: {
-		user: function() {
-			return this.$store.state.auth;
-		},
-	},
-	methods: {
-		changeUsername() {
-			console.log(this.user.username);
-
-			this.$store
-				.dispatch("auth/setUsername", {
-					username: this.user.username,
-				})
-				.then(() => {
-					console.log("username changed!");
-					this.$store.dispatch("message/setInfoMessage", {
-						message: "ユーザー名を変更しました",
-					});
-				});
-		},
-	},
+	computed: {},
+	methods: {},
 	watch: {},
 	mounted() {},
 	updated() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.sidebar-item {
+	font-size: 1.6rem;
+	color: black;
+	padding-left: 1rem;
+}
+</style>

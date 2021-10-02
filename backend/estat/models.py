@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class StatName(models.Model):
@@ -273,4 +276,37 @@ class StatsData(models.Model):
         verbose_name='統計データ数値',
         null=True,
         max_length=255
+    )
+
+
+class StatHistory(models.Model):
+    """
+    統計表示履歴
+    """
+
+    class Meta:
+        db_table = 'stat_history'
+
+    stats_code = models.ForeignKey(
+        StatsCode,
+        verbose_name='統計表 表ID',
+        on_delete=models.PROTECT,
+    )
+    area = models.ForeignKey(
+        Area,
+        verbose_name='地域コード',
+        on_delete=models.PROTECT
+    )
+    sub_category = models.ManyToManyField(
+        SubCategory,
+        verbose_name='サブカテゴリコード'
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name='ユーザー',
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField(
+        verbose_name='Attempt Time',
+        auto_now_add=True,
     )

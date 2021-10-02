@@ -6,11 +6,12 @@ django-filter
 djangorestframework
 djangorestframework-simplejwt
 djoser
-django-axes
 django-cleanup
 pillow
 django-imagekit
 django-storages
+social-auth-app-django
+django-csp
 boto3
 python-dotenv
 psycopg2

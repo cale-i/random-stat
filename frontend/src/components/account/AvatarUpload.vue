@@ -1,8 +1,13 @@
 <template>
-	<div class="container">
+	<div class="container my-5">
 		<b-form @submit.prevent="uploadImage">
 			<div>
-				<img :src="previewSrc || avatar.imageURL" class="avatar-image" />
+				<img
+					v-show="avatarImage"
+					:src="avatarImage"
+					class="avatar-image"
+					alt="アバターイメージ"
+				/>
 			</div>
 			<b-form-file
 				v-model="form.image"
@@ -60,6 +65,11 @@ export default {
 	computed: {
 		avatar: function() {
 			return this.$store.state.avatar;
+		},
+		avatarImage() {
+			return (
+				this.previewSrc || this.avatar.imageURL || this.avatar.socialImageURL
+			);
 		},
 	},
 	methods: {

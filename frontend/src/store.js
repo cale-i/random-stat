@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import api from "@/services/api";
+import { api, refreshApi } from "@/services/api";
 
 Vue.use(Vuex);
 
@@ -22,8 +22,6 @@ const chartModule = {
 			return api({
 				method: "get",
 				url: context.getters.chartURL,
-			}).then((response) => {
-				return response.data;
 			});
 		},
 		searchChart(context, data) {
@@ -44,6 +42,20 @@ const chartModule = {
 				return response.data;
 			});
 		},
+		getStatHistory(context, payload) {
+			return api.get("timeseries/history/", { params: payload });
+		},
+		getStatsCodeList() {
+			return api.get("timeseries/statscode/");
+		},
+		getAreaList(context, payload) {
+			return api.get("timeseries/area/", { params: { stats_code: payload } });
+		},
+		getCategoryList(context, payload) {
+			return api.get("timeseries/category/", {
+				params: { stats_code: payload },
+			});
+		},
 	},
 };
 
@@ -55,11 +67,23 @@ const authModule = {
 		email: "",
 		username: "",
 		isLoggedIn: false,
+		validPassword: true,
+		lastLoginType: {
+			"google-oauth2": false,
+			github: false,
+			twitter: false,
+			email: false,
+		},
 	},
 	getters: {
 		email: (state) => state.email,
 		username: (state) => state.username,
 		isLoggedIn: (state) => state.isLoggedIn,
+		validPassword: (state) => state.validPassword,
+		lastLoginType: (state) => state.lastLoginType,
+		isGuestUser(state) {
+			return state.email === "example@example.com";
+		},
 	},
 	mutations: {
 		setUserData(state, payload) {
@@ -71,6 +95,22 @@ const authModule = {
 			state.email = "";
 			state.username = "";
 			state.isLoggedIn = false;
+		},
+		setValidPassword(state, payload) {
+			// payload === response.data
+			state.validPassword = payload.valid_password;
+		},
+		setLastLoginType(state) {
+			const lastLoginType = localStorage.getItem("lastLoginType");
+			if (lastLoginType) state.lastLoginType[lastLoginType] = true;
+		},
+		resetLastLoginType(state) {
+			state.lastLoginType = {
+				"google-oauth2": false,
+				github: false,
+				twitter: false,
+				email: false,
+			};
 		},
 	},
 	actions: {
@@ -84,40 +124,74 @@ const authModule = {
 				.then((response) => {
 					// 認証用トークンをlocalStorageに保存
 					localStorage.setItem("access", response.data.access);
+					// 有効なパスワードが設定されているかを判別
+					context.commit("setValidPassword", response.data);
 					//ユーザー情報を取得してstoreのユーザー情報を更新
 					const user = context.dispatch("reload");
+					// 前回のログイン情報を保存
+					context.commit("resetLastLoginType");
+					localStorage.setItem("lastLoginType", "email");
 
 					return user;
 				});
 		},
+		guestLogin(context) {
+			return api.post("/auth/jwt/create/guest/").then((response) => {
+				// 認証用トークンをlocalStorageに保存
+				localStorage.setItem("access", response.data.access);
+				// 有効なパスワードが設定されているかを判別
+				context.commit("setValidPassword", response.data);
+				//ユーザー情報を取得してstoreのユーザー情報を更新
+				store.dispatch("auth/reload");
+
+				// メッセージ表示
+				store.dispatch("message/setInfoMessage", {
+					message: "ログインしました。",
+				});
+			});
+		},
 		// logout/
 		logout(context) {
+			// server side ログアウト処理
+			refreshApi.post("/auth/jwt/logout/");
 			// 認証用トークンをlocalStorageから削除
 			localStorage.removeItem("access");
 			// storeのユーザー情報をクリア
 			context.commit("clearUserData");
-			console.log("logouted");
+		},
+		// Refresh Token
+		refresh(context) {
+			return refreshApi
+				.post("/auth/jwt/refresh/")
+				.then((response) => {
+					// 認証用トークンをlocalStorageに保存
+					localStorage.setItem("access", response.data.access);
+					// 有効なパスワードが設定されているか
+					context.commit("setValidPassword", response.data);
+				})
+				.catch(() => {
+					// localStorageに保存されている認証用トークンを削除
+					localStorage.removeItem("access");
+					// storeのユーザー情報をクリア
+					context.commit("clearUserData");
+				});
 		},
 		setEmail(context, payload) {
 			// ユーザー名変更
-			console.log(payload);
 			return api
 				.post("/auth/users/set_email/", {
 					new_email: payload.new_email,
 					re_new_email: payload.re_new_email,
 					current_password: payload.current_password,
 				})
-				.then((response) => {
-					console.log(response);
+				.then(() => {
 					return context.dispatch("reload");
 				});
 		},
 		setUsername(context, payload) {
-			// console.log(payload)
 			const response = context.dispatch("updateField", {
 				username: payload.username,
 			});
-			// console.log(response)
 			return response;
 		},
 		setPassword(context, payload) {
@@ -128,8 +202,7 @@ const authModule = {
 					re_new_password: payload.re_new_password,
 					current_password: payload.current_password,
 				})
-				.then((response) => {
-					console.log(response);
+				.then(() => {
 					return context.dispatch("reload");
 				});
 		},
@@ -143,13 +216,11 @@ const authModule = {
 				// ユーザーアバターの読み込み
 				store.dispatch("avatar/reload");
 
-				console.log(user);
 				return user;
 			});
 		},
 		// アカウント作成
 		createAccount(context, payload) {
-			console.log(payload);
 			return api
 				.post("/auth/users/", {
 					username: payload.username,
@@ -159,12 +230,7 @@ const authModule = {
 				})
 				.then((response) => {
 					const user = response.data;
-					console.log(user);
 					return user;
-				})
-				.catch((response) => {
-					console.log(response);
-					return undefined;
 				});
 		},
 		// アカウント削除
@@ -175,21 +241,14 @@ const authModule = {
 						current_password: payload.current_password,
 					},
 				})
-				.then((response) => {
-					console.log("deleted");
-					console.log(response);
+				.then(() => {
 					context.dispatch("logout");
 				});
-			// .catch((response) => {
-			// console.log("response", response);
-			// });
 		},
 		updateField(context, payload) {
 			// patch操作は同一URIに対し、
 			// { User.FIELDS_TO_UPDATE: VALUE } 形式のparamを送るため抽象化
-			return api.patch("/auth/users/me/", payload).then((response) => {
-				console.log("updated!");
-				console.log(response);
+			return api.patch("/auth/users/me/", payload).then(() => {
 				return context.dispatch("reload");
 			});
 		},
@@ -205,7 +264,7 @@ const messageModule = {
 		error: "",
 		warnings: [],
 		info: "",
-		dismissSecs: 5,
+		dismissSecs: 3,
 		dismissCountDown: 0,
 	},
 
@@ -279,14 +338,19 @@ const avatarModule = {
 	state: {
 		isDefaultImage: true,
 		imageURL: null,
+		socialImageURL: null,
 	},
 	getters: {
 		imageURL: (state) => state.imageURL,
+		socialImageURL: (state) => state.socialImageURL,
 		isDefaultImage: (state) => state.isDefaultImage,
 	},
 	mutations: {
 		setImageURL(state, response) {
 			state.imageURL = response.data.image_url;
+		},
+		setSocialImageURL(state, response) {
+			state.socialImageURL = response.data.social_image_url;
 		},
 		setIsDefaultImage(state, response) {
 			state.isDefaultImage = response.data.is_default_image;
@@ -306,9 +370,216 @@ const avatarModule = {
 		reload(context) {
 			return api.get("/user-profile/avatar/").then((response) => {
 				context.commit("setImageURL", response);
+				context.commit("setSocialImageURL", response);
 				context.commit("setIsDefaultImage", response);
 
 				return response;
+			});
+		},
+	},
+};
+// ログイン履歴
+const loginRecordModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {
+		records: [],
+	},
+	getters: {
+		records: (state) => state.records,
+	},
+	mutations: {
+		setRecord(state, payload) {
+			state.records = payload.data;
+		},
+	},
+	actions: {
+		getRecord(context) {
+			api.get("/auth/record/login/").then((response) => {
+				context.commit("setRecord", response);
+			});
+		},
+	},
+};
+
+const activationModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		activate(context, payload) {
+			return api.post("/auth/users/activation/", {
+				uid: payload.uid,
+				token: payload.token,
+			});
+		},
+	},
+};
+// アクティベーションメール再送信
+const resendActivationEmailModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail(context, payload) {
+			return api.post("/auth/users/resend_activation/", {
+				email: payload.email,
+			});
+		},
+	},
+};
+// パスワード再設定
+const resetPasswordModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail(context, payload) {
+			return api.post("/auth/users/reset_password/", { email: payload.email });
+		},
+		confirmation(context, payload) {
+			return api
+				.post("/auth/users/reset_password_confirm/", {
+					uid: payload.uid,
+					token: payload.token,
+					new_password: payload.new_password,
+					re_new_password: payload.re_new_password,
+				})
+				.then(() => {
+					store.dispatch("auth/logout");
+				});
+		},
+	},
+};
+// メールアドレス再設定
+const resetEmailModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {
+		sendEmail() {
+			const email = store.getters["auth/email"];
+			return api.post("/auth/users/reset_email/", { email });
+		},
+		confirmation(context, payload) {
+			return api
+				.post("/auth/users/reset_email_confirm/", {
+					uid: payload.uid,
+					token: payload.token,
+					new_email: payload.new_email,
+					re_new_email: payload.re_new_email,
+				})
+				.catch();
+		},
+	},
+};
+// ソーシャル認証
+const socialAuthModule = {
+	strict: process.env.NODE_ENV !== "production",
+	namespaced: true,
+	state: {
+		providers: {
+			"google-oauth2": false,
+			github: false,
+			facebook: false,
+		},
+	},
+	getters: {
+		providers: (state) => state.providers,
+	},
+	mutations: {
+		setProviders(state, payload) {
+			const providers = payload.providers;
+			if (providers === undefined) return;
+
+			providers.map((arr) => {
+				state.providers[arr.provider] = true;
+			});
+		},
+		initProviders(state) {
+			state.providers["google-oauth2"] = false;
+			state.providers["github"] = false;
+			state.providers["facebook"] = false;
+		},
+	},
+	actions: {
+		authenticate(context, payload) {
+			const pathname = `/social/o/${payload.provider}/`;
+			const url = `/auth/social/o/${payload.provider}/`;
+
+			const redirect_uri = `${window.location.origin}${pathname}`;
+			return api
+				.get(url, {
+					params: {
+						redirect_uri,
+					},
+				})
+				.then((response) => {
+					window.location.href = response.data.authorization_url;
+				});
+		},
+		authComplete(context, payload) {
+			const formData = new URLSearchParams();
+			formData.append("code", payload.code);
+			formData.append("state", payload.state);
+
+			return api
+				.post(`/auth/social/o/${payload.provider}/`, formData, {
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+						"X-Requested-With": "XMLHttpRequest",
+					},
+				})
+				.then((response) => {
+					if (response.data.access) {
+						// アカウント登録
+
+						// 認証用トークンをlocalStorageに保存
+						localStorage.setItem("access", response.data.access);
+						// 有効なパスワードが設定されているか
+						store.commit("auth/setValidPassword", response.data);
+						//ユーザー情報を取得してstoreのユーザー情報を更新
+						store.dispatch("auth/reload");
+						// 前回のログイン情報を保存
+						store.commit("auth/resetLastLoginType");
+						localStorage.setItem("lastLoginType", payload.provider);
+
+						return { next: "/", message: "ログインしました｡" };
+					} else {
+						// アカウント連携
+						context.dispatch("getProviders");
+						return {
+							next: "/account/social",
+							message: "アカウントを連携しました｡",
+						};
+					}
+				});
+		},
+		disconnect(context, payload) {
+			api.post(`/auth/social/disconnect/${payload.provider}/`).then(() => {
+				context.dispatch("getProviders");
+				store.dispatch("avatar/reload");
+			});
+		},
+		getProviders(context) {
+			// 連携済みサービス一覧を取得
+			api.get("/auth/social/services/").then((response) => {
+				context.commit("initProviders");
+				context.commit("setProviders", response.data);
+				store.commit("auth/setValidPassword", response.data);
+			});
+		},
+		setPasswordSendEmail(context, payload) {
+			return api.post("/auth/social/users/set_password/", {
+				email: payload.email,
 			});
 		},
 	},
@@ -320,6 +591,12 @@ const store = new Vuex.Store({
 		auth: authModule,
 		message: messageModule,
 		avatar: avatarModule,
+		loginRecord: loginRecordModule,
+		activation: activationModule,
+		resendActivationEmail: resendActivationEmailModule,
+		resetPassword: resetPasswordModule,
+		resetEmail: resetEmailModule,
+		socialAuth: socialAuthModule,
 	},
 });
 
