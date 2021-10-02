@@ -116,27 +116,27 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 	const isLoggedIn = store.getters["auth/isLoggedIn"];
 	const token = localStorage.getItem("access");
-	console.log("to.path=", to.path);
-	console.log("isLoggedIn=", isLoggedIn);
+	// console.log("to.path=", to.path);
+	// console.log("isLoggedIn=", isLoggedIn);
 
 	// ログインが必要な画面に遷移しようとした場合
 	if (to.matched.some((record) => record.meta.requiresAuth)) {
 		if (isLoggedIn) {
 			// ログインしている場合
-			console.log("already logged in");
+			// console.log("already logged in");
 			next();
 		} else {
 			// ログインしていない場合
 
 			// 認証用トークンが残っていれば、ユーザー情報を再取得
 			if (token != null) {
-				console.log("not logged in, now trying to reload again");
+				// console.log("not logged in, now trying to reload again");
 
 				store
 					.dispatch("auth/reload")
 					.then(() => {
 						// 再取得できた場合そのまま画面遷移
-						console.log("success!");
+						// console.log("success!");
 						next();
 					})
 					.catch(() => {
@@ -156,7 +156,7 @@ router.beforeEach((to, from, next) => {
 
 // ホーム画面へ強制移動
 function forceToHome(to, from, next) {
-	console.log("force user to login page");
+	// console.log("force user to login page");
 	next({
 		path: "/",
 		// 遷移先のURLはクエリ文字列として付加
