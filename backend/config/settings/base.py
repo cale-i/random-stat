@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 CSP_DEFAULT_SRC = ("'none'", )
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",
+               'blob:',
                'https://random-stat.s3.amazonaws.com',
                'https://lh3.googleusercontent.com'
                )
