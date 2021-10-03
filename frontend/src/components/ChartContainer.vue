@@ -508,9 +508,6 @@ export default {
 					this.loaded.first = true;
 					this.loaded.second = true;
 					this.loaded.mixChart = true;
-				})
-				.catch(() => {
-					window.location.href = "/";
 				});
 		},
 		getStatData(target) {
