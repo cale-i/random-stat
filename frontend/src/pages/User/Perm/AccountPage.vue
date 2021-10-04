@@ -1,8 +1,8 @@
 <template>
 	<div>
+		<GlobalHeader />
+		<GlobalMessage />
 		<b-container>
-			<GlobalHeader />
-			<GlobalMessage />
 			<div class="container">
 				<b-row align-v="baseline">
 					<b-col md="3" class="bg-white mt-5">
