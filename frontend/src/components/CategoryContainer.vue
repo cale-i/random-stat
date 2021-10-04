@@ -1,43 +1,54 @@
 <template>
 	<div>
-		<b-row>
-			<b-col md="4">
-				<span class="area-name">
-					地域
-				</span>
-				<b-form-select
-					v-model="selected.area"
-					:options="areaList"
-					class="mb-3"
-					value-field="id"
-					text-field="name"
-					:disabled="!hasChoice(areaList)"
-				></b-form-select>
-			</b-col>
-			<template v-if="hasCategoryList">
-				<b-col md="4" v-for="item in categoryList" :key="item.id">
-					<span class="category-name">
-						{{ item.name }}
-					</span>
+		<b-form>
+			<template>
+				<b-form-group
+					id="selectGroupArea"
+					label="地域"
+					label-cols-md="6"
+					label-align-md="right"
+					label-for="selectArea"
+					class="my-4"
+				>
 					<b-form-select
-						@change="changeSubCategory(item.id, $event)"
-						:value="selected.subCategory[item.id]"
-						:options="item.sub_category_list"
-						class="mb-3"
+						id="selectArea"
+						v-model="selected.area"
+						:options="areaList"
+						class="mb-0"
 						value-field="id"
 						text-field="name"
-						:disabled="!hasChoice(item.sub_category_list)"
+						:disabled="!hasChoice(areaList)"
 					></b-form-select>
-				</b-col>
+				</b-form-group>
 			</template>
-		</b-row>
-		<b-row>
-			<b-col>
-				<div class="btn btn-secondary" @click="searchStatData">
-					カテゴリーを指定して検索
+
+			<template v-if="hasCategoryList">
+				<div v-for="item in categoryList" :key="item.id">
+					<b-form-group
+						id="selectGroupSubCategory"
+						:label="item.name"
+						label-cols-md="6"
+						label-align-md="right"
+						label-for="inputSubCategory"
+						class="my-4"
+					>
+						<b-form-select
+							@change="changeSubCategory(item.id, $event)"
+							:value="selected.subCategory[item.id]"
+							:options="item.sub_category_list"
+							class="mb-0"
+							value-field="id"
+							text-field="name"
+							:disabled="!hasChoice(item.sub_category_list)"
+						></b-form-select>
+					</b-form-group>
 				</div>
-			</b-col>
-		</b-row>
+			</template>
+
+			<div class="btn btn-secondary" @click="searchStatData">
+				カテゴリーを指定して検索
+			</div>
+		</b-form>
 	</div>
 </template>
 
