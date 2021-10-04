@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<b-row class="mt-3">
-			<b-col md="8">
+			<b-col md="6">
 				<span class="stats-code"></span>
 				<b-form-select
 					v-model="selected.statsCodeID"
@@ -11,7 +11,7 @@
 					text-field="table_name"
 				></b-form-select>
 			</b-col>
-			<b-col md="4">
+			<b-col md="6">
 				<div @click="searchStatData" class="btn btn btn-secondary">
 					統計表を指定して取得
 				</div>
