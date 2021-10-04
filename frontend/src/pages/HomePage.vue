@@ -1,5 +1,5 @@
 <template>
-	<div id="home-page">
+	<div id="home-page" class="homepage">
 		<GlobalHeader />
 
 		<GlobalMessage />
@@ -38,3 +38,10 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.homepage {
+	height: 100vh;
+	background-color: #f8f9fa;
+}
+</style>

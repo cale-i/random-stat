@@ -1,138 +1,168 @@
 <template>
-	<b-container id="chart" class="pb-5">
-		<br />
+	<div id="chart-body" class="chart-body">
 		<b-overlay spinner-variant="success" :show="showOverlay" rounded="sm">
-			<b-tabs content-class="" v-model="tabIndex.mix" class="">
-				<b-tab title="統計表" :title-link-class="linkClass(0, 'mix')" active>
-					<b-card class="mb-4">
-						<chart
-							v-if="loaded.mixChart"
-							:chart-data="displayDataMix"
-							:options="displayOptionMix"
-						></chart>
-						<div class="btn btn-secondary mt-3" @click="getRandomStats">
-							ランダムな統計表セットを再取得
-						</div>
-					</b-card>
-				</b-tab>
-				<b-tab
-					v-if="isLoggedIn && loaded.mixChart"
-					title="履歴"
-					:title-link-class="linkClass(1, 'mix')"
-				>
-					<StatHistoryPage v-if="enableStatHistory" />
-				</b-tab>
-			</b-tabs>
-
 			<b-row>
-				<b-col md="6">
-					<b-card>
-						<chart
-							v-if="loaded.first"
-							:chart-data="displayDataFirst"
-							:options="displayOptionFirst"
-						></chart>
-						<hr />
-						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.first">
-							<b-tab
-								title="統計表取得"
-								:title-link-class="linkClass(0, 'first')"
-								active
-							>
-								<div class="btn btn-secondary" @click="getStatData('first')">
-									ランダムな統計表を取得
+				<b-col md="6" class="mix-chart">
+					<b-tabs content-class="" v-model="tabIndex.mix">
+						<b-tab
+							title="統計表"
+							:title-link-class="linkClass(0, 'mix')"
+							active
+						>
+							<b-card class="mb-2">
+								<chart
+									v-if="loaded.mixChart"
+									:chart-data="displayDataMix"
+									:options="displayOptionMix"
+									:styles="mixChartStyles"
+								></chart>
+								<div class="btn btn-secondary mt-3" @click="getRandomStats">
+									ランダムな統計表セットを再取得
 								</div>
-								<StatsCodeContainer
-									v-if="loaded.first"
-									:statsCodeList="statsCodeList"
-									:statsCodeID="statData.first.stats_code.id"
-									@catchSelected="searchStatsCode('first', $event)"
-								/>
-							</b-tab>
-
-							<b-tab
-								title="カテゴリー検索"
-								:title-link-class="linkClass(1, 'first')"
-							>
-								<CategoryContainer
-									v-if="loaded.first"
-									:statsCodeID="statData.first.stats_code.id"
-									:area-id="statData.first.area.id"
-									:sub-category="statData.first.sub_category"
-									@catchSelected="searchStatData('first', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="統計表詳細"
-								:title-link-class="linkClass(2, 'first')"
-							>
-								<StatsInfo
-									v-if="loaded.first"
-									:statsCodeID="statData.first.stats_code.id"
-									:statsCodeList="statsCodeList"
-									:areaName="statData.first.area.name"
-									:subCategory="statData.first.sub_category"
-									target="first"
-								/>
-							</b-tab>
-						</b-tabs>
-					</b-card>
+							</b-card>
+						</b-tab>
+						<b-tab
+							v-if="isLoggedIn && loaded.mixChart"
+							title="履歴"
+							:title-link-class="linkClass(1, 'mix')"
+						>
+							<StatHistoryPage v-if="enableStatHistory" />
+						</b-tab>
+					</b-tabs>
 				</b-col>
-				<b-col md="6">
+
+				<b-col md="6" class="chart">
+					<b-card class="mb-3">
+						<b-row>
+							<b-col>
+								<chart
+									v-if="loaded.first"
+									:chart-data="displayDataFirst"
+									:options="displayOptionFirst"
+									:styles="chartStyles"
+								></chart>
+							</b-col>
+							<b-col>
+								<b-tabs
+									class="mt-0"
+									content-class="mt-2"
+									v-model="tabIndex.first"
+								>
+									<b-tab
+										title="統計表取得"
+										:title-link-class="linkClass(0, 'first')"
+										active
+									>
+										<div
+											class="btn btn-secondary"
+											@click="getStatData('first')"
+										>
+											ランダムな統計表を取得
+										</div>
+										<StatsCodeContainer
+											v-if="loaded.first"
+											:statsCodeList="statsCodeList"
+											:statsCodeID="statData.first.stats_code.id"
+											@catchSelected="searchStatsCode('first', $event)"
+										/>
+									</b-tab>
+
+									<b-tab
+										title="カテゴリー検索"
+										:title-link-class="linkClass(1, 'first')"
+									>
+										<CategoryContainer
+											v-if="loaded.first"
+											:statsCodeID="statData.first.stats_code.id"
+											:area-id="statData.first.area.id"
+											:sub-category="statData.first.sub_category"
+											@catchSelected="searchStatData('first', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(2, 'first')"
+									>
+										<StatsInfo
+											v-if="loaded.first"
+											:statsCodeID="statData.first.stats_code.id"
+											:statsCodeList="statsCodeList"
+											:areaName="statData.first.area.name"
+											:subCategory="statData.first.sub_category"
+											target="first"
+										/>
+									</b-tab>
+								</b-tabs>
+							</b-col>
+						</b-row>
+					</b-card>
 					<b-card>
-						<chart
-							v-if="loaded.second"
-							:chart-data="displayDataSecond"
-							:options="displayOptionSecond"
-						></chart>
-						<hr />
-						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.second">
-							<b-tab
-								title="統計表取得"
-								:title-link-class="linkClass(0, 'second')"
-								active
-							>
-								<div class="btn btn-secondary" @click="getStatData('second')">
-									ランダムな統計表を取得
-								</div>
-								<StatsCodeContainer
+						<b-row>
+							<b-col>
+								<chart
 									v-if="loaded.second"
-									:statsCodeList="statsCodeList"
-									:statsCodeID="statData.second.stats_code.id"
-									@catchSelected="searchStatsCode('second', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="カテゴリーを指定"
-								:title-link-class="linkClass(1, 'second')"
-							>
-								<CategoryContainer
-									v-if="loaded.second"
-									:statsCodeID="statData.second.stats_code.id"
-									:area-id="statData.second.area.id"
-									:sub-category="statData.second.sub_category"
-									@catchSelected="searchStatData('second', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="統計表詳細"
-								:title-link-class="linkClass(2, 'second')"
-							>
-								<StatsInfo
-									v-if="loaded.second"
-									:statsCodeID="statData.second.stats_code.id"
-									:statsCodeList="statsCodeList"
-									:areaName="statData.second.area.name"
-									:subCategory="statData.second.sub_category"
-									target="second"
-								/>
-							</b-tab>
-						</b-tabs>
+									:chart-data="displayDataSecond"
+									:options="displayOptionSecond"
+									:styles="chartStyles"
+								></chart>
+							</b-col>
+							<b-col>
+								<b-tabs
+									class="mt-0"
+									content-class="mt-2"
+									v-model="tabIndex.second"
+								>
+									<b-tab
+										title="統計表取得"
+										:title-link-class="linkClass(0, 'second')"
+										active
+									>
+										<div
+											class="btn btn-secondary"
+											@click="getStatData('second')"
+										>
+											ランダムな統計表を取得
+										</div>
+										<StatsCodeContainer
+											v-if="loaded.second"
+											:statsCodeList="statsCodeList"
+											:statsCodeID="statData.second.stats_code.id"
+											@catchSelected="searchStatsCode('second', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="カテゴリーを指定"
+										:title-link-class="linkClass(1, 'second')"
+									>
+										<CategoryContainer
+											v-if="loaded.second"
+											:statsCodeID="statData.second.stats_code.id"
+											:area-id="statData.second.area.id"
+											:sub-category="statData.second.sub_category"
+											@catchSelected="searchStatData('second', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(2, 'second')"
+									>
+										<StatsInfo
+											v-if="loaded.second"
+											:statsCodeID="statData.second.stats_code.id"
+											:statsCodeList="statsCodeList"
+											:areaName="statData.second.area.name"
+											:subCategory="statData.second.sub_category"
+											target="second"
+										/>
+									</b-tab>
+								</b-tabs>
+							</b-col>
+						</b-row>
 					</b-card>
 				</b-col>
 			</b-row>
 		</b-overlay>
-	</b-container>
+	</div>
 </template>
 
 <script>
@@ -485,6 +515,21 @@ export default {
 		showOverlay() {
 			return !this.loaded.mixChart;
 		},
+		mixChartStyles() {
+			return {
+				"min-height": "70vh",
+				"max-height": "100vh",
+				position: "relative",
+			};
+		},
+		chartStyles() {
+			return {
+				// "max-height": "40vh",
+				// "min-height": "40vh",
+				height: "40vh",
+				position: "relative",
+			};
+		},
 	},
 	methods: {
 		getRandomStats() {
@@ -502,13 +547,12 @@ export default {
 					this.statsCodeList = response.data;
 				});
 
-			Promise.all([first, second, statsCodeList])
-				.then(() => {
-					this.setTimeSeriesData();
-					this.loaded.first = true;
-					this.loaded.second = true;
-					this.loaded.mixChart = true;
-				});
+			Promise.all([first, second, statsCodeList]).then(() => {
+				this.setTimeSeriesData();
+				this.loaded.first = true;
+				this.loaded.second = true;
+				this.loaded.mixChart = true;
+			});
 		},
 		getStatData(target) {
 			// ランダムデータを取得
@@ -605,4 +649,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.chart-body {
+	margin: auto 60px;
+}
+.mix-chart {
+}
+.chart {
+}
+</style>
