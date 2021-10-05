@@ -8,7 +8,7 @@
 					:options="statsCodeList"
 					class="mb-3"
 					value-field="id"
-					text-field="table_name"
+					text-field="table_name_alias"
 				></b-form-select>
 			</b-col>
 			<b-col md="6">

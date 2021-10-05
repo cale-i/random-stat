@@ -314,7 +314,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.stats_code.table_name,
+					text: self.statData.first.stats_code.table_name_alias,
 				},
 				hover: {
 					intersect: false,
@@ -379,7 +379,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.second.stats_code.table_name,
+					text: self.statData.second.stats_code.table_name_alias,
 				},
 				hover: {
 					intersect: false,
@@ -448,7 +448,7 @@ export default {
 				title: {
 					display: true,
 					// text: "",
-					text: `${self.statData.first.stats_code.table_name}   /   ${self.statData.second.stats_code.table_name}`,
+					text: `${self.statData.first.stats_code.table_name_alias}   /   ${self.statData.second.stats_code.table_name_alias}`,
 				},
 				hover: {
 					intersect: false,
