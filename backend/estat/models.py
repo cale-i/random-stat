@@ -72,6 +72,7 @@ class StatsCode(models.Model):
 
     class Meta:
         db_table = 'stats_code'
+        ordering = ['id', ]
 
     id = models.CharField(
         verbose_name='統計表ID {stat_name}_{gov_ort}_{title.zfill(3)}',
@@ -106,6 +107,12 @@ class StatsCode(models.Model):
     explanation = models.CharField(
         verbose_name='説明',
         null=False,
+        max_length=255
+    )
+
+    table_name_alias = models.CharField(
+        verbose_name="テーブル名の省略名称",
+        null=True,
         max_length=255
     )
 
