@@ -71,6 +71,13 @@
 										title="カテゴリー検索"
 										:title-link-class="linkClass(1, 'first')"
 									>
+										<div
+											class="btn btn-secondary mt-3"
+											@click="copySubCategory('second', 'first')"
+										>
+											このカテゴリーをもう一方にコピー
+										</div>
+										<hr />
 										<CategoryContainer
 											v-if="loaded.first"
 											:statsCodeID="statData.first.stats_code.id"
@@ -134,6 +141,13 @@
 										title="カテゴリーを指定"
 										:title-link-class="linkClass(1, 'second')"
 									>
+										<div
+											class="btn btn-secondary mt-3"
+											@click="copySubCategory('second', 'first')"
+										>
+											このカテゴリーをもう一方にコピー
+										</div>
+										<hr />
 										<CategoryContainer
 											v-if="loaded.second"
 											:statsCodeID="statData.second.stats_code.id"
@@ -641,6 +655,11 @@ export default {
 					return ["text-dark", "bg-white", "font-weight-bold", "border"];
 				return ["text-dark"];
 			}
+		},
+		copySubCategory(from, to) {
+			// 一方の統計データをもう一方にコピーする
+			this.statData[to] = this.statData[from];
+			this.setTimeSeriesData();
 		},
 	},
 	created() {
