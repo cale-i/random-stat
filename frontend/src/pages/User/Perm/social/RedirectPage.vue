@@ -2,17 +2,20 @@
 	<div id="redirect-page">
 		<GlobalHeader />
 		<GlobalMessage />
+		<GlobalFooter />
 	</div>
 </template>
 
 <script>
 import GlobalMessage from "@/components/GlobalMessage.vue";
 import GlobalHeader from "@/components/GlobalHeader.vue";
+import GlobalFooter from "@/components/GlobalFooter.vue";
 
 export default {
 	components: {
 		GlobalMessage,
 		GlobalHeader,
+		GlobalFooter,
 	},
 	props: {},
 	data: () => ({}),
