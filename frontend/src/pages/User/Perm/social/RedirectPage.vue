@@ -1,8 +1,8 @@
 <template>
-	<b-container>
+	<div id="redirect-page">
 		<GlobalHeader />
 		<GlobalMessage />
-	</b-container>
+	</div>
 </template>
 
 <script>
