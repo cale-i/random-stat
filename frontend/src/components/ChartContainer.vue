@@ -87,8 +87,18 @@
 										/>
 									</b-tab>
 									<b-tab
-										title="統計表詳細"
+										title="統計数値"
 										:title-link-class="linkClass(2, 'first')"
+									>
+										<StatsDataTable
+											v-if="loaded.first"
+											:dataset="datasets.first"
+											:labels="labels.first"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(3, 'first')"
 									>
 										<StatsInfo
 											v-if="loaded.first"
@@ -97,6 +107,7 @@
 											:areaName="statData.first.area.name"
 											:subCategory="statData.first.sub_category"
 											target="first"
+											:dataset="datasets.first"
 										/>
 									</b-tab>
 								</b-tabs>
@@ -157,8 +168,18 @@
 										/>
 									</b-tab>
 									<b-tab
-										title="統計表詳細"
+										title="統計数値"
 										:title-link-class="linkClass(2, 'second')"
+									>
+										<StatsDataTable
+											v-if="loaded.second"
+											:dataset="datasets.second"
+											:labels="labels.second"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(3, 'second')"
 									>
 										<StatsInfo
 											v-if="loaded.second"
@@ -184,6 +205,7 @@ import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 import StatsInfo from "./StatsInfo";
+import StatsDataTable from "./StatsDataTable";
 import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
 
 export default {
@@ -194,6 +216,7 @@ export default {
 		StatsCodeContainer,
 		StatsInfo,
 		StatHistoryPage,
+		StatsDataTable,
 	},
 	data: () => ({
 		statData: {
