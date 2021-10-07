@@ -341,25 +341,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// type: "bar",
-
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
-							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
@@ -406,24 +390,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// type: "time",
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
-							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
