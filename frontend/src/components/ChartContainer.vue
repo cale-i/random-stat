@@ -233,23 +233,52 @@ export default {
 		},
 	}),
 	computed: {
+		title() {
+			return {
+				first: this.statData.first.stats_code.table_name_alias,
+				second: this.statData.second.stats_code.table_name_alias,
+			};
+		},
+		labels() {
+			return {
+				first: this.timeSeriesData.first.map((e) => e.time),
+				second: this.timeSeriesData.second.map((e) => e.time),
+			};
+		},
+		datasets() {
+			const area = {
+				first: this.statData.first.area.name,
+				second: this.statData.second.area.name,
+			};
+			const subCategory = {
+				first: this.statData.first.sub_category.map((e) => e.name).join(" : "),
+				second: this.statData.second.sub_category
+					.map((e) => e.name)
+					.join(" : "),
+			};
+			return {
+				first: {
+					data: this.timeSeriesData.first.map((e) => e.value),
+					label: `【${area.first}】${subCategory.first}`,
+				},
+				second: {
+					data: this.timeSeriesData.second.map((e) => e.value),
+					label: `【${area.second}】${subCategory.second}`,
+				},
+			};
+		},
 		displayDataFirst() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.first.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.first.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.first.map((e) => e.time),
+				labels: self.labels.first,
 				// labels: self.statData.first.results.map((e) => e.time.date.slice(0, 4)),
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.first.label,
 						type: "bar",
-						data: self.timeSeriesData.first.map((e) => e.value),
+						data: self.datasets.first.data,
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -264,19 +293,14 @@ export default {
 		displayDataSecond() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.second.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.second.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.second.map((e) => e.time),
+				labels: self.labels.second,
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.second.label,
 						type: "bar",
-						data: self.timeSeriesData.second.map((e) => e.value),
+						data: self.datasets.second.data,
 						backgroundColor: "#bd3f4c",
 
 						categoryPercentage: 0.4,
@@ -291,16 +315,15 @@ export default {
 		displayDataMix() {
 			const self = this;
 
-			const labels = self.displayDataFirst.labels;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels,
+				labels: self.labels.first,
 				datasets: [
 					{
-						label: self.displayDataFirst.datasets[0].label,
+						label: self.datasets.first.label,
 						type: "bar",
-						data: self.timeSeriesData.first.map((e) => e.value),
+						data: self.datasets.first.data,
+
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -309,9 +332,10 @@ export default {
 						yAxisID: "second-y-axis",
 					},
 					{
-						label: self.displayDataSecond.datasets[0].label,
+						label: self.datasets.second.label,
 						type: "line",
-						data: self.timeSeriesData.second.map((e) => e.value),
+						data: self.datasets.second.data,
+
 						backgroundColor: transparentWhite,
 
 						borderWidth: 2,
@@ -328,7 +352,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.stats_code.table_name_alias,
+					text: self.title.first,
 				},
 				hover: {
 					intersect: false,
