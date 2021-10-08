@@ -26,7 +26,7 @@
 							title="履歴"
 							:title-link-class="linkClass(1, 'mix')"
 						>
-							<StatHistoryPage v-if="enableStatHistory" />
+							<StatHistory v-if="enableStatHistory" />
 						</b-tab>
 						<b-tab
 							v-if="isLoggedIn && loaded.mixChart"
@@ -227,7 +227,7 @@ import StatsInfo from "./StatsInfo";
 import StatsDataTable from "./StatsDataTable";
 import Favorites from "./Favorites";
 import FavoritesCharts from "./FavoritesCharts";
-import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
+import StatHistory from "./StatHistory";
 
 export default {
 	name: "ChartContainer",
@@ -236,7 +236,7 @@ export default {
 		CategoryContainer,
 		StatsCodeContainer,
 		StatsInfo,
-		StatHistoryPage,
+		StatHistory,
 		StatsDataTable,
 		Favorites,
 		FavoritesCharts,
