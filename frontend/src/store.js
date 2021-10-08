@@ -56,6 +56,18 @@ const chartModule = {
 				params: { stats_code: payload },
 			});
 		},
+		checkIsFavorites(context, params) {
+			return api.get("timeseries/favorites/isfavorite", { params });
+		},
+		addFavorites(context, params) {
+			return api.post("timeseries/favorites/", params);
+		},
+		deleteFavorites(context, params) {
+			return api.delete("timeseries/favorites/", { data: params });
+		},
+		getFavorites(context, params) {
+			return api.get("timeseries/favorites/", { params });
+		},
 	},
 };
 
