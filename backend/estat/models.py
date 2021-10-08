@@ -317,3 +317,32 @@ class StatHistory(models.Model):
         verbose_name='Attempt Time',
         auto_now_add=True,
     )
+
+
+class Favorites(models.Model):
+    class Meta:
+        db_table = 'favorites'
+
+    stats_code = models.ForeignKey(
+        StatsCode,
+        verbose_name='統計表 表ID',
+        on_delete=models.PROTECT,
+    )
+    area = models.ForeignKey(
+        Area,
+        verbose_name='地域コード',
+        on_delete=models.PROTECT
+    )
+    sub_category = models.ManyToManyField(
+        SubCategory,
+        verbose_name='サブカテゴリコード'
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name='ユーザー',
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField(
+        verbose_name='作成日',
+        auto_now_add=True,
+    )
