@@ -96,6 +96,7 @@
 											:statsCodeID="statData.first.stats_code.id"
 											:area-id="statData.first.area.id"
 											:sub-category="statData.first.sub_category"
+											target="first"
 											@catchSelected="searchStatData('first', $event)"
 										/>
 									</b-tab>
@@ -183,6 +184,7 @@
 											:statsCodeID="statData.second.stats_code.id"
 											:area-id="statData.second.area.id"
 											:sub-category="statData.second.sub_category"
+											target="second"
 											@catchSelected="searchStatData('second', $event)"
 										/>
 									</b-tab>
