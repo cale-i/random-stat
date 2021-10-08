@@ -75,7 +75,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.stats_code.table_name,
+					text: self.statData.stats_code.table_name_alias,
 				},
 				hover: {
 					intersect: false,
