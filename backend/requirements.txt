@@ -3,6 +3,7 @@ django-cors-headers
 django-debug-toolbar
 django-environ
 django-filter
+PyJWT==2.1.0
 djangorestframework
 djangorestframework-simplejwt
 djoser
