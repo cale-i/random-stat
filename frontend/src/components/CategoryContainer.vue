@@ -7,11 +7,11 @@
 					label="地域"
 					label-cols-md="6"
 					label-align-md="right"
-					label-for="selectArea"
+					:label-for="`selectArea-${target}`"
 					class="my-4"
 				>
 					<b-form-select
-						id="selectArea"
+						:id="`selectArea-${target}`"
 						v-model="selected.area"
 						:options="areaList"
 						class="mb-0"
@@ -65,6 +65,10 @@ export default {
 		},
 		subCategory: {
 			type: Array,
+			default: null,
+		},
+		target: {
+			type: String,
 			default: null,
 		},
 	},

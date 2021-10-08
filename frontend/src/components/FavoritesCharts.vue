@@ -152,7 +152,6 @@ export default {
 	methods: {
 		getFavorites(page = { page: 1 }) {
 			this.$store.dispatch("chart/getFavorites", page).then((response) => {
-				console.log("statData: ", response.data);
 				// お気に入りが0個の場合
 				if (response.data.count === 0) {
 					this.loaded = false;

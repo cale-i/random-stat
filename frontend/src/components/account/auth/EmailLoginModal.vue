@@ -111,7 +111,6 @@ export default {
 					password: this.form.password,
 				})
 				.then(() => {
-					console.log("success");
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "ログインしました。",
 					});
