@@ -4,6 +4,7 @@ from estat.models import (
     Time,
     StatsData,
     StatHistory,
+    Favorites,
 )
 from rest_framework import serializers
 
@@ -42,3 +43,9 @@ class StatHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = StatHistory
         fields = ['stats_code', 'area', 'sub_category', 'user']
+
+
+class FavoritesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorites
+        fields = '__all__'

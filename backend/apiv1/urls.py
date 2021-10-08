@@ -11,7 +11,7 @@ urlpatterns = [
     path('timeseries/history/', views.StatHistoryView.as_view()),
     path('search/', views.TimeSeriesAPIView.as_view()),
     path('search/statscode/', views.StatsCodeAPIView.as_view()),
-
-
-
+    path('timeseries/favorites/', views.FavoritesView.as_view()),
+    path('timeseries/favorites/isfavorites/',
+         views.IsFavoriteView.as_view()),
 ]

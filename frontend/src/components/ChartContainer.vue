@@ -28,6 +28,13 @@
 						>
 							<StatHistoryPage v-if="enableStatHistory" />
 						</b-tab>
+						<b-tab
+							v-if="isLoggedIn && loaded.mixChart"
+							title="お気に入り"
+							:title-link-class="linkClass(2, 'mix')"
+						>
+							<FavoritesCharts v-if="enableFavoritesCharts" />
+						</b-tab>
 					</b-tabs>
 				</b-col>
 
@@ -41,6 +48,12 @@
 									:options="displayOptionFirst"
 									:styles="chartStyles"
 								></chart>
+								<Favorites
+									v-if="loaded.first && this.isLoggedIn"
+									:statsCodeID="statData.first.stats_code.id"
+									:areaId="statData.first.area.id"
+									:subCategory="statData.first.sub_category"
+								></Favorites>
 							</b-col>
 							<b-col>
 								<b-tabs
@@ -123,6 +136,12 @@
 									:options="displayOptionSecond"
 									:styles="chartStyles"
 								></chart>
+								<Favorites
+									v-if="loaded.second && this.isLoggedIn"
+									:statsCodeID="statData.second.stats_code.id"
+									:areaId="statData.second.area.id"
+									:subCategory="statData.second.sub_category"
+								></Favorites>
 							</b-col>
 							<b-col>
 								<b-tabs
@@ -149,7 +168,7 @@
 										/>
 									</b-tab>
 									<b-tab
-										title="カテゴリーを指定"
+										title="カテゴリー検索"
 										:title-link-class="linkClass(1, 'second')"
 									>
 										<div
@@ -206,6 +225,8 @@ import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 import StatsInfo from "./StatsInfo";
 import StatsDataTable from "./StatsDataTable";
+import Favorites from "./Favorites";
+import FavoritesCharts from "./FavoritesCharts";
 import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
 
 export default {
@@ -217,6 +238,8 @@ export default {
 		StatsInfo,
 		StatHistoryPage,
 		StatsDataTable,
+		Favorites,
+		FavoritesCharts,
 	},
 	data: () => ({
 		statData: {
@@ -559,6 +582,9 @@ export default {
 				height: "40vh",
 				position: "relative",
 			};
+		},
+		enableFavoritesCharts() {
+			return this.isLoggedIn && this.loaded.mixChart && this.tabIndex.mix === 2;
 		},
 	},
 	methods: {
