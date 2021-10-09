@@ -308,7 +308,7 @@ class IsFavoriteView(generics.GenericAPIView):
             queryset=Favorites.objects.filter(user=user.id)
         )
         data = {
-            **params,
+            **filterset.data,
             'is_favorites': bool(filterset.qs)
         }
 
