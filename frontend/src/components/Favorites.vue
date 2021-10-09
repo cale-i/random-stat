@@ -50,20 +50,20 @@ export default {
 					this.isFavorites = response.data.is_favorites;
 				});
 		},
-		addFavorites() {
+		async addFavorites() {
 			console.log(this.params);
-			this.$store.dispatch("chart/addFavorites", this.params).then(() => {
-				this.$store.dispatch("message/setInfoMessage", {
-					message: "お気に入りに追加しました｡",
-				});
+			await this.$store.dispatch("chart/addFavorites", this.params);
+			this.$store.dispatch("message/setInfoMessage", {
+				message: "お気に入りに追加しました｡",
+			});
 				this.isFavorites = true;
 			});
 		},
-		deleteFavorites() {
-			this.$store.dispatch("chart/deleteFavorites", this.params).then(() => {
-				this.$store.dispatch("message/setInfoMessage", {
-					message: "お気に入から削除しました｡",
-				});
+		async deleteFavorites() {
+			await this.$store.dispatch("chart/deleteFavorites", this.params);
+			this.$store.dispatch("message/setInfoMessage", {
+				message: "お気に入から削除しました｡",
+			});
 				this.isFavorites = false;
 			});
 		},
