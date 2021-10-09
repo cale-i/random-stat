@@ -16,7 +16,9 @@
 				お気に入りから削除
 			</b-col>
 			<b-col class="reload-favorites">
-				<b-icon icon="arrow-clockwise" @click="getFavorites"></b-icon>
+				<div class="btn btn-info btn-sm">
+					<b-icon icon="arrow-clockwise" @click="getFavorites()"></b-icon>
+				</div>
 			</b-col>
 		</b-row>
 	</b-card>
