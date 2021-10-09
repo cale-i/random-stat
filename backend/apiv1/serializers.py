@@ -48,4 +48,4 @@ class StatHistorySerializer(serializers.ModelSerializer):
 class FavoritesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
-        fields = '__all__'
+        fields = ['stats_code', 'area', 'sub_category', 'user']
