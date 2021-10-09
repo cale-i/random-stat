@@ -56,8 +56,7 @@ const chartModule = {
 				params: { stats_code: payload },
 			});
 		},
-		checkIsFavorites(context, params) {
-			return api.get("timeseries/favorites/isfavorite", { params });
+			return api.get("timeseries/favorites/isfavorites/", { params });
 		},
 		addFavorites(context, params) {
 			return api.post("timeseries/favorites/", params);
