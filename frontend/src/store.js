@@ -65,8 +65,8 @@ const chartModule = {
 		deleteFavorites(context, params) {
 			return api.delete("timeseries/favorites/", { data: params });
 		},
-		getFavorites(context, params) {
-			return api.get("timeseries/favorites/", { params });
+		getFavorites(context, page) {
+			return api.get("timeseries/favorites/", { params: page });
 		},
 	},
 };
