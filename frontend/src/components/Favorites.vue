@@ -67,17 +67,7 @@ export default {
 		},
 	},
 	watch: {
-		statsCodeID: {
-			handler: function() {
-				this.checkIsFavorites();
-			},
-		},
-		areaId: {
-			handler: function() {
-				this.checkIsFavorites();
-			},
-		},
-		subCategory: {
+		params: {
 			handler: function() {
 				this.checkIsFavorites();
 			},
