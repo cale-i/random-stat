@@ -56,8 +56,13 @@ const chartModule = {
 				params: { stats_code: payload },
 			});
 		},
-		checkIsFavorites(context, params) {
-			return api.get("timeseries/favorites/isfavorite", { params });
+		checkIsFavorites(context, payload) {
+			const params = {
+				stats_code: payload.stats_code,
+				area: payload.area,
+				sub_category: JSON.stringify(payload.sub_category),
+			};
+			return api.get("timeseries/favorites/isfavorites/", { params });
 		},
 		addFavorites(context, params) {
 			return api.post("timeseries/favorites/", params);
@@ -65,8 +70,8 @@ const chartModule = {
 		deleteFavorites(context, params) {
 			return api.delete("timeseries/favorites/", { data: params });
 		},
-		getFavorites(context, params) {
-			return api.get("timeseries/favorites/", { params });
+		getFavorites(context, page) {
+			return api.get("timeseries/favorites/", { params: page });
 		},
 	},
 };
