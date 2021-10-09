@@ -86,7 +86,7 @@
 									>
 										<div
 											class="btn btn-secondary mt-3"
-											@click="copySubCategory('second', 'first')"
+											@click="copySubCategory('first', 'second')"
 										>
 											このカテゴリーをもう一方にコピー
 										</div>
