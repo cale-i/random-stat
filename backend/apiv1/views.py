@@ -289,8 +289,17 @@ class IsFavoriteView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        params = request.data
 
+        sub_category = request.GET.get('sub_category')
+        table = str.maketrans('', '', '[] \"')
+        sub_category = sub_category.translate(table).split(',')
+
+        params = {
+            'stats_code': request.GET.get('stats_code'),
+            'area': request.GET.get('area'),
+            'sub_category': sub_category,
+
+        }
         if not params:
             return Response(params, status.HTTP_400_BAD_REQUEST)
 
