@@ -56,16 +56,14 @@ export default {
 			this.$store.dispatch("message/setInfoMessage", {
 				message: "お気に入りに追加しました｡",
 			});
-				this.isFavorites = true;
-			});
+			this.checkIsFavorites();
 		},
 		async deleteFavorites() {
 			await this.$store.dispatch("chart/deleteFavorites", this.params);
 			this.$store.dispatch("message/setInfoMessage", {
 				message: "お気に入から削除しました｡",
 			});
-				this.isFavorites = false;
-			});
+			this.checkIsFavorites();
 		},
 	},
 	watch: {
