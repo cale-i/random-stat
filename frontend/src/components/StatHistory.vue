@@ -6,16 +6,25 @@
 			:options="displayOption"
 		></chart>
 		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
+		<Favorites
+			v-if="loaded"
+			:statsCodeID="statData.stats_code.id"
+			:areaId="statData.area.id"
+			:subCategory="statData.sub_category"
+		></Favorites>
 	</b-card>
 </template>
 
 <script>
 import chart from "@/services/chart.js";
 import Pagination from "@/components/Pagination.vue";
+import Favorites from "./Favorites";
+
 export default {
 	components: {
 		chart,
 		Pagination,
+		Favorites,
 	},
 	props: {},
 	data: () => ({
