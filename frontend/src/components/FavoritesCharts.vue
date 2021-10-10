@@ -5,6 +5,8 @@
 			:chart-data="displayData"
 			:options="displayOption"
 		></chart>
+		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
+
 		<Pagination v-if="loaded" :page="page" @movePage="getFavorites($event)" />
 		<b-row>
 			<b-col></b-col>
@@ -27,10 +29,12 @@
 <script>
 import chart from "@/services/chart.js";
 import Pagination from "@/components/Pagination.vue";
+import StatsDataTable from "./StatsDataTable";
 export default {
 	components: {
 		chart,
 		Pagination,
+		StatsDataTable,
 	},
 	props: {},
 	data: () => ({

@@ -5,6 +5,7 @@
 			:chart-data="displayData"
 			:options="displayOption"
 		></chart>
+		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
 		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
 		<Favorites
 			v-if="loaded"
@@ -19,12 +20,14 @@
 import chart from "@/services/chart.js";
 import Pagination from "@/components/Pagination.vue";
 import Favorites from "./Favorites";
+import StatsDataTable from "./StatsDataTable";
 
 export default {
 	components: {
 		chart,
 		Pagination,
 		Favorites,
+		StatsDataTable,
 	},
 	props: {},
 	data: () => ({
@@ -50,23 +53,35 @@ export default {
 		},
 	}),
 	computed: {
+		title() {
+			return this.statData.stats_code.table_name_alias_alias;
+		},
+		labels() {
+			return this.timeSeriesData.map((e) => e.time);
+		},
+		datasets() {
+			const area = this.statData.area.name;
+
+			const subCategory = this.statData.sub_category
+				.map((e) => e.name)
+				.join(" : ");
+
+			return {
+				data: this.timeSeriesData.map((e) => e.value),
+				label: `【${area}】${subCategory}`,
+			};
+		},
 		displayData() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.map((e) => e.time),
-				// labels: self.statData.results.map((e) => e.time.date.slice(0, 4)),
+				labels: self.labels,
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.label,
 						type: "bar",
-						data: self.timeSeriesData.map((e) => e.value),
+						data: self.datasets.data,
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -124,6 +139,13 @@ export default {
 				maintainAspectRatio: false,
 			};
 			return options;
+		},
+		params() {
+			return {
+				stats_code: this.statData.stats_code.id,
+				area: this.statData.area.id,
+				sub_category: this.statData.sub_category.map((el) => el.id),
+			};
 		},
 	},
 	methods: {
