@@ -590,6 +590,13 @@ export default {
 		},
 	},
 	methods: {
+		async authReload() {
+			// Tokenが存在する場合はユーザー情報を取得する
+			const token = localStorage.getItem("access");
+			if (token != null) {
+				await this.$store.dispatch("auth/reload");
+			}
+		},
 		getRandomStats() {
 			// 2つのランダムな統計表を取得
 			const first = this.$store.dispatch("chart/getChart").then((response) => {
@@ -706,7 +713,8 @@ export default {
 			this.setTimeSeriesData();
 		},
 	},
-	created() {
+	async created() {
+		await this.authReload();
 		this.getRandomStats();
 	},
 };

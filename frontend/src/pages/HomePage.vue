@@ -23,19 +23,6 @@ export default {
 		GlobalMessage,
 		GlobalFooter,
 	},
-	methods: {
-		async authReload() {
-			// Tokenが存在する場合はユーザー情報を取得する
-			const token = localStorage.getItem("access");
-			if (token != null) {
-				await this.$store.dispatch("auth/reload");
-			}
-		},
-	},
-
-	mounted() {
-		this.authReload();
-	},
 };
 </script>
 
