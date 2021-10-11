@@ -5,6 +5,7 @@
 		<ResetPasswordConfirmationModal />
 		<ResetEmailConfirmationModal />
 		{{ resultMessage }}
+		<GlobalFooter />
 	</div>
 </template>
 
@@ -14,6 +15,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
 
 import ResetPasswordConfirmationModal from "@/components/account/auth/ResetPasswordConfirmationModal.vue";
 import ResetEmailConfirmationModal from "@/components/account/auth/ResetEmailConfirmationModal.vue";
+import GlobalFooter from "@/components/GlobalFooter.vue";
 
 export default {
 	components: {
@@ -21,6 +23,7 @@ export default {
 		GlobalHeader,
 		ResetPasswordConfirmationModal,
 		ResetEmailConfirmationModal,
+		GlobalFooter,
 	},
 	props: {},
 	data: () => ({
