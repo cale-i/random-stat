@@ -1,11 +1,11 @@
 <template>
-	<b-container>
+	<div>
 		<GlobalHeader />
 		<GlobalMessage />
 		<ResetPasswordConfirmationModal />
 		<ResetEmailConfirmationModal />
 		{{ resultMessage }}
-	</b-container>
+	</div>
 </template>
 
 <script>
