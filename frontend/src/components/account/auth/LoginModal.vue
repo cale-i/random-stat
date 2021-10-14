@@ -116,7 +116,7 @@
 
 					<hr />
 
-					<template v-if="lastLoginType.email">
+					<template v-if="lastLoginType['email']">
 						<div class="last-login-box">
 							<b-row>
 								<p class="last-login-caption">
