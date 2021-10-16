@@ -15,7 +15,7 @@
 							<span class="rs-red">S</span>tat
 						</div>
 					</b-col>
-					<b-col class="footer-left">
+					<b-col class="footer-right">
 						<b-row class="pr-5">
 							<b-col class="about-link">
 								<template v-if="isMobile">
@@ -50,12 +50,13 @@ export default {
 <style scoped>
 .footer {
 	color: white;
+	margin-top: 600px;
 }
-.footer-left {
+.footer-right {
 	display: grid;
 	justify-content: end;
 }
-.footer-left a {
+.footer-right a {
 	color: white;
 }
 
@@ -66,7 +67,7 @@ export default {
 	.about-link {
 		font-size: 0.1rem;
 	}
-	.footer-left a {
+	.footer-right a {
 		font-size: 0.5rem;
 	}
 }
@@ -77,7 +78,7 @@ export default {
 	.about-link {
 		font-size: 0.1rem;
 	}
-	.footer-left a {
+	.footer-right a {
 		font-size: 0.5rem;
 	}
 }
