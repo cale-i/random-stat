@@ -39,7 +39,7 @@
 				</b-col>
 
 				<b-col md="6" class="chart">
-					<b-card class="mb-3">
+					<b-card class="mb-3 chart-card">
 						<b-row>
 							<b-col>
 								<chart
@@ -57,7 +57,7 @@
 							</b-col>
 							<b-col>
 								<b-tabs
-									class="mt-0"
+									class="mt-0 tab-text"
 									content-class="mt-2"
 									v-model="tabIndex.first"
 								>
@@ -146,7 +146,7 @@
 							</b-col>
 							<b-col>
 								<b-tabs
-									class="mt-0"
+									class="mt-0 tab-text"
 									content-class="mt-2"
 									v-model="tabIndex.second"
 								>
@@ -727,5 +727,8 @@ export default {
 .mix-chart {
 }
 .chart {
+}
+.tab-text {
+	font-size: 0.8rem;
 }
 </style>
