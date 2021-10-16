@@ -85,7 +85,7 @@
 										:title-link-class="linkClass(1, 'first')"
 									>
 										<div
-											class="btn btn-secondary mt-3"
+											class="btn btn-secondary mt-3 btn-sm"
 											@click="copySubCategory('first', 'second')"
 										>
 											このカテゴリーをもう一方にコピー
@@ -173,7 +173,7 @@
 										:title-link-class="linkClass(1, 'second')"
 									>
 										<div
-											class="btn btn-secondary mt-3"
+											class="btn btn-secondary mt-3 btn-sm"
 											@click="copySubCategory('second', 'first')"
 										>
 											このカテゴリーをもう一方にコピー
@@ -581,7 +581,7 @@ export default {
 			return {
 				// "max-height": "40vh",
 				// "min-height": "40vh",
-				height: "40vh",
+				height: "38vh",
 				position: "relative",
 			};
 		},
@@ -727,6 +727,9 @@ export default {
 .mix-chart {
 }
 .chart {
+}
+.card-body {
+	padding: 0.3rem;
 }
 .tab-text {
 	font-size: 0.8rem;
