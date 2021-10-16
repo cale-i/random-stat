@@ -39,7 +39,7 @@
 				</b-col>
 
 				<b-col md="6" class="chart">
-					<b-card class="mb-3">
+					<b-card class="mb-3 chart-card">
 						<b-row>
 							<b-col>
 								<chart
@@ -57,7 +57,7 @@
 							</b-col>
 							<b-col>
 								<b-tabs
-									class="mt-0"
+									class="mt-0 tab-text"
 									content-class="mt-2"
 									v-model="tabIndex.first"
 								>
@@ -85,7 +85,7 @@
 										:title-link-class="linkClass(1, 'first')"
 									>
 										<div
-											class="btn btn-secondary mt-3"
+											class="btn btn-secondary mt-3 btn-sm"
 											@click="copySubCategory('first', 'second')"
 										>
 											このカテゴリーをもう一方にコピー
@@ -146,7 +146,7 @@
 							</b-col>
 							<b-col>
 								<b-tabs
-									class="mt-0"
+									class="mt-0 tab-text"
 									content-class="mt-2"
 									v-model="tabIndex.second"
 								>
@@ -173,7 +173,7 @@
 										:title-link-class="linkClass(1, 'second')"
 									>
 										<div
-											class="btn btn-secondary mt-3"
+											class="btn btn-secondary mt-3 btn-sm"
 											@click="copySubCategory('second', 'first')"
 										>
 											このカテゴリーをもう一方にコピー
@@ -581,7 +581,7 @@ export default {
 			return {
 				// "max-height": "40vh",
 				// "min-height": "40vh",
-				height: "40vh",
+				height: "38vh",
 				position: "relative",
 			};
 		},
@@ -727,5 +727,11 @@ export default {
 .mix-chart {
 }
 .chart {
+}
+.card-body {
+	padding: 0.3rem;
+}
+.tab-text {
+	font-size: 0.8rem;
 }
 </style>

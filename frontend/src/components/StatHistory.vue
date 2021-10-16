@@ -4,6 +4,7 @@
 			v-if="loaded"
 			:chart-data="displayData"
 			:options="displayOption"
+			:styles="historyChartStyles"
 		></chart>
 		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
 		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
@@ -145,6 +146,13 @@ export default {
 				stats_code: this.statData.stats_code.id,
 				area: this.statData.area.id,
 				sub_category: this.statData.sub_category.map((el) => el.id),
+			};
+		},
+		historyChartStyles() {
+			return {
+				"min-height": "35vh",
+				"max-height": "35vh",
+				position: "relative",
 			};
 		},
 	},

@@ -4,6 +4,7 @@
 			v-if="loaded"
 			:chart-data="displayData"
 			:options="displayOption"
+			:styles="favoritesChartStyles"
 		></chart>
 		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
 
@@ -152,6 +153,13 @@ export default {
 				stats_code: this.statData.stats_code.id,
 				area: this.statData.area.id,
 				sub_category: this.statData.sub_category.map((el) => el.id),
+			};
+		},
+		favoritesChartStyles() {
+			return {
+				"min-height": "35vh",
+				"max-height": "35vh",
+				position: "relative",
 			};
 		},
 	},
