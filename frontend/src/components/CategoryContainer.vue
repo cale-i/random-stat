@@ -8,7 +8,7 @@
 					label-cols-md="6"
 					label-align-md="right"
 					:label-for="`selectArea-${target}`"
-					class="my-4"
+					class="my-2"
 				>
 					<b-form-select
 						:id="`selectArea-${target}`"
@@ -30,7 +30,7 @@
 						label-cols-md="6"
 						label-align-md="right"
 						label-for="inputSubCategory"
-						class="my-4"
+						class="my-2"
 					>
 						<b-form-select
 							@change="changeSubCategory(item.id, $event)"
