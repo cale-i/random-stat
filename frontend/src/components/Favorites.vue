@@ -51,7 +51,6 @@ export default {
 				});
 		},
 		async addFavorites() {
-			console.log(this.params);
 			await this.$store.dispatch("chart/addFavorites", this.params);
 			this.$store.dispatch("message/setInfoMessage", {
 				message: "お気に入りに追加しました｡",
