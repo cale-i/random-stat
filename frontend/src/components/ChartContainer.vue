@@ -593,8 +593,18 @@ export default {
 		async authReload() {
 			// Tokenが存在する場合はユーザー情報を取得する
 			const token = localStorage.getItem("access");
-			if (token != null) {
+			if (token === null) return;
+
+			// トークンがnullでない場合
+
+			// 有効期限内の場合､処理をblockしない
+			if (this.isExpired(token)) {
+				console.log("expired");
+				// 有効期限切れの場合の処理
 				await this.$store.dispatch("auth/reload");
+			} else {
+				console.log("valid");
+				this.$store.dispatch("auth/reload");
 			}
 		},
 		getRandomStats() {
@@ -711,6 +721,18 @@ export default {
 			// 一方の統計データをもう一方にコピーする
 			this.statData[to] = this.statData[from];
 			this.setTimeSeriesData();
+		},
+		isExpired(token) {
+			// tokenをデコード
+			const base64Url = token.split(".")[1];
+			const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+			token = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+
+			// token.exp: second, Date().getTime(): milisecond
+			const expirationTime = token.exp * 1000;
+			const nowTime = new Date().getTime();
+
+			return expirationTime <= nowTime;
 		},
 	},
 	async created() {
