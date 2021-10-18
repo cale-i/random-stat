@@ -16,7 +16,13 @@
 									:options="displayOptionMix"
 									:styles="mixChartStyles"
 								></chart>
-								<div class="btn btn-secondary mt-3" @click="getRandomStats">
+								<StatsDataTableMix
+									v-if="loaded.mixChart"
+									:datasets="datasets"
+									:labels="labels"
+									class="mt-4"
+								/>
+								<div class="btn btn-secondary my-3" @click="getRandomStats">
 									ランダムな統計表セットを再取得
 								</div>
 							</b-card>
@@ -227,6 +233,7 @@ import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 import StatsInfo from "./StatsInfo";
 import StatsDataTable from "./StatsDataTable";
+import StatsDataTableMix from "./StatsDataTableMix";
 import Favorites from "./Favorites";
 import FavoritesCharts from "./FavoritesCharts";
 import StatHistory from "./StatHistory";
@@ -240,6 +247,7 @@ export default {
 		StatsInfo,
 		StatHistory,
 		StatsDataTable,
+		StatsDataTableMix,
 		Favorites,
 		FavoritesCharts,
 	},
@@ -572,8 +580,8 @@ export default {
 		},
 		mixChartStyles() {
 			return {
-				"min-height": "70vh",
-				"max-height": "100vh",
+				"min-height": "40vh",
+				"max-height": "40vh",
 				position: "relative",
 			};
 		},
@@ -599,11 +607,9 @@ export default {
 
 			// 有効期限内の場合､処理をblockしない
 			if (this.isExpired(token)) {
-				console.log("expired");
 				// 有効期限切れの場合の処理
 				await this.$store.dispatch("auth/reload");
 			} else {
-				console.log("valid");
 				this.$store.dispatch("auth/reload");
 			}
 		},
