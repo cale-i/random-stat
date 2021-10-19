@@ -1,17 +1,24 @@
 <template functional>
 	<div class="about">
-		<div class="hero bg-dark">
-			<div class="hero-content">
+		<b-jumbotron
+			bg-variant="dark"
+			text-variant="white"
+			bordar-variant="dark"
+			class="hero"
+		>
+			<template #header>
 				<div class="hero-title">
 					Enjoy the <span class="rs-green">R</span>andomnes<span class="rs-red"
 						>S</span
 					>!
 				</div>
+			</template>
+			<template #lead>
 				<div class="hero-text">
 					Random Statは､2つの統計表をランダムに表示するサービスです｡
 				</div>
-			</div>
-		</div>
+			</template>
+		</b-jumbotron>
 		<br />
 		<p>
 			※
@@ -26,17 +33,12 @@ export default {
 </script>
 <style strict>
 .about {
-	margin-top: 60px;
 	margin-bottom: 60px;
 	border-top: solid 0.3rem green;
 }
 .hero {
-	height: 30rem;
 	color: #fff;
-	border-bottom: solid 0.2rem green;
-}
-.hero-content {
-	padding-top: 10rem;
+	border-bottom: solid 0.3rem green;
 }
 .hero-title {
 	font-size: 5rem;
