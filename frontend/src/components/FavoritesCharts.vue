@@ -9,21 +9,30 @@
 		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
 
 		<Pagination v-if="loaded" :page="page" @movePage="getFavorites($event)" />
-		<b-row>
-			<b-col></b-col>
-			<b-col
-				v-if="loaded"
-				class="btn btn-secondary btn-sm mt-2 "
+		<div if="loaded">
+			<div
+				id="deleteFavoritesBtn"
+				class="btn favorites-icon"
 				@click="deleteFavorites"
 			>
-				お気に入りから削除
-			</b-col>
-			<b-col class="reload-favorites">
-				<div class="btn btn-info btn-sm">
-					<b-icon icon="arrow-clockwise" @click="getFavorites()"></b-icon>
-				</div>
-			</b-col>
-		</b-row>
+				<b-icon icon="heart-fill"></b-icon>
+			</div>
+			<b-popover
+				target="deleteFavoritesBtn"
+				placement="topright"
+				triggers="hover focus"
+				content="お気に入りから削除"
+			></b-popover>
+			<div id="reloadBtn" class="btn reload-icon">
+				<b-icon icon="arrow-clockwise" @click="getFavorites()"></b-icon>
+			</div>
+			<b-popover
+				target="reloadBtn"
+				placement="topright"
+				triggers="hover focus"
+				content="再読み込み"
+			></b-popover>
+		</div>
 	</b-card>
 </template>
 
@@ -225,4 +234,17 @@ export default {
 	},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.favorites-icon {
+	color: red;
+}
+.favorites-icon:hover {
+	color: gray;
+}
+.reload-icon {
+	color: #00a040;
+}
+.reload-icon:hover {
+	color: black;
+}
+</style>
