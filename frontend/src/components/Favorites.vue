@@ -1,15 +1,35 @@
 <template>
 	<div id="favorites">
-		<div
-			v-if="isFavorites"
-			class="btn btn-secondary btn-sm mt-2"
-			@click="deleteFavorites"
-		>
-			お気に入りから削除
-		</div>
-		<div v-else class="btn btn-success btn-sm mt-2" @click="addFavorites">
-			お気に入りに追加
-		</div>
+		<template v-if="isFavorites">
+			<div
+				id="deleteFavoritesBtn"
+				class="btn delete-favorites-icon"
+				@click="deleteFavorites"
+			>
+				<b-icon icon="heart-fill"></b-icon>
+			</div>
+			<b-popover
+				target="deleteFavoritesBtn"
+				placement="topright"
+				triggers="hover focus"
+				content="お気に入りから削除"
+			></b-popover>
+		</template>
+		<template v-else>
+			<div
+				id="addFavoritesBtn"
+				class="btn add-favorites-icon"
+				@click="addFavorites"
+			>
+				<b-icon icon="heart-fill"></b-icon>
+			</div>
+			<b-popover
+				target="addFavoritesBtn"
+				placement="topright"
+				triggers="hover focus"
+				content="お気に入りに追加"
+			></b-popover>
+		</template>
 	</div>
 </template>
 <script>
@@ -74,3 +94,17 @@ export default {
 	},
 };
 </script>
+<style scoped>
+.add-favorites-icon {
+	color: gray;
+}
+.add-favorites-icon:hover {
+	color: red;
+}
+.delete-favorites-icon {
+	color: red;
+}
+.delete-favorites-icon:hover {
+	color: gray;
+}
+</style>
