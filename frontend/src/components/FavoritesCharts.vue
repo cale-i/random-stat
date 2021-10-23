@@ -11,14 +11,14 @@
 		<Pagination v-if="loaded" :page="page" @movePage="getFavorites($event)" />
 		<div if="loaded">
 			<div
-				id="deleteFavoritesBtn"
+				id="deleteFavoritesBtn-favorites"
 				class="btn favorites-icon"
 				@click="deleteFavorites"
 			>
 				<b-icon icon="heart-fill"></b-icon>
 			</div>
 			<b-popover
-				target="deleteFavoritesBtn"
+				target="deleteFavoritesBtn-favorites"
 				placement="topright"
 				triggers="hover focus"
 				content="お気に入りから削除"
