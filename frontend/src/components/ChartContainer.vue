@@ -59,6 +59,7 @@
 									:statsCodeID="statData.first.stats_code.id"
 									:areaId="statData.first.area.id"
 									:subCategory="statData.first.sub_category"
+									idSuffix="first"
 								></Favorites>
 							</b-col>
 							<b-col>
@@ -148,6 +149,7 @@
 									:statsCodeID="statData.second.stats_code.id"
 									:areaId="statData.second.area.id"
 									:subCategory="statData.second.sub_category"
+									idSuffix="second"
 								></Favorites>
 							</b-col>
 							<b-col>

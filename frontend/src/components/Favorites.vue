@@ -2,14 +2,14 @@
 	<div id="favorites">
 		<template v-if="isFavorites">
 			<div
-				id="deleteFavoritesBtn"
+				:id="deleteFavoritesId"
 				class="btn delete-favorites-icon"
 				@click="deleteFavorites"
 			>
 				<b-icon icon="heart-fill"></b-icon>
 			</div>
 			<b-popover
-				target="deleteFavoritesBtn"
+				:target="deleteFavoritesId"
 				placement="topright"
 				triggers="hover focus"
 				content="お気に入りから削除"
@@ -17,14 +17,14 @@
 		</template>
 		<template v-else>
 			<div
-				id="addFavoritesBtn"
+				:id="addFavoritesId"
 				class="btn add-favorites-icon"
 				@click="addFavorites"
 			>
 				<b-icon icon="heart-fill"></b-icon>
 			</div>
 			<b-popover
-				target="addFavoritesBtn"
+				:target="addFavoritesId"
 				placement="topright"
 				triggers="hover focus"
 				content="お気に入りに追加"
@@ -47,6 +47,10 @@ export default {
 			type: Array,
 			default: null,
 		},
+		idSuffix: {
+			type: String,
+			default: null,
+		},
 	},
 	data() {
 		return {
@@ -60,6 +64,12 @@ export default {
 				area: this.areaId,
 				sub_category: this.subCategory.map((el) => el.id),
 			};
+		},
+		addFavoritesId() {
+			return `addFavoritesBtn-${this.idSuffix}`;
+		},
+		deleteFavoritesId() {
+			return `deleteFavoritesBtn-${this.idSuffix}`;
 		},
 	},
 	methods: {

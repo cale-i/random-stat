@@ -13,6 +13,7 @@
 			:statsCodeID="statData.stats_code.id"
 			:areaId="statData.area.id"
 			:subCategory="statData.sub_category"
+			idSuffix="history"
 		></Favorites>
 	</b-card>
 </template>
