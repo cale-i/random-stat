@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 class TestStatsCodeListView(APITestCase):
     # """StatsCodeListViewのテストクラス"""
-    fixtures = ['estat/fixtures/estat.json']
+    fixtures = ['apiv1/fixtures/test_stats_code.json']
     TARGET_URL = '/api/v1/timeseries/statscode/'
 
     def test_get_success(self):
