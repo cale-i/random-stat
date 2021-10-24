@@ -160,6 +160,9 @@ export default {
 	methods: {
 		getStatHistory(page = { page: 1 }) {
 			this.$store.dispatch("chart/getStatHistory", page).then((response) => {
+				// アカウント登録直後は履歴数が0のため処理を行わない
+				if (!response.data) return;
+
 				this.statData = response.data;
 				this.setTimeSeriesData();
 				this.setPage();
