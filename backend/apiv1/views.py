@@ -161,7 +161,7 @@ class StatHistoryView(generics.GenericAPIView):
 
         # 登録直後等､履歴が存在しない場合終了
         if not params:
-            return Response(status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         meta = get_meta_data(params)
         # 履歴から統計表を作成
