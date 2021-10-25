@@ -6,42 +6,9 @@ from apiv1.serializers import (
     StatsCodeSerializer,
 )
 
-
-class TestStatNameSerializer(TestCase):
-    """
-    StatNameSerializerのテストクラス
-    """
-
-    input_data = {
-        'id': '00200521',
-        'name': '国勢調査',
-    }
-
-    def test_input_valid(self):
-        """入力データのバリデーション(OK)"""
-
-        # シリアライザを作成
-        input_data = self.input_data.copy().copy()
-        serializer = StatNameSerializer(data=input_data)
-        # バリデーションの結果を検証
-        serializer.is_valid()
-        self.assertEqual(serializer.is_valid(), True)
-
-    def test_input_invalid_if_id_is_blank(self):
-        """入力データのバリデーション(NG: idが空文字)"""
-
-        # シリアライザを作成
-        input_data = self.input_data.copy().copy()
-        input_data['id'] = ''
-        serializer = StatNameSerializer(data=input_data)
-
-        # バリデーションの結果を検証
-        self.assertEqual(serializer.is_valid(), False)
-        self.assertCountEqual(serializer.errors.keys(), ['id'])
-        self.assertCountEqual(
-            [e.code for e in serializer.errors['id']],
-            ['blank'],
-        )
+from apiv1.tests.factories.estat import (
+    StatsCodeFactory,
+)
 
 
 class TestStatsCodeSerializer(TestCase):
@@ -51,87 +18,19 @@ class TestStatsCodeSerializer(TestCase):
 
     def test_output_data(self):
         """出力データの内容検証"""
-        input_data = self.input_data.copy()
-        # オブジェクトを作成
-        area = Area.objects.create(
-            id=input_data['id'],
-            name=input_data['name'],
-        )
-        serializer = AreaSerializer(instance=area)
-
-        # シリアライザの出力内容を検証
-        expected_data = {
-            'id': area.id,
-            'name': area.name,
+        data = {
+            'id': '00034103719',
+            'table_name_alias': '総人口',
+            'explanation': '1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
         }
-        self.assertDictEqual(serializer.data, expected_data)
-
-
-class TestTimeSerializer(TestCase):
-    """
-    TimeSerializerのテストクラス
-    """
-    input_data = {
-        'id': '2015000000',
-        'date': '20150000',
-    }
-
-    def test_input_valid(self):
-        """入力データのバリデーション(OK)"""
-
         # シリアライザを作成
-        input_data = self.input_data.copy()
-
-        serializer = TimeSerializer(data=input_data)
-
-        # バリデーションの結果を検証
-        self.assertEqual(serializer.is_valid(), True)
-
-    def test_input_invalid_if_id_is_blank(self):
-        """入力データのバリデーション(NG: idが空文字)"""
-
-        # シリアライザを作成
-        input_data = self.input_data.copy()
-        input_data['id'] = ''
-        serializer = TimeSerializer(data=input_data)
-
-        # バリデーションの結果を検証
-        self.assertEqual(serializer.is_valid(), False)
-        self.assertCountEqual(serializer.errors.keys(), ['id'])
-        self.assertCountEqual(
-            [e.code for e in serializer.errors['id']],
-            ['blank'],
-        )
-
-    def test_input_invalid_if_name_is_blank(self):
-        """入力データのバリデーション(NG: nameが空文字)"""
-
-        # シリアライザを作成
-        input_data = self.input_data.copy()
-        input_data['date'] = ''
-        serializer = TimeSerializer(data=input_data)
-
-        # バリデーションの結果を検証
-        self.assertEqual(serializer.is_valid(), False)
-        self.assertCountEqual(serializer.errors.keys(), ['date'])
-        self.assertCountEqual(
-            [e.code for e in serializer.errors['date']],
-            ['blank'],
-        )
-
-    def test_output_data(self):
-        """出力データの内容検証"""
-        input_data = self.input_data.copy()
-        # オブジェクトを作成
-        time = Time.objects.create(
-            id=input_data['id'],
-            date=input_data['date'],
-        )
-        serializer = TimeSerializer(instance=time)
+        stats_code = StatsCodeFactory(**data)
+        serializer = StatsCodeSerializer(instance=stats_code)
 
         # シリアライザの出力内容を検証
         expected_data = {
-            'id': time.id,
-            'date': time.date,
+            'id': data['id'],
+            'table_name_alias': data['table_name_alias'],
+            'explanation': data['explanation'],
         }
         self.assertDictEqual(serializer.data, expected_data)
