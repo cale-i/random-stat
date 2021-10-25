@@ -28,11 +28,38 @@ def get_default_database_url():
     return r'DATABASE_URL=postgresql://testuser:password@localhost:5432/testdb'
 
 
+def write_dummy_params(env_file):
+    array = [
+        'CORS_ORIGIN_WHITELIST=https://example.com',
+        'AWS_ACCESS_KEY_ID=dummy',
+        'AWS_SECRET_ACCESS_KEY=dummy',
+        'AWS_STORAGE_BUCKET_NAME=dummy',
+        'SITE_EMAIL=dummy',
+        'EMAIL_PASSWORD_SUB=dummy',
+        'EMAIL_PASSWORD=dummy',
+        'GUEST_EMAIL=dummy',
+        'GUEST_PASSWORD=dummy',
+        'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=dummy',
+        'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=dummy',
+        'SOCIAL_AUTH_GITHUB_KEY=dummy',
+        'SOCIAL_AUTH_GITHUB_SECRET=dummy',
+        'SOCIAL_AUTH_GITHUB_KEY_LOCAL=dummy',
+        'SOCIAL_AUTH_GITHUB_SECRET_LOCAL=dummy',
+        'SOCIAL_AUTH_FACEBOOK_KEY=dummy',
+        'SOCIAL_AUTH_FACEBOOK_SECRET=dummy',
+        'SOCIAL_AUTH_FACEBOOK_KEY_LOCAL=dummy',
+        'SOCIAL_AUTH_FACEBOOK_SECRET_LOCAL=dummy',
+    ]
+
+    [env_file.write(e) for e in array]
+
+
 def main():
     env_file = StdIO()
     env_file.write(generate_secret_key())
     env_file.write(generate_allowed_hosts())
     env_file.write(get_default_database_url())
+    write_dummy_params(env_file)
 
 
 if __name__ == "__main__":
