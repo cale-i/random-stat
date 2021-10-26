@@ -4,10 +4,12 @@ from django.utils.timezone import localtime
 
 from apiv1.serializers import (
     StatsCodeSerializer,
+    AreaSerializer,
 )
 
 from apiv1.tests.factories.estat import (
     StatsCodeFactory,
+    AreaFactory,
 )
 
 
@@ -19,7 +21,7 @@ class TestStatsCodeSerializer(TestCase):
     def test_output_data(self):
         """出力データの内容検証"""
         data = {
-            'id': '00034103719',
+            'id': '0003410379',
             'table_name_alias': '総人口',
             'explanation': '1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
         }
@@ -32,5 +34,29 @@ class TestStatsCodeSerializer(TestCase):
             'id': data['id'],
             'table_name_alias': data['table_name_alias'],
             'explanation': data['explanation'],
+        }
+        self.assertDictEqual(serializer.data, expected_data)
+
+
+class TestAreaSerializer(TestCase):
+    """
+    AreaSerializerのテストクラス
+    """
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+
+        data = {
+            'id': 'wwww',
+            'name': '全国',
+        }
+        # シリアライザを作成
+        area = AreaFactory(**data)
+        serializer = AreaSerializer(instance=area)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'id': data['id'],
+            'name': data['name'],
         }
         self.assertDictEqual(serializer.data, expected_data)
