@@ -34,3 +34,27 @@ class TestStatsCodeSerializer(TestCase):
             'explanation': data['explanation'],
         }
         self.assertDictEqual(serializer.data, expected_data)
+
+
+class TestAreaSerializer(TestCase):
+    """
+    AreaSerializerのテストクラス
+    """
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+
+        data = {
+            'id': 'wwww',
+            'name': '全国',
+        }
+        # シリアライザを作成
+        area = AreaFactory(**data)
+        serializer = AreaSerializer(instance=area)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'id': data['id'],
+            'name': data['name'],
+        }
+        self.assertDictEqual(serializer.data, expected_data)
