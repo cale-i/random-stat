@@ -19,7 +19,7 @@ class TestStatsCodeSerializer(TestCase):
     def test_output_data(self):
         """出力データの内容検証"""
         data = {
-            'id': '00034103719',
+            'id': '0003410379',
             'table_name_alias': '総人口',
             'explanation': '1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。',
         }
