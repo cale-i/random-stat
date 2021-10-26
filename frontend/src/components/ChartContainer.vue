@@ -1,138 +1,232 @@
 <template>
-	<b-container id="chart" class="pb-5">
-		<br />
+	<div id="chart-body" class="chart-body">
 		<b-overlay spinner-variant="success" :show="showOverlay" rounded="sm">
-			<b-tabs content-class="" v-model="tabIndex.mix" class="">
-				<b-tab title="統計表" :title-link-class="linkClass(0, 'mix')" active>
-					<b-card class="mb-4">
-						<chart
-							v-if="loaded.mixChart"
-							:chart-data="displayDataMix"
-							:options="displayOptionMix"
-						></chart>
-						<div class="btn btn-secondary mt-3" @click="getRandomStats">
-							ランダムな統計表セットを再取得
-						</div>
-					</b-card>
-				</b-tab>
-				<b-tab
-					v-if="isLoggedIn && loaded.mixChart"
-					title="履歴"
-					:title-link-class="linkClass(1, 'mix')"
-				>
-					<StatHistoryPage v-if="enableStatHistory" />
-				</b-tab>
-			</b-tabs>
-
 			<b-row>
-				<b-col md="6">
-					<b-card>
-						<chart
-							v-if="loaded.first"
-							:chart-data="displayDataFirst"
-							:options="displayOptionFirst"
-						></chart>
-						<hr />
-						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.first">
-							<b-tab
-								title="統計表取得"
-								:title-link-class="linkClass(0, 'first')"
-								active
-							>
-								<div class="btn btn-secondary" @click="getStatData('first')">
-									ランダムな統計表を取得
+				<b-col md="6" class="mix-chart">
+					<b-tabs content-class="" v-model="tabIndex.mix">
+						<b-tab
+							title="統計表"
+							:title-link-class="linkClass(0, 'mix')"
+							active
+						>
+							<b-card class="mb-2">
+								<chart
+									v-if="loaded.mixChart"
+									:chart-data="displayDataMix"
+									:options="displayOptionMix"
+									:styles="mixChartStyles"
+								></chart>
+								<StatsDataTableMix
+									v-if="loaded.mixChart"
+									:datasets="datasets"
+									:labels="labels"
+									class="mt-4"
+								/>
+								<div class="btn btn-secondary my-3" @click="getRandomStats">
+									ランダムな統計表セットを再取得
 								</div>
-								<StatsCodeContainer
-									v-if="loaded.first"
-									:statsCodeList="statsCodeList"
-									:statsCodeID="statData.first.stats_code.id"
-									@catchSelected="searchStatsCode('first', $event)"
-								/>
-							</b-tab>
-
-							<b-tab
-								title="カテゴリー検索"
-								:title-link-class="linkClass(1, 'first')"
-							>
-								<CategoryContainer
-									v-if="loaded.first"
-									:statsCodeID="statData.first.stats_code.id"
-									:area-id="statData.first.area.id"
-									:sub-category="statData.first.sub_category"
-									@catchSelected="searchStatData('first', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="統計表詳細"
-								:title-link-class="linkClass(2, 'first')"
-							>
-								<StatsInfo
-									v-if="loaded.first"
-									:statsCodeID="statData.first.stats_code.id"
-									:statsCodeList="statsCodeList"
-									:areaName="statData.first.area.name"
-									:subCategory="statData.first.sub_category"
-									target="first"
-								/>
-							</b-tab>
-						</b-tabs>
-					</b-card>
+							</b-card>
+						</b-tab>
+						<b-tab
+							v-if="isLoggedIn && loaded.mixChart"
+							title="履歴"
+							:title-link-class="linkClass(1, 'mix')"
+						>
+							<StatHistory v-if="enableStatHistory" />
+						</b-tab>
+						<b-tab
+							v-if="isLoggedIn && loaded.mixChart"
+							title="お気に入り"
+							:title-link-class="linkClass(2, 'mix')"
+						>
+							<FavoritesCharts v-if="enableFavoritesCharts" />
+						</b-tab>
+					</b-tabs>
 				</b-col>
-				<b-col md="6">
+
+				<b-col md="6" class="chart">
+					<b-card class="mb-3 chart-card">
+						<b-row>
+							<b-col>
+								<chart
+									v-if="loaded.first"
+									:chart-data="displayDataFirst"
+									:options="displayOptionFirst"
+									:styles="chartStyles"
+								></chart>
+								<Favorites
+									v-if="loaded.first && this.isLoggedIn"
+									:statsCodeID="statData.first.stats_code.id"
+									:areaId="statData.first.area.id"
+									:subCategory="statData.first.sub_category"
+									idSuffix="first"
+								></Favorites>
+							</b-col>
+							<b-col>
+								<b-tabs
+									class="mt-0 tab-text"
+									content-class="mt-2"
+									v-model="tabIndex.first"
+								>
+									<b-tab
+										title="統計表取得"
+										:title-link-class="linkClass(0, 'first')"
+										active
+									>
+										<div
+											class="btn btn-secondary"
+											@click="getStatData('first')"
+										>
+											ランダムな統計表を取得
+										</div>
+										<StatsCodeContainer
+											v-if="loaded.first"
+											:statsCodeList="statsCodeList"
+											:statsCodeID="statData.first.stats_code.id"
+											@catchSelected="searchStatsCode('first', $event)"
+										/>
+									</b-tab>
+
+									<b-tab
+										title="カテゴリー検索"
+										:title-link-class="linkClass(1, 'first')"
+									>
+										<div
+											class="btn btn-secondary mt-3 btn-sm"
+											@click="copySubCategory('first', 'second')"
+										>
+											このカテゴリーをもう一方にコピー
+										</div>
+										<hr />
+										<CategoryContainer
+											v-if="loaded.first"
+											:statsCodeID="statData.first.stats_code.id"
+											:area-id="statData.first.area.id"
+											:sub-category="statData.first.sub_category"
+											target="first"
+											@catchSelected="searchStatData('first', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計数値"
+										:title-link-class="linkClass(2, 'first')"
+									>
+										<StatsDataTable
+											v-if="loaded.first"
+											:dataset="datasets.first"
+											:labels="labels.first"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(3, 'first')"
+									>
+										<StatsInfo
+											v-if="loaded.first"
+											:statsCodeID="statData.first.stats_code.id"
+											:statsCodeList="statsCodeList"
+											:areaName="statData.first.area.name"
+											:subCategory="statData.first.sub_category"
+											target="first"
+											:dataset="datasets.first"
+										/>
+									</b-tab>
+								</b-tabs>
+							</b-col>
+						</b-row>
+					</b-card>
 					<b-card>
-						<chart
-							v-if="loaded.second"
-							:chart-data="displayDataSecond"
-							:options="displayOptionSecond"
-						></chart>
-						<hr />
-						<b-tabs class="mt-4" content-class="mt-3" v-model="tabIndex.second">
-							<b-tab
-								title="統計表取得"
-								:title-link-class="linkClass(0, 'second')"
-								active
-							>
-								<div class="btn btn-secondary" @click="getStatData('second')">
-									ランダムな統計表を取得
-								</div>
-								<StatsCodeContainer
+						<b-row>
+							<b-col>
+								<chart
 									v-if="loaded.second"
-									:statsCodeList="statsCodeList"
+									:chart-data="displayDataSecond"
+									:options="displayOptionSecond"
+									:styles="chartStyles"
+								></chart>
+								<Favorites
+									v-if="loaded.second && this.isLoggedIn"
 									:statsCodeID="statData.second.stats_code.id"
-									@catchSelected="searchStatsCode('second', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="カテゴリーを指定"
-								:title-link-class="linkClass(1, 'second')"
-							>
-								<CategoryContainer
-									v-if="loaded.second"
-									:statsCodeID="statData.second.stats_code.id"
-									:area-id="statData.second.area.id"
-									:sub-category="statData.second.sub_category"
-									@catchSelected="searchStatData('second', $event)"
-								/>
-							</b-tab>
-							<b-tab
-								title="統計表詳細"
-								:title-link-class="linkClass(2, 'second')"
-							>
-								<StatsInfo
-									v-if="loaded.second"
-									:statsCodeID="statData.second.stats_code.id"
-									:statsCodeList="statsCodeList"
-									:areaName="statData.second.area.name"
+									:areaId="statData.second.area.id"
 									:subCategory="statData.second.sub_category"
-									target="second"
-								/>
-							</b-tab>
-						</b-tabs>
+									idSuffix="second"
+								></Favorites>
+							</b-col>
+							<b-col>
+								<b-tabs
+									class="mt-0 tab-text"
+									content-class="mt-2"
+									v-model="tabIndex.second"
+								>
+									<b-tab
+										title="統計表取得"
+										:title-link-class="linkClass(0, 'second')"
+										active
+									>
+										<div
+											class="btn btn-secondary"
+											@click="getStatData('second')"
+										>
+											ランダムな統計表を取得
+										</div>
+										<StatsCodeContainer
+											v-if="loaded.second"
+											:statsCodeList="statsCodeList"
+											:statsCodeID="statData.second.stats_code.id"
+											@catchSelected="searchStatsCode('second', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="カテゴリー検索"
+										:title-link-class="linkClass(1, 'second')"
+									>
+										<div
+											class="btn btn-secondary mt-3 btn-sm"
+											@click="copySubCategory('second', 'first')"
+										>
+											このカテゴリーをもう一方にコピー
+										</div>
+										<hr />
+										<CategoryContainer
+											v-if="loaded.second"
+											:statsCodeID="statData.second.stats_code.id"
+											:area-id="statData.second.area.id"
+											:sub-category="statData.second.sub_category"
+											target="second"
+											@catchSelected="searchStatData('second', $event)"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計数値"
+										:title-link-class="linkClass(2, 'second')"
+									>
+										<StatsDataTable
+											v-if="loaded.second"
+											:dataset="datasets.second"
+											:labels="labels.second"
+										/>
+									</b-tab>
+									<b-tab
+										title="統計表詳細"
+										:title-link-class="linkClass(3, 'second')"
+									>
+										<StatsInfo
+											v-if="loaded.second"
+											:statsCodeID="statData.second.stats_code.id"
+											:statsCodeList="statsCodeList"
+											:areaName="statData.second.area.name"
+											:subCategory="statData.second.sub_category"
+											target="second"
+										/>
+									</b-tab>
+								</b-tabs>
+							</b-col>
+						</b-row>
 					</b-card>
 				</b-col>
 			</b-row>
 		</b-overlay>
-	</b-container>
+	</div>
 </template>
 
 <script>
@@ -140,7 +234,11 @@ import chart from "@/services/chart.js";
 import CategoryContainer from "./CategoryContainer.vue";
 import StatsCodeContainer from "./StatsCodeContainer";
 import StatsInfo from "./StatsInfo";
-import StatHistoryPage from "@/pages/User/Perm/StatHistoryPage.vue";
+import StatsDataTable from "./StatsDataTable";
+import StatsDataTableMix from "./StatsDataTableMix";
+import Favorites from "./Favorites";
+import FavoritesCharts from "./FavoritesCharts";
+import StatHistory from "./StatHistory";
 
 export default {
 	name: "ChartContainer",
@@ -149,7 +247,11 @@ export default {
 		CategoryContainer,
 		StatsCodeContainer,
 		StatsInfo,
-		StatHistoryPage,
+		StatHistory,
+		StatsDataTable,
+		StatsDataTableMix,
+		Favorites,
+		FavoritesCharts,
 	},
 	data: () => ({
 		statData: {
@@ -189,23 +291,52 @@ export default {
 		},
 	}),
 	computed: {
+		title() {
+			return {
+				first: this.statData.first.stats_code.table_name_alias,
+				second: this.statData.second.stats_code.table_name_alias,
+			};
+		},
+		labels() {
+			return {
+				first: this.timeSeriesData.first.map((e) => e.time),
+				second: this.timeSeriesData.second.map((e) => e.time),
+			};
+		},
+		datasets() {
+			const area = {
+				first: this.statData.first.area.name,
+				second: this.statData.second.area.name,
+			};
+			const subCategory = {
+				first: this.statData.first.sub_category.map((e) => e.name).join(" : "),
+				second: this.statData.second.sub_category
+					.map((e) => e.name)
+					.join(" : "),
+			};
+			return {
+				first: {
+					data: this.timeSeriesData.first.map((e) => e.value),
+					label: `【${area.first}】${subCategory.first}`,
+				},
+				second: {
+					data: this.timeSeriesData.second.map((e) => e.value),
+					label: `【${area.second}】${subCategory.second}`,
+				},
+			};
+		},
 		displayDataFirst() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.first.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.first.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.first.map((e) => e.time),
+				labels: self.labels.first,
 				// labels: self.statData.first.results.map((e) => e.time.date.slice(0, 4)),
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.first.label,
 						type: "bar",
-						data: self.timeSeriesData.first.map((e) => e.value),
+						data: self.datasets.first.data,
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -220,19 +351,14 @@ export default {
 		displayDataSecond() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.second.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.second.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.second.map((e) => e.time),
+				labels: self.labels.second,
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.second.label,
 						type: "bar",
-						data: self.timeSeriesData.second.map((e) => e.value),
+						data: self.datasets.second.data,
 						backgroundColor: "#bd3f4c",
 
 						categoryPercentage: 0.4,
@@ -247,16 +373,15 @@ export default {
 		displayDataMix() {
 			const self = this;
 
-			const labels = self.displayDataFirst.labels;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels,
+				labels: self.labels.first,
 				datasets: [
 					{
-						label: self.displayDataFirst.datasets[0].label,
+						label: self.datasets.first.label,
 						type: "bar",
-						data: self.timeSeriesData.first.map((e) => e.value),
+						data: self.datasets.first.data,
+
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -265,9 +390,10 @@ export default {
 						yAxisID: "second-y-axis",
 					},
 					{
-						label: self.displayDataSecond.datasets[0].label,
+						label: self.datasets.second.label,
 						type: "line",
-						data: self.timeSeriesData.second.map((e) => e.value),
+						data: self.datasets.second.data,
+
 						backgroundColor: transparentWhite,
 
 						borderWidth: 2,
@@ -284,7 +410,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.first.stats_code.table_name,
+					text: self.title.first,
 				},
 				hover: {
 					intersect: false,
@@ -297,25 +423,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// type: "bar",
-
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
-							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
@@ -349,7 +459,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.second.stats_code.table_name,
+					text: self.statData.second.stats_code.table_name_alias,
 				},
 				hover: {
 					intersect: false,
@@ -362,24 +472,9 @@ export default {
 				scales: {
 					xAxes: [
 						{
-							// type: "time",
-							// time: {
-							// 	unit: "year",
-							// 	displayFormats: {
-							// 		// year: 'YYYY[年]MM[月]DD[日]'
-							// 		year: "YYYY[年]",
-							// 	},
-							// 	parser: "YYYY",
-							// },
-							// グリッドラインを消す
 							gridLines: {
 								drawOnChartArea: false,
 							},
-							// ticks: {
-							//     callback: (value) => {
-							//         return dayjs(value).format('D')
-							//     }
-							// }
 						},
 					],
 					yAxes: [
@@ -418,7 +513,7 @@ export default {
 				title: {
 					display: true,
 					// text: "",
-					text: `${self.statData.first.stats_code.table_name}   /   ${self.statData.second.stats_code.table_name}`,
+					text: `${self.statData.first.stats_code.table_name_alias}   /   ${self.statData.second.stats_code.table_name_alias}`,
 				},
 				hover: {
 					intersect: false,
@@ -485,8 +580,41 @@ export default {
 		showOverlay() {
 			return !this.loaded.mixChart;
 		},
+		mixChartStyles() {
+			return {
+				"min-height": "40vh",
+				"max-height": "40vh",
+				position: "relative",
+			};
+		},
+		chartStyles() {
+			return {
+				// "max-height": "40vh",
+				// "min-height": "40vh",
+				height: "38vh",
+				position: "relative",
+			};
+		},
+		enableFavoritesCharts() {
+			return this.isLoggedIn && this.loaded.mixChart && this.tabIndex.mix === 2;
+		},
 	},
 	methods: {
+		async authReload() {
+			// Tokenが存在する場合はユーザー情報を取得する
+			const token = localStorage.getItem("access");
+			if (token === null) return;
+
+			// トークンがnullでない場合
+
+			// 有効期限内の場合､処理をblockしない
+			if (this.isExpired(token)) {
+				// 有効期限切れの場合の処理
+				await this.$store.dispatch("auth/reload");
+			} else {
+				this.$store.dispatch("auth/reload");
+			}
+		},
 		getRandomStats() {
 			// 2つのランダムな統計表を取得
 			const first = this.$store.dispatch("chart/getChart").then((response) => {
@@ -502,16 +630,12 @@ export default {
 					this.statsCodeList = response.data;
 				});
 
-			Promise.all([first, second, statsCodeList])
-				.then(() => {
-					this.setTimeSeriesData();
-					this.loaded.first = true;
-					this.loaded.second = true;
-					this.loaded.mixChart = true;
-				})
-				.catch(() => {
-					window.location.href = "/";
-				});
+			Promise.all([first, second, statsCodeList]).then(() => {
+				this.setTimeSeriesData();
+				this.loaded.first = true;
+				this.loaded.second = true;
+				this.loaded.mixChart = true;
+			});
 		},
 		getStatData(target) {
 			// ランダムデータを取得
@@ -601,11 +725,43 @@ export default {
 				return ["text-dark"];
 			}
 		},
+		copySubCategory(from, to) {
+			// 一方の統計データをもう一方にコピーする
+			this.statData[to] = this.statData[from];
+			this.setTimeSeriesData();
+		},
+		isExpired(token) {
+			// tokenをデコード
+			const base64Url = token.split(".")[1];
+			const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+			token = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+
+			// token.exp: second, Date().getTime(): milisecond
+			const expirationTime = token.exp * 1000;
+			const nowTime = new Date().getTime();
+
+			return expirationTime <= nowTime;
+		},
 	},
-	created() {
+	async created() {
+		await this.authReload();
 		this.getRandomStats();
 	},
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.chart-body {
+	margin: auto 60px;
+}
+.mix-chart {
+}
+.chart {
+}
+.card-body {
+	padding: 0.3rem;
+}
+.tab-text {
+	font-size: 0.8rem;
+}
+</style>

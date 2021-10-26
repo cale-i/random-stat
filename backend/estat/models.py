@@ -72,6 +72,7 @@ class StatsCode(models.Model):
 
     class Meta:
         db_table = 'stats_code'
+        ordering = ['id', ]
 
     id = models.CharField(
         verbose_name='統計表ID {stat_name}_{gov_ort}_{title.zfill(3)}',
@@ -106,6 +107,12 @@ class StatsCode(models.Model):
     explanation = models.CharField(
         verbose_name='説明',
         null=False,
+        max_length=255
+    )
+
+    table_name_alias = models.CharField(
+        verbose_name="テーブル名の省略名称",
+        null=True,
         max_length=255
     )
 
@@ -308,5 +315,34 @@ class StatHistory(models.Model):
     )
     created_at = models.DateTimeField(
         verbose_name='Attempt Time',
+        auto_now_add=True,
+    )
+
+
+class Favorites(models.Model):
+    class Meta:
+        db_table = 'favorites'
+
+    stats_code = models.ForeignKey(
+        StatsCode,
+        verbose_name='統計表 表ID',
+        on_delete=models.PROTECT,
+    )
+    area = models.ForeignKey(
+        Area,
+        verbose_name='地域コード',
+        on_delete=models.PROTECT
+    )
+    sub_category = models.ManyToManyField(
+        SubCategory,
+        verbose_name='サブカテゴリコード'
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name='ユーザー',
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField(
+        verbose_name='作成日',
         auto_now_add=True,
     )

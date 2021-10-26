@@ -37,7 +37,8 @@ api.interceptors.request.use(
 
 		// 有効期限切れのaccess_tokenが存在 かつ 有効期限切れのrefresh_tokenが存在
 		// 現在のページが"/"でない場合"/"に移動
-		if (window.location.pathname !== "/") window.location.href = "/";
+
+		window.location.href = "/";
 		return Promise.reject(config);
 	},
 	function(error) {
@@ -111,9 +112,9 @@ const isExpired = (token) => {
 	const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
 	token = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
 
-	const expirationTime = token.exp;
-	// getTime関数はミリ秒で取得するため､秒に揃えるため1000で除す
-	const nowTime = Math.floor(new Date().getTime() / 1000);
+	// token.exp: second, Date().getTime(): milisecond
+	const expirationTime = token.exp * 1000;
+	const nowTime = new Date().getTime();
 
 	return expirationTime <= nowTime;
 };

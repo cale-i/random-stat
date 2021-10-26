@@ -1,8 +1,13 @@
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import ValidationError
 import datetime
 
 
 from django_filters import rest_framework as filters
-from estat.models import StatsData
+from estat.models import (
+    StatsData,
+    Favorites,
+)
 from rest_framework import generics, status, views
 from rest_framework.response import Response
 
@@ -10,6 +15,7 @@ from apiv1.serializers import (
     StatsDataSerializer,
     StatsCodeSerializer,
     AreaSerializer,
+    FavoritesSerializer,
 )
 from estat.models import (
     StatsCode,
@@ -22,10 +28,14 @@ from apiv1.stat_hist import (
     get_stat_history,
 
 )
-from .helpers import (
+from apiv1.helpers import (
     get_random_data,
     get_response_data,
     get_meta_data,
+)
+
+from apiv1.favorites import (
+    get_favorites,
 )
 
 
@@ -151,7 +161,7 @@ class StatHistoryView(generics.GenericAPIView):
 
         # 登録直後等､履歴が存在しない場合終了
         if not params:
-            return Response(status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         meta = get_meta_data(params)
         # 履歴から統計表を作成
@@ -200,3 +210,106 @@ class CategoryListView(generics.GenericAPIView):
                 'sub_category_list': SubCategory.objects.filter(category_id=category['id']).values('id', 'name').order_by('id')}
             category_list.append(data)
         return Response(category_list, status=status.HTTP_200_OK)
+
+
+class FavoritesView(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        page_size = 1
+
+        # userで履歴をフィルター
+        params, page_data = get_favorites(
+            request,
+            page_size=page_size,
+        )
+
+        # 登録直後等､履歴が存在しない場合終了
+        if not params:
+            return Response({**page_data}, status.HTTP_200_OK)
+
+        meta = get_meta_data(params)
+        # お気に入りから統計表を作成
+        filterset = TimeSeriesFilter(params, queryset=stats_data_queryset)
+        serializer = StatsDataSerializer(instance=filterset.qs, many=True)
+        data = {
+            **get_response_data(meta, serializer),
+            **page_data
+        }
+
+        return Response(data, status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+
+        user = request.user
+        params = request.data
+
+        if not params:
+            return Response(params, status.HTTP_201_CREATED)
+
+        # 重複チェック
+        filterset = TimeSeriesFilter(
+            params,
+            queryset=Favorites.objects.all()
+        )
+        if filterset.qs:
+            # 登録済み
+            return Response(params, status.HTTP_201_CREATED)
+
+        serializer = FavoritesSerializer(
+            data={**params, 'user': user.id})
+
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except ValidationError as e:
+            raise ValidationError(e.args[0])
+
+        return Response(params, status.HTTP_201_CREATED)
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        params = request.data
+
+        if not params:
+            return Response(status.HTTP_204_NO_CONTENT)
+
+        filterset = TimeSeriesFilter(
+            params,
+            queryset=Favorites.objects.filter(user=user.id)
+        )
+
+        filterset.qs.delete()
+
+        return Response(params, status.HTTP_204_NO_CONTENT)
+
+
+class IsFavoriteView(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        sub_category = request.GET.get('sub_category')
+        table = str.maketrans('', '', '[] \"')
+        sub_category = sub_category.translate(table).split(',')
+
+        params = {
+            'stats_code': request.GET.get('stats_code'),
+            'area': request.GET.get('area'),
+            'sub_category': sub_category,
+
+        }
+        if not params:
+            return Response(params, status.HTTP_400_BAD_REQUEST)
+
+        filterset = TimeSeriesFilter(
+            params,
+            queryset=Favorites.objects.filter(user=user.id)
+        )
+        data = {
+            **filterset.data,
+            'is_favorites': bool(filterset.qs)
+        }
+
+        return Response(data, status.HTTP_200_OK)

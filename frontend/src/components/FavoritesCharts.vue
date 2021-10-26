@@ -4,22 +4,51 @@
 			v-if="loaded"
 			:chart-data="displayData"
 			:options="displayOption"
+			:styles="favoritesChartStyles"
 		></chart>
-		<Pagination v-if="loaded" :page="page" @movePage="getStatHistory($event)" />
+		<StatsDataTable v-if="loaded" :dataset="datasets" :labels="labels" />
+
+		<Pagination v-if="loaded" :page="page" @movePage="getFavorites($event)" />
+		<div if="loaded">
+			<div
+				id="deleteFavoritesBtn-favorites"
+				class="btn favorites-icon"
+				@click="deleteFavorites"
+			>
+				<b-icon icon="heart-fill"></b-icon>
+			</div>
+			<b-popover
+				target="deleteFavoritesBtn-favorites"
+				placement="topright"
+				triggers="hover focus"
+				content="お気に入りから削除"
+			></b-popover>
+			<div id="reloadBtn" class="btn reload-icon">
+				<b-icon icon="arrow-clockwise" @click="getFavorites()"></b-icon>
+			</div>
+			<b-popover
+				target="reloadBtn"
+				placement="topright"
+				triggers="hover focus"
+				content="再読み込み"
+			></b-popover>
+		</div>
 	</b-card>
 </template>
 
 <script>
 import chart from "@/services/chart.js";
 import Pagination from "@/components/Pagination.vue";
+import StatsDataTable from "./StatsDataTable";
 export default {
 	components: {
 		chart,
 		Pagination,
+		StatsDataTable,
 	},
 	props: {},
 	data: () => ({
-		loaded: false,
+		loaded: null,
 		statData: null,
 		timeSeriesData: null,
 		page: null,
@@ -41,23 +70,35 @@ export default {
 		},
 	}),
 	computed: {
+		title() {
+			return this.statData.stats_code.table_name_alias_alias;
+		},
+		labels() {
+			return this.timeSeriesData.map((e) => e.time);
+		},
+		datasets() {
+			const area = this.statData.area.name;
+
+			const subCategory = this.statData.sub_category
+				.map((e) => e.name)
+				.join(" : ");
+
+			return {
+				data: this.timeSeriesData.map((e) => e.value),
+				label: `【${area}】${subCategory}`,
+			};
+		},
 		displayData() {
 			const self = this;
 
-			// sub_categoryからlabelを取得
-			let subCategory = self.statData.sub_category.map((e) => e.name);
-			// areaを取得
-			const area = self.statData.area.name;
-
 			const transparentWhite = "rgba(255,255,255,0)";
 			const dataCollection = {
-				labels: self.timeSeriesData.map((e) => e.time),
-				// labels: self.statData.results.map((e) => e.time.date.slice(0, 4)),
+				labels: self.labels,
 				datasets: [
 					{
-						label: `【${area}】${subCategory.join(" : ")}`,
+						label: self.datasets.label,
 						type: "bar",
-						data: self.timeSeriesData.map((e) => e.value),
+						data: self.datasets.data,
 						backgroundColor: "#00a040",
 
 						categoryPercentage: 0.4,
@@ -75,7 +116,7 @@ export default {
 			const options = {
 				title: {
 					display: true,
-					text: self.statData.stats_code.table_name,
+					text: self.statData.stats_code.table_name_alias,
 				},
 				hover: {
 					intersect: false,
@@ -116,10 +157,30 @@ export default {
 			};
 			return options;
 		},
+		params() {
+			return {
+				stats_code: this.statData.stats_code.id,
+				area: this.statData.area.id,
+				sub_category: this.statData.sub_category.map((el) => el.id),
+			};
+		},
+		favoritesChartStyles() {
+			return {
+				"min-height": "35vh",
+				"max-height": "35vh",
+				position: "relative",
+			};
+		},
 	},
 	methods: {
-		getStatHistory(page = { page: 1 }) {
-			this.$store.dispatch("chart/getStatHistory", page).then((response) => {
+		getFavorites(page = { page: 1 }) {
+			this.$store.dispatch("chart/getFavorites", page).then((response) => {
+				// お気に入りが0個の場合
+				if (response.data.count === 0) {
+					this.loaded = false;
+
+					return;
+				}
 				this.statData = response.data;
 				this.setTimeSeriesData();
 				this.setPage();
@@ -158,10 +219,32 @@ export default {
 				current: this.statData.current,
 			};
 		},
+		deleteFavorites() {
+			console.log(this.params);
+			this.$store.dispatch("chart/deleteFavorites", this.params).then(() => {
+				this.$store.dispatch("message/setInfoMessage", {
+					message: "お気に入から削除しました｡",
+				});
+				this.getFavorites();
+			});
+		},
 	},
 	mounted() {
-		this.getStatHistory();
+		this.getFavorites();
 	},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.favorites-icon {
+	color: red;
+}
+.favorites-icon:hover {
+	color: gray;
+}
+.reload-icon {
+	color: #00a040;
+}
+.reload-icon:hover {
+	color: black;
+}
+</style>
