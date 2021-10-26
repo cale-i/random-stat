@@ -1,5 +1,5 @@
 <template>
-	<div id="home-page">
+	<div id="home-page" class="homepage">
 		<GlobalHeader />
 
 		<GlobalMessage />
@@ -23,18 +23,12 @@ export default {
 		GlobalMessage,
 		GlobalFooter,
 	},
-	methods: {
-		async authReload() {
-			// Tokenが存在する場合はユーザー情報を取得する
-			const token = localStorage.getItem("access");
-			if (token != null) {
-				await this.$store.dispatch("auth/reload");
-			}
-		},
-	},
-
-	mounted() {
-		this.authReload();
-	},
 };
 </script>
+
+<style scoped>
+.homepage {
+	height: 100vh;
+	background-color: #f8f9fa;
+}
+</style>

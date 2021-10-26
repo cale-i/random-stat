@@ -1,11 +1,12 @@
 <template>
-	<b-container>
+	<div>
 		<GlobalHeader />
 		<GlobalMessage />
 		<ResetPasswordConfirmationModal />
 		<ResetEmailConfirmationModal />
 		{{ resultMessage }}
-	</b-container>
+		<GlobalFooter />
+	</div>
 </template>
 
 <script>
@@ -14,6 +15,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
 
 import ResetPasswordConfirmationModal from "@/components/account/auth/ResetPasswordConfirmationModal.vue";
 import ResetEmailConfirmationModal from "@/components/account/auth/ResetEmailConfirmationModal.vue";
+import GlobalFooter from "@/components/GlobalFooter.vue";
 
 export default {
 	components: {
@@ -21,6 +23,7 @@ export default {
 		GlobalHeader,
 		ResetPasswordConfirmationModal,
 		ResetEmailConfirmationModal,
+		GlobalFooter,
 	},
 	props: {},
 	data: () => ({
@@ -33,6 +36,13 @@ export default {
 	}),
 	computed: {},
 	methods: {
+		async authReload() {
+			// Tokenが存在する場合はユーザー情報を取得する
+			const token = localStorage.getItem("access");
+			if (token != null) {
+				await this.$store.dispatch("auth/reload");
+			}
+		},
 		getAction() {
 			// URLから処理を分岐
 			// 次の3つの候補がある
@@ -85,8 +95,8 @@ export default {
 			this.$bvModal.show("resetEmailConfirmationModal");
 		},
 	},
-	watch: {},
-	mounted() {
+	async created() {
+		await this.authReload();
 		// 処理を分岐
 		const action = this.getAction();
 		if (action === this.actions.userActivation) {

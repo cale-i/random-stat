@@ -1,6 +1,6 @@
 <template>
 	<div id="header">
-		<b-navbar type="dark" variant="dark" fixed="top">
+		<b-navbar type="dark" variant="dark">
 			<b-navbar-brand href="/" class="navbar-brand">
 				<b-icon icon="bar-chart-line" aria-hidden="true" class="mr-2"></b-icon>
 				<span class="rs-green">R</span>andom <span class="rs-red">S</span>tat
@@ -112,9 +112,6 @@ export default {
 </script>
 
 <style scoped>
-#header {
-	margin-bottom: 60px;
-}
 .navbar-brand {
 	font-size: 1.5em;
 }

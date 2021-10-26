@@ -155,6 +155,13 @@ export default {
 				alert("ゲストユーザーのメールアドレスは変更できません｡");
 				return;
 			}
+
+			// パスワード未設定の場合は処理なし
+			if (!this.validPassword) {
+				alert("パスワードが未設定の場合､メールアドレスの変更はできません｡");
+				return;
+			}
+
 			const confirmMsg =
 				"メールアドレス変更リクエストを送信します｡よろしいですか?";
 			if (confirm(confirmMsg) === false) {

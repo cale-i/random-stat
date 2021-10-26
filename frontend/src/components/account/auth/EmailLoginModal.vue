@@ -1,6 +1,6 @@
 <template>
 	<b-modal
-		:id="mordalId"
+		:id="modalId"
 		header-bg-variant="dark"
 		header-text-variant="light"
 		body-bg-variant="light"
@@ -95,7 +95,7 @@ export default {
 			password: "",
 		},
 		loginAttempting: false,
-		mordalId: "emailLoginModal",
+		modalId: "emailLoginModal",
 	}),
 	computed: {},
 	methods: {
@@ -111,7 +111,6 @@ export default {
 					password: this.form.password,
 				})
 				.then(() => {
-					console.log("success");
 					this.$store.dispatch("message/setInfoMessage", {
 						message: "ログインしました。",
 					});

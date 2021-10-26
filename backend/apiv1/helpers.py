@@ -44,10 +44,10 @@ def get_meta_data(data):
 
 def get_stats_code(stats_code_id=None):
     if not stats_code_id:
-        return random.choice(StatsCode.objects.all().values('id', 'table_name'))
+        return random.choice(StatsCode.objects.all().values('id', 'table_name_alias'))
 
     try:
-        return StatsCode.objects.all().values('id', 'table_name').get(id=stats_code_id)
+        return StatsCode.objects.all().values('id', 'table_name_alias').get(id=stats_code_id)
     except StatsCode.DoesNotExist:
         raise StatsCode.DoesNotExist
 

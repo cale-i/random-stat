@@ -32,6 +32,7 @@ CSP_DEFAULT_SRC = ("'none'", )
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",
                'blob:',
+               'data:',
                'https://random-stat.s3.amazonaws.com',
                'https://lh3.googleusercontent.com'
                )
@@ -229,7 +230,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

@@ -1,0 +1,617 @@
+[
+    {
+        "model": "estat.area",
+        "pk": "00000",
+        "fields": {
+            "name": "全国",
+            "stats_code": [
+                "0003410379",
+                "0003412175"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "00100",
+        "fields": {
+            "name": "人口集中地区",
+            "stats_code": [
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "00200",
+        "fields": {
+            "name": "人口集中地区以外の地区",
+            "stats_code": [
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "01000",
+        "fields": {
+            "name": "北海道",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "02000",
+        "fields": {
+            "name": "青森県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "03000",
+        "fields": {
+            "name": "岩手県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "04000",
+        "fields": {
+            "name": "宮城県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "05000",
+        "fields": {
+            "name": "秋田県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "06000",
+        "fields": {
+            "name": "山形県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "07000",
+        "fields": {
+            "name": "福島県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "08000",
+        "fields": {
+            "name": "茨城県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "09000",
+        "fields": {
+            "name": "栃木県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "10000",
+        "fields": {
+            "name": "群馬県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "11000",
+        "fields": {
+            "name": "埼玉県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "12000",
+        "fields": {
+            "name": "千葉県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "13000",
+        "fields": {
+            "name": "東京都",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "14000",
+        "fields": {
+            "name": "神奈川県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "15000",
+        "fields": {
+            "name": "新潟県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "16000",
+        "fields": {
+            "name": "富山県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "17000",
+        "fields": {
+            "name": "石川県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "18000",
+        "fields": {
+            "name": "福井県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "19000",
+        "fields": {
+            "name": "山梨県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "20000",
+        "fields": {
+            "name": "長野県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "21000",
+        "fields": {
+            "name": "岐阜県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "22000",
+        "fields": {
+            "name": "静岡県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "23000",
+        "fields": {
+            "name": "愛知県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "24000",
+        "fields": {
+            "name": "三重県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "25000",
+        "fields": {
+            "name": "滋賀県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "26000",
+        "fields": {
+            "name": "京都府",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "27000",
+        "fields": {
+            "name": "大阪府",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "28000",
+        "fields": {
+            "name": "兵庫県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "29000",
+        "fields": {
+            "name": "奈良県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "30000",
+        "fields": {
+            "name": "和歌山県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "31000",
+        "fields": {
+            "name": "鳥取県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "32000",
+        "fields": {
+            "name": "島根県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "33000",
+        "fields": {
+            "name": "岡山県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "34000",
+        "fields": {
+            "name": "広島県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "35000",
+        "fields": {
+            "name": "山口県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "36000",
+        "fields": {
+            "name": "徳島県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "37000",
+        "fields": {
+            "name": "香川県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "38000",
+        "fields": {
+            "name": "愛媛県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "39000",
+        "fields": {
+            "name": "高知県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "40000",
+        "fields": {
+            "name": "福岡県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "41000",
+        "fields": {
+            "name": "佐賀県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "42000",
+        "fields": {
+            "name": "長崎県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "43000",
+        "fields": {
+            "name": "熊本県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "44000",
+        "fields": {
+            "name": "大分県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "45000",
+        "fields": {
+            "name": "宮崎県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "46000",
+        "fields": {
+            "name": "鹿児島県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.area",
+        "pk": "47000",
+        "fields": {
+            "name": "沖縄県",
+            "stats_code": [
+                "0003412176",
+                "0003410379"
+            ]
+        }
+    },
+    {
+        "model": "estat.statname",
+        "pk": "00200521",
+        "fields": {
+            "name": "国勢調査"
+        }
+    },
+    {
+        "model": "estat.govorg",
+        "pk": "00200",
+        "fields": {
+            "name": "総務省"
+        }
+    },
+    {
+        "model": "estat.title",
+        "pk": "001",
+        "fields": {
+            "name": "男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）"
+        }
+    },
+    {
+        "model": "estat.title",
+        "pk": "002",
+        "fields": {
+            "name": "労働力状態（３区分），男女別15歳以上人口－都道府県（昭和25年～平成27年）　北海道　～　沖縄県"
+        }
+    },
+    {
+        "model": "estat.statscode",
+        "pk": "0003410379",
+        "fields": {
+            "stat_name": "00200521",
+            "gov_org": "00200",
+            "title": "001",
+            "statistics_name": "時系列データ 男女，年齢，配偶関係",
+            "table_name": "男女別人口及び人口性比－全国，都道府県（大正9年～平成27年）",
+            "explanation": "1)　沖縄県は調査されなかったため，含まれていない。<br>2)　長野県西筑摩群山口村と岐阜県中津川市の境界紛争地域人口（男39人，女34人）は全国に含まれているが，長野県及び岐阜県のいずれにも含まれていない。",
+            "table_name_alias": "総人口"
+        }
+    },
+    {
+        "model": "estat.statscode",
+        "pk": "0003412175",
+        "fields": {
+            "stat_name": "00200521",
+            "gov_org": "00200",
+            "title": "001",
+            "statistics_name": "時系列データ 人口の労働力状態，就業者の産業・職業",
+            "table_name": "労働力状態（３区分），男女別15歳以上人口－全国（昭和25年～平成27年）",
+            "explanation": "1) 沖縄県の本土籍の日本人及び外国人を除く14歳以上人口<br>2) 沖縄県分については，標本抽出集計結果による14歳以上人口<br>3) 労働力状態「不詳」を含む。<br>4) 15歳以上人口に占める労働力人口の割合。割合は，分母から不詳を除いて算出している。",
+            "table_name_alias": "労働力状態 (全国)"
+        }
+    },
+    {
+        "model": "estat.statscode",
+        "pk": "0003412176",
+        "fields": {
+            "stat_name": "00200521",
+            "gov_org": "00200",
+            "title": "002",
+            "statistics_name": "時系列データ 人口の労働力状態，就業者の産業・職業",
+            "table_name": "労働力状態（３区分），男女別15歳以上人口－都道府県（昭和25年～平成27年）　北海道　～　沖縄県",
+            "explanation": "1) 労働力状態「不詳」を含む。<br>2) 15歳以上人口に占める労働力人口の割合。分母から労働力状態「不詳」を除いて算出。<br>3) 14歳以上人口",
+            "table_name_alias": "労働力状態 (都道府県)"
+        }
+    }
+]
