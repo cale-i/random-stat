@@ -199,7 +199,7 @@ class CategoryListView(generics.GenericAPIView):
         stats_code = self.request.GET.get('stats_code', None)
 
         if not stats_code:
-            return
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         queryset = Category.objects.filter(
             stats_code=stats_code).values('id', 'name')
