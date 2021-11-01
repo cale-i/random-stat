@@ -5,11 +5,13 @@ from django.utils.timezone import localtime
 from apiv1.serializers import (
     StatsCodeSerializer,
     AreaSerializer,
+    TimeSerializer,
 )
 
 from apiv1.tests.factories.estat import (
     StatsCodeFactory,
     AreaFactory,
+    TimeFactory,
 )
 
 
@@ -60,3 +62,25 @@ class TestAreaSerializer(TestCase):
             'name': data['name'],
         }
         self.assertDictEqual(serializer.data, expected_data)
+
+
+class TestTimeSerializer(TestCase):
+    """
+    TimeSerializerのテストクラス
+    """
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+
+        data = {"date": "19500000"}
+        # シリアライザを作成
+        time = TimeFactory(**data)
+        serializer = TimeSerializer(instance=time)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'date': data['date'],
+        }
+        self.assertDictEqual(serializer.data, expected_data)
+
+

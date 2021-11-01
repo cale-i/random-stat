@@ -47,3 +47,8 @@ class AreaFactory(factory.django.DjangoModelFactory):
         if extracted:
             for stat_code in extracted:
                 self.stats_code.add(stat_code)
+
+
+class TimeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Time
