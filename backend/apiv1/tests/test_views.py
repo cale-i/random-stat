@@ -136,3 +136,30 @@ class TestCategoryListView(APITestCase):
         # レスポンスの内容を検証
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, expected_json_list)
+
+
+class TestFavoritesView(APITestCase):
+    # """FavoritesViewのテストクラス"""
+    TARGET_URL = '/api/v1/timeseries/favorites/'
+
+    def test_get_not_authenticated(self):
+        """未ログインGET(異常系)"""
+        response = self.client.get(
+            self.TARGET_URL,
+            format='json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_post_not_authenticated(self):
+        """未ログインPOST(異常系)"""
+        response = self.client.post(
+            self.TARGET_URL,
+            format='json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_delete_not_authenticated(self):
+        """未ログインDELETE(異常系)"""
+        response = self.client.delete(
+            self.TARGET_URL,
+            format='json')
+        self.assertEqual(response.status_code, 401)
+
