@@ -142,6 +142,53 @@ class TestFavoritesView(APITestCase):
     # """FavoritesViewのテストクラス"""
     TARGET_URL = '/api/v1/timeseries/favorites/'
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.user = get_user_model().objects.create_user(
+            username='user',
+            email='example1@example.com',
+            password='password',
+        )
+
+    def test_get_success_when_no_record_exist(self):
+        """モデル取得APIへのGETリクエスト 登録件数が0の場合 (正常系)"""
+        token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+        params = {'page': 1}
+
+        response = self.client.get(
+            self.TARGET_URL,
+            params,
+            format='json')
+
+        expected_json_dict = {
+            'current': params['page'],
+            'count': 0
+        }
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, expected_json_dict)
+
+    def test_get_success(self):
+        """モデル取得APIへのGETリクエスト(正常系)"""
+        token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+        params = {'page': 1}
+
+        response = self.client.get(
+            self.TARGET_URL,
+            params,
+            format='json')
+
+        expected_json_dict = {
+            'current': params['page'],
+            'count': 0
+        }
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, expected_json_dict)
+
     def test_get_not_authenticated(self):
         """未ログインGET(異常系)"""
         response = self.client.get(
