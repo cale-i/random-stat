@@ -1,11 +1,13 @@
+from apiv1.tests.factories.favorites import FavoritesFactory
 from django.test import TestCase
-from django.utils.timezone import localtime
+from django.contrib.auth import get_user_model
 
 
 from apiv1.serializers import (
     StatsCodeSerializer,
     AreaSerializer,
     TimeSerializer,
+    FavoritesSerializer,
 )
 
 from apiv1.tests.factories.estat import (
@@ -84,3 +86,35 @@ class TestTimeSerializer(TestCase):
         self.assertDictEqual(serializer.data, expected_data)
 
 
+class TestFavoritesSerializer(TestCase):
+    """
+    FavoritesSerializerのテストクラス
+    """
+
+    @ classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.user = get_user_model().objects.create_user(
+            username='user',
+            email='example@example.com',
+            password='password',
+        )
+
+    def test_output_data(self):
+        """出力データの内容検証"""
+        data = {
+            'user': self.user,
+        }
+
+        # シリアライザを作成
+        favorites = FavoritesFactory(**data)
+        serializer = FavoritesSerializer(instance=favorites)
+
+        # シリアライザの出力内容を検証
+        expected_data = {
+            'user': data['user'].id,
+            'area': '00000',
+            'sub_category': [],
+            'stats_code': '0003412176',
+        }
+        self.assertDictEqual(serializer.data, expected_data)
