@@ -272,7 +272,7 @@ class FavoritesView(generics.GenericAPIView):
         params = request.data
 
         if not params:
-            return Response(status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         filterset = TimeSeriesFilter(
             params,
@@ -281,7 +281,7 @@ class FavoritesView(generics.GenericAPIView):
 
         filterset.qs.delete()
 
-        return Response(params, status.HTTP_204_NO_CONTENT)
+        return Response(params, status.HTTP_200_OK)
 
 
 class IsFavoriteView(generics.GenericAPIView):
