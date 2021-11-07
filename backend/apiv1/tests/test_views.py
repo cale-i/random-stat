@@ -212,3 +212,12 @@ class TestFavoritesView(APITestCase):
             format='json')
         self.assertEqual(response.status_code, 401)
 
+    def test_delete_bad_request(self):
+        token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+        response = self.client.delete(
+            self.TARGET_URL,
+            format='json')
+
+        self.assertEqual(response.status_code, 400)
