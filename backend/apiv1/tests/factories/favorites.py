@@ -11,8 +11,6 @@ class FavoritesFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Favorites
 
-    stats_code = factory.SubFactory(StatsCodeFactory)
-    # area = factory.SubFactory(AreaFactory)
     stats_code = factory.SubFactory(StatsCodeFactory, id='0003412176')
     area = factory.SubFactory(AreaFactory, id='00000')
 
