@@ -52,6 +52,10 @@ e-stat から取得した統計データをランダムで表示するサービ�
 
   - ログイン機能
 
+    - JWT による認証
+
+      - Access token の有効期限が切れた場合 Refresh Token により Access Token を再発行
+
     - Google アカウントでログイン
     - GitHub アカウントでログイン
     - Facebook アカウントでログイン
@@ -160,12 +164,30 @@ e-stat から取得した統計データをランダムで表示するサービ�
   - Exif 削除
   - upload イメージ縮小
 
-## File upload
+# 技術の選定理由
 
-- max_length(Model)
-- extension(FileExtensionValidator)
-- change file name(UUID)
-- magic number
-- remove Exif
-- limit image size
+- Python, Django
 
+  - 競技プログラミングを通じ標準ライブラリをある程度理解しており､各関数の計算量も多少把握していたため｡
+
+- Vue.js
+
+  - React に比べ学習難易度が低いと聞いたため｡
+  - JSX に抵抗感があったため｡
+
+- Terraform
+
+  - AWS の勉強をしていた際､コンソールからのリソースの管理に難があったため｡
+  - リソースの追加･削除が容易に行えるため｡
+  - コンポーネント化したコードの再利用が可能であるため｡
+
+- Docker
+
+  - 以前､ Web サービスの開発の際､ローカル環境と本番環境の違いによる不具合への対処に苦労したため｡
+
+- AWS ECS Fargate
+
+  - 開発環境･テスト環境･本番環境と一貫して同一のコンテナイメージを使用した開発を行うため
+
+- GitHub Actions
+  - 設定ファイルを追加するだけで利用可能であり手軽に導入できるため｡
