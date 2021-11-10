@@ -221,3 +221,24 @@ class TestFavoritesView(APITestCase):
             format='json')
 
         self.assertEqual(response.status_code, 400)
+
+
+class TestIsFavoriteView(APITestCase):
+    """IsFavoriteViewのテストクラス"""
+    TARGET_URL = '/api/v1/timeseries/favorites/isfavorites/'
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.user = get_user_model().objects.create_user(
+            username='user',
+            email='example1@example.com',
+            password='password',
+        )
+
+    def test_get_not_authenticated(self):
+        """未ログインGET(異常系)"""
+        response = self.client.get(
+            self.TARGET_URL,
+            format='json')
+        self.assertEqual(response.status_code, 401)
