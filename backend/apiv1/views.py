@@ -291,6 +291,11 @@ class IsFavoriteView(generics.GenericAPIView):
         user = request.user
 
         sub_category = request.GET.get('sub_category')
+
+        # query paramsが存在しない場合
+        if not sub_category:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         table = str.maketrans('', '', '[] \"')
         sub_category = sub_category.translate(table).split(',')
 
