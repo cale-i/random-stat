@@ -236,6 +236,16 @@ class TestIsFavoriteView(APITestCase):
             password='password',
         )
 
+    def test_get_bad_request_if_without_params(self):
+        token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+        response = self.client.get(
+            self.TARGET_URL,
+            format='json')
+
+        self.assertEqual(response.status_code, 400)
+
     def test_get_not_authenticated(self):
         """未ログインGET(異常系)"""
         response = self.client.get(
