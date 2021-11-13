@@ -236,6 +236,23 @@ class TestIsFavoriteView(APITestCase):
             password='password',
         )
 
+
+    def test_get_bad_request_if_no_params_area(self):
+        token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+        params = {
+            'stats_code': '123456',
+            'sub_category': ['dummy1', 'dummy2', 'dummy3'],
+
+        }
+
+        response = self.client.get(
+            self.TARGET_URL,
+            params,
+            format='json')
+
+        self.assertEqual(response.status_code, 400)
+
     def test_get_bad_request_if_no_params_sub_category(self):
         token = str(RefreshToken.for_user(self.user).access_token)
         self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
